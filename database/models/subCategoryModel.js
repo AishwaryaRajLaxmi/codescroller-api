@@ -1,75 +1,48 @@
 const mongoose = require("mongoose");
-const userSchema = mongoose.Schema(
+
+const subCategorySchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
+      unique: true,
     },
 
-    email: {
+    slug: {
       type: String,
       required: true,
       unique: true,
     },
 
-    mobile: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-
-    password: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
-    address: {
+    description: {
       type: String,
     },
 
-    city: {
+    seoTitle: {
       type: String,
     },
 
-    landmark: {
+    seoDescription: {
       type: String,
     },
 
-    pincode: {
-      type: String,
-    },
-
-    state: {
-      type: String,
-    },
-
-    otp: {
-      type: String,
-    },
-    otpExpiredAt: {
-      type: Date,
-      trim: true,
-    },
     status: {
       type: Boolean,
       required: true,
       default: true,
     },
-    otpExpiredAt: {
-      type: Date,
-      trim: true,
-    },
+
     isDeleted: {
       type: Boolean,
       default: false,
     },
-    isVerified: {
-      type: Boolean,
-      default: false,
+
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "category",
+      required: true,
     },
   },
-
   {
     timestamps: true,
     toObject: {
@@ -78,12 +51,10 @@ const userSchema = mongoose.Schema(
         delete ret.password;
         ret.id = ret._id;
         delete ret._id;
-        delete ret.otp;
-        delete ret.otpExpiredAt;
         return ret;
       },
     },
   }
 );
 
-module.exports = mongoose.model("user", userSchema);
+module.exports = mongoose.model("subCategory", subCategorySchema);

@@ -1,75 +1,45 @@
 const mongoose = require("mongoose");
-const userSchema = mongoose.Schema(
+
+const categorySchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
+      unique: true,
     },
 
-    email: {
+    slug: {
       type: String,
       required: true,
       unique: true,
     },
 
-    mobile: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-
-    password: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
-    address: {
+    image: {
       type: String,
     },
 
-    city: {
+    description: {
       type: String,
     },
 
-    landmark: {
+    seoTitle: {
       type: String,
     },
 
-    pincode: {
+    seoDescription: {
       type: String,
     },
 
-    state: {
-      type: String,
-    },
-
-    otp: {
-      type: String,
-    },
-    otpExpiredAt: {
-      type: Date,
-      trim: true,
-    },
     status: {
       type: Boolean,
-      required: true,
       default: true,
     },
-    otpExpiredAt: {
-      type: Date,
-      trim: true,
-    },
+
     isDeleted: {
       type: Boolean,
       default: false,
     },
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
   },
-
   {
     timestamps: true,
     toObject: {
@@ -78,12 +48,10 @@ const userSchema = mongoose.Schema(
         delete ret.password;
         ret.id = ret._id;
         delete ret._id;
-        delete ret.otp;
-        delete ret.otpExpiredAt;
         return ret;
       },
     },
   }
 );
 
-module.exports = mongoose.model("user", userSchema);
+module.exports = mongoose.model("category", categorySchema);

@@ -1,16 +1,32 @@
-module.exports={
-  defaultServerResponse:{
-    message:"",
-    body:null,
-    errors:{},
-    status:400
+module.exports = {
+  defaultServerResponse: {
+    message: "",
+    body: null,
+    errors: {},
+    status: 400,
   },
   UserMessage: {
     USER_REGISTERED: "USER Registered Successfully",
     USER_FETCHED: "USER Fetched Successfully",
+    USER_NOT_FETCHED: "USER Fetched Successfully",
     USER_LOGEDIN: "USER Logedin Successfully",
+    USER_NOT_LOGEDIN: "USER Not Logedin",
     USER_UPDATED: "USER Updated Successfully",
+    USER_NOT_UPDATED: "USER Not Updated Successfully",
     USER_DELETED: "USER Deleted Successfully",
+    USER_NOT_DELETED: "USER Not Deleted",
     USER_NOT_FOUND: "USER Not Found",
   },
-}
+  CategoryMessage: {
+    CATEGORY_CREATED: "CATEGORY Created Successfully",
+    CATEGORY_FETCHED: "CATEGORY Fetched Successfully",
+    CATEGORY_NOT_FETCHED: "CATEGORY Fetched Successfully",
+    CATEGORY_LOGEDIN: "CATEGORY Logedin Successfully",
+    CATEGORY_NOT_LOGEDIN: "CATEGORY Not Logedin",
+    CATEGORY_UPDATED: "CATEGORY Updated Successfully",
+    CATEGORY_NOT_UPDATED: "CATEGORY Not Updated Successfully",
+    CATEGORY_DELETED: "CATEGORY Deleted Successfully",
+    CATEGORY_NOT_DELETED: "CATEGORY Not Deleted",
+    CATEGORY_NOT_FOUND: "CATEGORY Not Found",
+  },
+};
