@@ -1,7 +1,9 @@
 const bcrypt = require("bcrypt");
+const optGenerator=require("../helpers/otpGenerator")
 const userModel = require("../database/models/userModel");
 const constants = require("../helpers/constants");
 const { formatMongoData } = require("../helpers/dbHelper");
+
 // registerUser
 module.exports.registerUser = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
@@ -19,7 +21,16 @@ module.exports.registerUser = async (serviceData) => {
       };
       return response;
     }
+
+    // send otp
+    const currentDate=new Date();
+    const otp=optGenerator.createOTP();
+    const otpExpires=currentDate.setMinutes(currentDate.getMinutes()+3);
     const newData = new userModel(serviceData);
+
+    // getTimeandDate
+    newData.otp=otp;
+    newData.otpExpiredAt=otpExpires;
 
     // encrypt password
     const hashPassword = await bcrypt.hash(newData.password, 10);
@@ -64,6 +75,51 @@ module.exports.loginUser = async (serviceData) => {
   } catch (error) {
     console.log(
       `Something went wrong : service :userService :loginUser\nError:${error}`
+    );
+    throw new Error(error);
+  }
+};
+
+module.exports.isMobileExists = async (serviceData) => {
+  const response = { ...constants.defaultServerResponse };
+  try {
+    const userResponse = await userModel.findOne({
+      mobile: serviceData.mobile,
+    });
+
+    console.log(serviceData.mobile);
+
+    if (userResponse) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(
+      `Something went wrong : service :userService:isMobileExists\nError:${error}`
+    );
+    throw new Error(error);
+  }
+};
+
+// isEmailExists
+module.exports.isEmailExists = async (serviceData) => {
+  const response = { ...constants.defaultServerResponse };
+  try {
+    const userResponse = await userModel.findOne({
+      email: serviceData.email,
+    });
+
+    console.log(serviceData.email);
+
+    if (userResponse) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(
+      `Something went wrong : service :userService:isEmailExists\nError:${error}`
     );
     throw new Error(error);
   }

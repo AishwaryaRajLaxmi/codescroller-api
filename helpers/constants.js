@@ -16,6 +16,7 @@ module.exports = {
     USER_DELETED: "USER Deleted Successfully",
     USER_NOT_DELETED: "USER Not Deleted",
     USER_NOT_FOUND: "USER Not Found",
+    USER_FOUND: "USER Found",
   },
   CategoryMessage: {
     CATEGORY_CREATED: "CATEGORY Created Successfully",

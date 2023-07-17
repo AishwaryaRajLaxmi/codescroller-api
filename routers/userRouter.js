@@ -6,7 +6,9 @@ const {
   login,
   getAllUsers,
   getUserById,
-  updateUser
+  updateUser,
+  isMobileExists,
+  isEmailExists,
 } = require("../apiValidationSchemas/userValidationSchema");
 const {
   validateBody,
@@ -38,6 +40,24 @@ userRouter.delete(
 userRouter.get("/:id", validateParams(getUserById), userController.getUserById);
 
 // updateUser
-userRouter.put("/:id",validateParams(getUserById),validateBody(updateUser),userController.updateUser)
+userRouter.put(
+  "/:id",
+  validateParams(getUserById),
+  validateBody(updateUser),
+  userController.updateUser
+);
+
+// isMobileExists
+userRouter.get(
+  "/isMobileExists/:mobile",
+  validateParams(isMobileExists),
+  userController.isMobileExists
+);
+// isEmailExists
+userRouter.get(
+  "/isEmailExists/:email",
+  validateParams(isEmailExists),
+  userController.isEmailExists
+);
 
 module.exports = userRouter;

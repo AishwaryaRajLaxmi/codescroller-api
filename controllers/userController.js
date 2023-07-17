@@ -6,6 +6,8 @@ module.exports.registerUser = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await userService.registerUser(req.body);
+    console.log(serviceResponse);
+    
     if (serviceResponse.status === 400) {
       response.errors = serviceResponse.errors;
       response.status = 400; // Set the response status to 400
@@ -37,6 +39,50 @@ module.exports.loginUser = async (req, res) => {
     response.status = 200;
   } catch (error) {
     console.log(`Something went wrong: controlelr :loginController:loginUser`);
+    response.message = error.message;
+    response.errors = error;
+  }
+  res.status(response.status).send(response);
+};
+
+// isEmailExists
+module.exports.isEmailExists = async (req, res) => {
+  const response = { ...constants.defaultServerResponse };
+  try {
+    const serviceResponse = await userService.isEmailExists(req.params);
+    response.status = 200;
+    response.body = serviceResponse;
+    if (response.body) {
+      response.message = constants.UserMessage.USER_FOUND;
+    } else {
+      response.message = constants.UserMessage.USER_NOT_FOUND;
+    }
+  } catch (error) {
+    console.log(
+      `Something went wrong: controller :userController:isEmailExists`
+    );
+    response.message = error.message;
+    response.errors = error;
+  }
+  res.status(response.status).send(response);
+};
+
+// isMobileExists
+module.exports.isMobileExists = async (req, res) => {
+  const response = { ...constants.defaultServerResponse };
+  try {
+    const serviceResponse = await userService.isMobileExists(req.params);
+    response.status = 200;
+    response.body = serviceResponse;
+    if (response.body) {
+      response.message = constants.UserMessage.USER_FOUND;
+    } else {
+      response.message = constants.UserMessage.USER_NOT_FOUND;
+    }
+  } catch (error) {
+    console.log(
+      `Something went wrong: controller :userController:isMobileExists`
+    );
     response.message = error.message;
     response.errors = error;
   }
