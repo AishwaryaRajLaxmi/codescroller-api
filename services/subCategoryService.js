@@ -1,37 +1,37 @@
 const bcrypt = require("bcrypt");
 const constants = require("../helpers/constants");
 const { formatMongoData } = require("../helpers/dbHelper");
-const categoryModel = require("../database/models/categoryModel");
+const subCategoryModel = require("../database/models/subCategoryModel");
 
 // createCategory
-module.exports.createCategory = async (serviceData) => {
+module.exports.createSubCategory = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const categoryResponse = await categoryModel.findOne({
+    const categoryResponse = await subCategoryModel.findOne({
       name: serviceData.name,
     });
 
     if (categoryResponse) {
       response.errors = {
-        email: "Category already exists",
+        email: "SubCategoryalready exists",
         status: 400,
       };
       return response;
     }
-    const newData = new categoryModel(serviceData);
+    const newData = new subCategoryModel(serviceData);
 
     const serviceResponse = await newData.save();
     return formatMongoData(serviceResponse);
   } catch (error) {
     console.log(
-      `Something went wrong service : userService : createCategory\nError: ${error.message}`
+      `Something went wrong service : userService : createSubCategory\nError: ${error.message}`
     );
     throw new Error(error.message);
   }
 };
 
-// getAllCategories
-module.exports.getAllCategories = async (serviceData) => {
+// getAllSubCategories
+module.exports.getAllSubCategories = async (serviceData) => {
   try {
     const { limit = 10, skip = 0, status = true } = serviceData;
     let conditions = {};
@@ -43,7 +43,7 @@ module.exports.getAllCategories = async (serviceData) => {
       conditions.status = status;
     }
 
-    const dbResponse = await categoryModel
+    const dbResponse = await subCategoryModel
       .find(conditions)
       .skip(parseInt(skip))
       .limit(parseInt(limit));
@@ -53,18 +53,18 @@ module.exports.getAllCategories = async (serviceData) => {
     return formatData;
   } catch (error) {
     console.log(
-      `Something went wrong: Service: categoryService: getAllCategories\nError: ${error.message}`
+      `Something went wrong: Service: subcategoryService: getAllSubCategories\nError: ${error.message}`
     );
     throw new Error(error);
   }
 };
 
 // deleteCategory
-module.exports.deleteCategory = async (serviceData) => {
+module.exports.deleteSubCategory = async (serviceData) => {
   try {
     const response = { ...constants.defaultServerResponse };
 
-    const dbResponse = await categoryModel.findOneAndUpdate(
+    const dbResponse = await subCategoryModel.findOneAndUpdate(
       { _id: serviceData.id }, // Condition to find the document
       { isDeleted: true }, // Update to set isDeleted field to true
       { new: true } // Options to return the updated document
@@ -73,7 +73,7 @@ module.exports.deleteCategory = async (serviceData) => {
 
     if (!dbResponse) {
       response.errors = {
-        error: constants.CategoryMessage.CATEGORY_NOT_DELETED,
+        error: constants.SubCategoryMessage.SUB_CATEGORY_DELETED
       };
       return response;
     }
@@ -84,37 +84,37 @@ module.exports.deleteCategory = async (serviceData) => {
     return response;
   } catch (error) {
     console.log(
-      `Something went wrong: service : categoryService : deletecategory`
+      `Something went wrong: service : subcategoryService : deletesubcategory`
     );
     throw new Error(error);
   }
 };
 
-// getCategoryById
-module.exports.getCategoryById = async (serviceData) => {
+// getSubCategoryById
+module.exports.getSubCategoryById = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const dbResponse = await categoryModel.findById(serviceData.id);
+    const dbResponse = await subCategoryModel.findById(serviceData.id);
     const formatData = formatMongoData(dbResponse);
     return formatData;
   } catch (error) {
-    console.log(`Something went wrong: service : userService : deleteUser`);
+    console.log(`Something went wrong: service : subCategoryService : deletecategoryservice`);
     throw new Error(error);
   }
 };
 
 // updateCategory
 
-module.exports.updateCategory = async (serviceData) => {
+module.exports.updateSubCategory = async (serviceData) => {
   try {
     const { id, body } = serviceData;
-    const dbResponse = await categoryModel.findByIdAndUpdate(id, body, {
+    const dbResponse = await subCategoryModel.findByIdAndUpdate(id, body, {
       new: true,
     });
     return formatMongoData(dbResponse);
   } catch (error) {
     console.log(
-      `Somthing Went Wrong Service: categoryService: updateCategory`,
+      `Somthing Went Wrong Service: subcategoryService: updateSubCategory`,
       error.message
     );
     throw new Error(error);

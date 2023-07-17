@@ -1,37 +1,36 @@
-const bcrypt = require("bcrypt");
 const constants = require("../helpers/constants");
 const { formatMongoData } = require("../helpers/dbHelper");
-const categoryModel = require("../database/models/categoryModel");
+const languageModel = require("../database/models/languageModel");
 
-// createCategory
-module.exports.createCategory = async (serviceData) => {
+// createLanguage
+module.exports.createLanguage = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const categoryResponse = await categoryModel.findOne({
+    const dbResponse = await languageModel.findOne({
       name: serviceData.name,
     });
 
-    if (categoryResponse) {
+    if (dbResponse) {
       response.errors = {
-        email: "Category already exists",
+        email: "Language already exists",
         status: 400,
       };
       return response;
     }
-    const newData = new categoryModel(serviceData);
+    const newData = new languageModel(serviceData);
 
     const serviceResponse = await newData.save();
     return formatMongoData(serviceResponse);
   } catch (error) {
     console.log(
-      `Something went wrong service : userService : createCategory\nError: ${error.message}`
+      `Something went wrong service : userService : createLanguage\nError: ${error.message}`
     );
     throw new Error(error.message);
   }
 };
 
-// getAllCategories
-module.exports.getAllCategories = async (serviceData) => {
+// getAllLanguages
+module.exports.getAllLanguages = async (serviceData) => {
   try {
     const { limit = 10, skip = 0, status = true } = serviceData;
     let conditions = {};
@@ -43,7 +42,7 @@ module.exports.getAllCategories = async (serviceData) => {
       conditions.status = status;
     }
 
-    const dbResponse = await categoryModel
+    const dbResponse = await languageModel
       .find(conditions)
       .skip(parseInt(skip))
       .limit(parseInt(limit));
@@ -53,18 +52,18 @@ module.exports.getAllCategories = async (serviceData) => {
     return formatData;
   } catch (error) {
     console.log(
-      `Something went wrong: Service: categoryService: getAllCategories\nError: ${error.message}`
+      `Something went wrong: Service: LanguageService: getAllLanguages\nError: ${error.message}`
     );
     throw new Error(error);
   }
 };
 
-// deleteCategory
-module.exports.deleteCategory = async (serviceData) => {
+// deleteLanguage
+module.exports.deleteLanguage = async (serviceData) => {
   try {
     const response = { ...constants.defaultServerResponse };
 
-    const dbResponse = await categoryModel.findOneAndUpdate(
+    const dbResponse = await languageModel.findOneAndUpdate(
       { _id: serviceData.id }, // Condition to find the document
       { isDeleted: true }, // Update to set isDeleted field to true
       { new: true } // Options to return the updated document
@@ -73,7 +72,7 @@ module.exports.deleteCategory = async (serviceData) => {
 
     if (!dbResponse) {
       response.errors = {
-        error: constants.CategoryMessage.CATEGORY_NOT_DELETED,
+        error: constants.LanguageMessage.LANGUAGE_NOT_DELETED
       };
       return response;
     }
@@ -84,37 +83,40 @@ module.exports.deleteCategory = async (serviceData) => {
     return response;
   } catch (error) {
     console.log(
-      `Something went wrong: service : categoryService : deletecategory`
+      `Something went wrong: service : LanguageService : deleteLanguage`
     );
     throw new Error(error);
   }
 };
 
-// getCategoryById
-module.exports.getCategoryById = async (serviceData) => {
+// getLanguageById
+module.exports.getLanguageById = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
+  console.log(serviceData.id)
   try {
-    const dbResponse = await categoryModel.findById(serviceData.id);
+    const dbResponse = await languageModel.findById(serviceData.id);
     const formatData = formatMongoData(dbResponse);
     return formatData;
   } catch (error) {
-    console.log(`Something went wrong: service : userService : deleteUser`);
+    console.log(`Something went wrong: service : LaaguageService : deleteLanguage`);
     throw new Error(error);
   }
 };
 
-// updateCategory
+// updateLanguage
 
-module.exports.updateCategory = async (serviceData) => {
+module.exports.updateLanguage = async (serviceData) => {
+
   try {
     const { id, body } = serviceData;
-    const dbResponse = await categoryModel.findByIdAndUpdate(id, body, {
+    const dbResponse = await languageModel.findByIdAndUpdate(id, body, {
       new: true,
     });
+    console.log(dbResponse);
     return formatMongoData(dbResponse);
   } catch (error) {
     console.log(
-      `Somthing Went Wrong Service: categoryService: updateCategory`,
+      `Somthing Went Wrong Service: LanguageService: updateLanguage`,
       error.message
     );
     throw new Error(error);

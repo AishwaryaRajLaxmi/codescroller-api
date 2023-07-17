@@ -28,13 +28,14 @@ const subCategorySchema = new mongoose.Schema(
 
     status: {
       type: Boolean,
-      required: true,
+      required:true,     
       default: true,
     },
 
     isDeleted: {
       type: Boolean,
       default: false,
+      required:true,
     },
 
     category: {

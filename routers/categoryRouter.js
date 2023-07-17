@@ -5,7 +5,7 @@ const {
   createCategory,
   getAllCategories,
   getCategoryById,
-  updateCategory,
+  updateCategory
 } = require("../apiValidationSchemas/categoryValidation");
 const {
   validateBody,
