@@ -10,11 +10,11 @@ module.exports.registerUser = async (req, res) => {
     
     if (serviceResponse.status === 400) {
       response.errors = serviceResponse.errors;
-      response.status = 400; // Set the response status to 400
+     
     } else {
       response.body = serviceResponse;
       response.message = constants.UserMessage.USER_REGISTERED;
-      response.status = 200;
+    
     }
   } catch (error) {
     console.log(

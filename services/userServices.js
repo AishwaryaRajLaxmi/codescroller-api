@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const optGenerator=require("../helpers/otpGenerator")
+const optGenerator = require("../helpers/otpGenerator");
 const userModel = require("../database/models/userModel");
 const constants = require("../helpers/constants");
 const { formatMongoData } = require("../helpers/dbHelper");
@@ -23,14 +23,14 @@ module.exports.registerUser = async (serviceData) => {
     }
 
     // send otp
-    const currentDate=new Date();
-    const otp=optGenerator.createOTP();
-    const otpExpires=currentDate.setMinutes(currentDate.getMinutes()+3);
+    const currentDate = new Date();
+    const otp = optGenerator.createOTP();
+    const otpExpires = currentDate.setMinutes(currentDate.getMinutes() + 3);
     const newData = new userModel(serviceData);
 
     // getTimeandDate
-    newData.otp=otp;
-    newData.otpExpiredAt=otpExpires;
+    newData.otp = otp;
+    newData.otpExpiredAt = otpExpires;
 
     // encrypt password
     const hashPassword = await bcrypt.hash(newData.password, 10);

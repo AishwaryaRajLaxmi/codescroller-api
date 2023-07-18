@@ -17,11 +17,7 @@ const {
 } = require("../middlewares/joiSchemaValidation");
 
 // registerUser
-userRouter.post(
-  "/register",
-  validateBody(registerUser),
-  userController.registerUser
-);
+userRouter.post("/register", userController.registerUser);
 
 // loginUser
 userRouter.post("/login", validateBody(login), userController.loginUser);

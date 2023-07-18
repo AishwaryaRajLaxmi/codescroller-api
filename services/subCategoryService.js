@@ -49,7 +49,6 @@ module.exports.getAllSubCategories = async (serviceData) => {
       .limit(parseInt(limit));
 
     const formatData = formatMongoData(dbResponse);
-    // console.log(formatData)
     return formatData;
   } catch (error) {
     console.log(
@@ -69,7 +68,8 @@ module.exports.deleteSubCategory = async (serviceData) => {
       { isDeleted: true }, // Update to set isDeleted field to true
       { new: true } // Options to return the updated document
     );
-    console.log(dbResponse);
+    
+
 
     if (!dbResponse) {
       response.errors = {
