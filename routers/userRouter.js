@@ -3,7 +3,7 @@ const userRouter = express.Router();
 const userController = require("../controllers/userController");
 const {
   registerUser,
-  login,
+  loginUser,
   getAllUsers,
   getUserById,
   updateUser,
@@ -17,10 +17,14 @@ const {
 } = require("../middlewares/joiSchemaValidation");
 
 // registerUser
-userRouter.post("/register", userController.registerUser);
+userRouter.post(
+  "/register",
+  validateBody(registerUser),
+  userController.registerUser
+);
 
 // loginUser
-userRouter.post("/login", validateBody(login), userController.loginUser);
+userRouter.post("/login", validateBody(loginUser), userController.loginUser);
 
 //getAllUser
 userRouter.get("/", validateQuery(getAllUsers), userController.getAllUsers);

@@ -18,15 +18,12 @@ module.exports.registerUser = Joi.object({
   cPassword: Joi.any()
     .equal(Joi.ref("password"))
     .required()
-    .label("Confirm password")
+    .label("Confirm Password")
     .messages({ "any.only": "{{#label}} does not match" }),
-  status: Joi.boolean(),
-  isDeleted: Joi.boolean(),
-  isVerified: Joi.boolean(),
 });
 
-// login
-module.exports.login = Joi.object({
+// loginUser
+module.exports.loginUser = Joi.object({
   email: Joi.string().email().trim().required().label("Email"),
   password: Joi.string().min(5).trim().required().label("Password"),
 });
@@ -43,21 +40,6 @@ module.exports.getAllUsers = Joi.object({
 //getUserById
 module.exports.getUserById = Joi.object({
   id: Joi.string().custom(customCallback),
-});
-
-// updateUser
-module.exports.registerUser = Joi.object({
-  name: Joi.string().trim().label("Name"),
-  email: Joi.string().email().trim().label("Email"),
-  mobile: Joi.string()
-    .label("Mobile")
-    .regex(/^[6-9]\d{9}$/)
-    .messages({
-      "string.empty": `"Mobile Number" should be 10 digit`,
-      "string.pattern.base": `"Mobile Number" must be a valid number`,
-      "any.required": `"Mobile Number" is a required field`,
-    }),
-  password: Joi.string().min(5).trim().label("Password"),
 });
 
 //isMobileExists

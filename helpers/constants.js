@@ -5,6 +5,12 @@ module.exports = {
     errors: {},
     status: 400,
   },
+
+  validationMessage: {
+    VALIDATION_FAILED: "Validation Failed",
+    TOKEN_MISSING: "Token is Missing, Login First",
+  },
+
   UserMessage: {
     USER_REGISTERED: "USER Registered Successfully",
     USER_FETCHED: "USER Fetched Successfully",

@@ -6,7 +6,7 @@ const {
   getLanguageById,
   updateLanguage,
   getAllLanguages,
-} = require("../apiValidationSchemas/languageValidation");
+} = require("../apiValidationSchemas/languageValidationSchema");
 const {
   validateBody,
   validateParams,

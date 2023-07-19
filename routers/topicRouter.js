@@ -6,7 +6,7 @@ const {
   getTopicById,
   updateTopic,
   getAllTopics,
-} = require("../apiValidationSchemas/topicValidation");
+} = require("../apiValidationSchemas/topicValidationSchema");
 const {
   validateBody,
   validateParams,
@@ -14,18 +14,10 @@ const {
 } = require("../middlewares/joiSchemaValidation");
 
 // createCategory
-topicRouter.post(
-  "/",
-  validateBody(createTopic),
-  topicController.createTopic
-);
+topicRouter.post("/", validateBody(createTopic), topicController.createTopic);
 
 //getAllTopics
-topicRouter.get(
-  "/",
-  validateQuery(getAllTopics),
-  topicController.getAllTopics
-);
+topicRouter.get("/", validateQuery(getAllTopics), topicController.getAllTopics);
 
 // deleteTopic
 topicRouter.delete(
