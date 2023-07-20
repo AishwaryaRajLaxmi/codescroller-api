@@ -94,7 +94,7 @@ module.exports.getTopicById = async (req, res) => {
 module.exports.updateTopic = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const serviceResponse = await TopicService.updateTopic({
+    const serviceResponse = await topicService.updateTopic({
       id: req.params.id,
       body: req.body,
     });

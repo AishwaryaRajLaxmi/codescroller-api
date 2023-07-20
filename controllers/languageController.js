@@ -6,7 +6,7 @@ module.exports.createLanguage = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await LanguageService.createLanguage(req.body);
-    console.log(serviceResponse);
+  
 
     if (serviceResponse.status === 400) {
       response.errors = serviceResponse.errors;
@@ -71,7 +71,7 @@ module.exports.deleteLanguage = async (req, res) => {
   res.status(response.status).send(response);
 };
 
-// getLanguage
+// getLanguageById
 module.exports.getLanguageById = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {

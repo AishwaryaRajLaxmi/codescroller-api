@@ -98,7 +98,7 @@ module.exports.getLanguageById = async (serviceData) => {
     const formatData = formatMongoData(dbResponse);
     return formatData;
   } catch (error) {
-    console.log(`Something went wrong: service : LaaguageService : deleteLanguage`);
+    console.log(`Something went wrong: service : LaaguageService : getLanguageById`);
     throw new Error(error);
   }
 };

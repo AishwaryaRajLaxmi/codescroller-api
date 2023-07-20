@@ -1,0 +1,117 @@
+const courseModel = require("../database/models/courseModel");
+const constants = require("../helpers/constants");
+const { formatMongoData } = require("../helpers/dbHelper");
+
+// createCourse
+module.exports.createCourse = async (serviceData) => {
+  const response = { ...constants.defaultServerResponse };
+  try {
+    const courseResponse = await courseModel.findOne({
+      name: serviceData.name,
+    });
+
+    if (courseResponse) {
+      response.errors = {
+        name: "course already exists",
+        status: 400,
+      };
+
+      return response;
+    }
+
+    const newData = new courseModel(serviceData);
+    const serviceResponse = await newData.save();
+    return serviceResponse;
+  } catch (error) {
+    console.log(
+      `Something went wrong service : courseService : createCourse\nError: ${error.message}`
+    );
+    throw new Error(error.message);
+  }
+};
+
+// getCourseById
+module.exports.getCourseById = async (serviceData) => {
+  try {
+    const serviceResponse = await courseModel.findById(serviceData.id);
+    const formatData = formatMongoData(serviceResponse);
+    return formatData;
+  } catch (error) {
+    console.log(
+      `Something went wrong: service : courseService : getLanguageById`
+    );
+    throw new Error(error);
+  }
+};
+
+// getAllCOu
+module.exports.getAllCourses = async (serviceData) => {
+  try {
+    const { limit = 10, skip = 0, status = true } = serviceData;
+    let conditions = {};
+    conditions.isDeleted = false;
+
+    if (status == true || status == false) {
+      conditions.status = status;
+    }
+
+    const serviceResponse = await courseModel
+      .find(conditions)
+      .skip(parseInt(skip))
+      .limit(parseInt(limit));
+
+    return formatMongoData(serviceResponse);
+  } catch (error) {
+    console.log(
+      `Something went wrong: Service: courseService: getAllCourses\nError: ${error.message}`
+    );
+    throw new Error(error);
+  }
+};
+
+// deleteService
+module.exports.deleteCourse = async (serviceData) => {
+  try {
+    const response = { ...constants.defaultServerResponse };
+
+    const serviceResponse = await courseModel.findOneAndUpdate(
+      { _id: serviceData.id },
+      { isDeleted: true },
+      { new: true }
+    );
+
+    if (!serviceResponse) {
+      response.errors = {
+        error: constants.CourseMessage.COURSE_DELETED,
+      };
+      return response;
+    }
+
+    response.body = serviceResponse;
+    response.status = 200;
+
+    return response;
+  } catch (error) {
+    console.log(`Something went wrong: service : courseService : deleteCourse`);
+    throw new Error(error);
+  }
+};
+
+// updateCourse
+module.exports.updateCourse = async (serviceData) => {
+  const response = { ...constants.defaultServerResponse };
+  try {
+    console.log(serviceData);
+    
+    const { id, body } = serviceData;
+    const serviceResponse = await courseModel.findByIdAndUpdate(id, body, {
+      new: true,
+    });
+    return formatMongoData(serviceResponse);
+  } catch (error) {
+    console.log(
+      `Something went wrong: Service : courseService : updateCourse ${error.message}`
+    );
+    throw new Error(error);
+  }
+};

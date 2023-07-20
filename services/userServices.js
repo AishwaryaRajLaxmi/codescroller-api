@@ -219,7 +219,7 @@ module.exports.updateUser = async (serviceData) => {
     return formatMongoData(dbResponse);
   } catch (error) {
     console.log(
-      `Somthing Went Wrong Service: categoryService: updateCategory`,
+      `Somthing Went Wrong Service: updateService: updateUser`,
       error.message
     );
     throw new Error(error);

@@ -6,7 +6,7 @@ module.exports.registerUser = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await userService.registerUser(req.body);
-    console.log(serviceResponse);
+   
     
     if (serviceResponse.status === 400) {
       response.errors = serviceResponse.errors;
