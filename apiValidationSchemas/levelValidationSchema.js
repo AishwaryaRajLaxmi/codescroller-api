@@ -25,6 +25,6 @@ module.exports.getLevelById = Joi.object({
 module.exports.updateLevel = Joi.object({
   name: Joi.string().trim(),
   description: Joi.string().trim().allow(""),
-  slug: Joi.string().trim(),
+  slug: Joi.string().trim().required(),
   status: Joi.boolean(),
 });
