@@ -13,7 +13,6 @@ module.exports.createLanguage = async (serviceData) => {
     if (languageResponse) {
       response.errors = {
         name: "Language already exists",
-        status: 400,
       };
       return response;
     }

@@ -17,7 +17,6 @@ module.exports.registerUser = async (serviceData) => {
     if (userResponse) {
       response.errors = {
         email: "Email already exists",
-        status: 400,
       };
       return response;
     }

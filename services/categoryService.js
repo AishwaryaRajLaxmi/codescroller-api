@@ -13,7 +13,6 @@ module.exports.createCategory = async (serviceData) => {
     if (categoryResponse) {
       response.errors = {
         name: "Category already exists",
-        status: 400,
       };
       return response;
     }

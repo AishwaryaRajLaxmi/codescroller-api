@@ -14,7 +14,6 @@ module.exports.createLevel = async (serviceData) => {
     if (levelResponse) {
       response.errors = {
         name: "Level already exists",
-        status: 400,
       };
       return response;
     }

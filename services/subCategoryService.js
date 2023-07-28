@@ -14,7 +14,6 @@ module.exports.createSubCategory = async (serviceData) => {
     if (categoryResponse) {
       response.errors = {
         name: "SubCategoryalready exists",
-        status: 400,
       };
       return response;
     }

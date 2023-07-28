@@ -13,7 +13,6 @@ module.exports.createCourse = async (serviceData) => {
     if (courseResponse) {
       response.errors = {
         name: "course already exists",
-        status: 400,
       };
 
       return response;
@@ -50,7 +49,7 @@ module.exports.getCourseById = async (serviceData) => {
 // getAllCOu
 module.exports.getAllCourses = async (serviceData) => {
   try {
-    const { limit = 10, page=1, status = "true",searchQuery } = serviceData;
+    const { limit = 10, page = 1, status = "true", searchQuery } = serviceData;
     let conditions = {};
     conditions.isDeleted = false;
 
@@ -58,22 +57,32 @@ module.exports.getAllCourses = async (serviceData) => {
       conditions.status = status;
     }
 
-     // search query
-     if (searchQuery) {
+    // search query
+    if (searchQuery) {
       const regex = new RegExp(searchQuery, "i");
-      conditions.$or = [{ name: regex }, { description: regex } ,{seoTitle:regex},{seoDescription:regex}, {instructorName:regex},{sellingPrice:regex},{prerequisite:regex},{requirements:regex},{highlights:regex}];
+      conditions.$or = [
+        { name: regex },
+        { description: regex },
+        { seoTitle: regex },
+        { seoDescription: regex },
+        { instructorName: regex },
+        { sellingPrice: regex },
+        { prerequisite: regex },
+        { requirements: regex },
+        { highlights: regex },
+      ];
     }
-     // count document
-     const totalRecords = await courseModel.countDocuments(conditions);
-     const totalPages = Math.ceil(totalRecords / parseInt(limit));
+    // count document
+    const totalRecords = await courseModel.countDocuments(conditions);
+    const totalPages = Math.ceil(totalRecords / parseInt(limit));
 
     const serviceResponse = await courseModel
       .find(conditions)
-      .skip((parseInt(page)-1)*parseInt(limit))
+      .skip((parseInt(page) - 1) * parseInt(limit))
       .limit(parseInt(limit))
-      .populate({path:"language", select:"name _id"})
-      .populate({path:"level", select:"name _id"})
-    
+      .populate({ path: "language", select: "name _id" })
+      .populate({ path: "level", select: "name _id" });
+
     const formatData = formatMongoData(serviceResponse);
     return {
       body: formatData,

@@ -13,7 +13,6 @@ module.exports.createTopic = async (serviceData) => {
     if (dbResponse) {
       response.errors = {
         name: "Topic already exists",
-        status: 400,
       };
       return response;
     }
@@ -103,7 +102,10 @@ module.exports.getTopicById = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
   console.log(serviceData.id);
   try {
-    const dbResponse = await topicModel.findOne({_id:serviceData.id,isDeleted:false});
+    const dbResponse = await topicModel.findOne({
+      _id: serviceData.id,
+      isDeleted: false,
+    });
     const formatData = formatMongoData(dbResponse);
     return formatData;
   } catch (error) {
