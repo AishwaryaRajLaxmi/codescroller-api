@@ -24,6 +24,7 @@ module.exports.getLevelById = Joi.object({
 // Update Level Validation Schema
 module.exports.updateLevel = Joi.object({
   name: Joi.string().trim(),
-  description: Joi.string().trim(),
+  description: Joi.string().trim().allow(""),
+  slug: Joi.string().trim(),
   status: Joi.boolean(),
 });

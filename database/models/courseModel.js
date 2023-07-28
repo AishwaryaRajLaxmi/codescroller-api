@@ -22,7 +22,16 @@ const courseSchema = mongoose.Schema(
       trim: true,
     },
 
-    instructor: {
+    instructorName: {
+      type: String,
+    },
+    instructorAbout: {
+      type: String,
+    },
+    instructorImage: {
+      type: String,
+    },
+    instructorDesignation: {
       type: String,
     },
 
