@@ -77,8 +77,7 @@ module.exports.deleteTopic = async (req, res) => {
 module.exports.getTopicById = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    // console.log(req.paramas.id);
-
+    
     const serviceResponse = await topicService.getTopicById(req.params);
     response.body = serviceResponse;
     response.status = 200;

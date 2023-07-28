@@ -46,7 +46,6 @@ const categorySchema = new mongoose.Schema(
       transform: (doc, ret, option) => {
         delete ret.__v;
         ret.id = ret._id;
-        delete ret._id;
         return ret;
       },
     },

@@ -67,7 +67,7 @@ const courseSchema = mongoose.Schema(
     topics: [
       {
         type: String,
-        ref:"topic"
+        ref: "topic",
       },
     ],
 
@@ -114,11 +114,7 @@ const courseSchema = mongoose.Schema(
     toObject: {
       transform: (doc, ret, option) => {
         delete ret.__v;
-        delete ret.password;
         ret.id = ret._id;
-        delete ret._id;
-        delete ret.otp;
-        delete ret.otpExpiredAt;
         return ret;
       },
     },
