@@ -6,11 +6,11 @@ const languageModel = require("../database/models/languageModel");
 module.exports.createLanguage = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const dbResponse = await languageModel.findOne({
+    const languageResponse = await languageModel.findOne({
       name: serviceData.name,
     });
 
-    if (dbResponse) {
+    if (languageResponse) {
       response.errors = {
         email: "Language already exists",
         status: 400,
@@ -23,7 +23,7 @@ module.exports.createLanguage = async (serviceData) => {
     return formatMongoData(serviceResponse);
   } catch (error) {
     console.log(
-      `Something went wrong service : userService : createLanguage\nError: ${error.message}`
+      `Something went wrong service : languageService : createLanguage\nError: ${error.message}`
     );
     throw new Error(error.message);
   }
@@ -32,24 +32,34 @@ module.exports.createLanguage = async (serviceData) => {
 // getAllLanguages
 module.exports.getAllLanguages = async (serviceData) => {
   try {
-    const { limit = 10, skip = 0, status = true } = serviceData;
+    const { limit = 10, page = 1, status = "true",searchQuery } = serviceData;
     let conditions = {};
-    // Set the condition for active users (where isDeleted is false)
+    // Set the condition for active language (where isDeleted is false)
     conditions.isDeleted = false;
 
     // status condition
-    if (status == true || status == false) {
+    if (status == "true" || status == "false") {
       conditions.status = status;
     }
 
-    const dbResponse = await languageModel
+    
+     // count document
+     const totalRecords = await languageModel.countDocuments(conditions);
+     const totalPages = Math.ceil(totalRecords / parseInt(limit));
+   
+    const languageResponse = await languageModel
       .find(conditions)
-      .skip(parseInt(skip))
+      .skip((parseInt(page)-1)*parseInt(limit))
       .limit(parseInt(limit));
 
-    const formatData = formatMongoData(dbResponse);
+    const formatData = formatMongoData(languageResponse);
     // console.log(formatData)
-    return formatData;
+    return {
+      body:formatData,
+      totalPages,
+      totalRecords,
+      page
+    }
   } catch (error) {
     console.log(
       `Something went wrong: Service: LanguageService: getAllLanguages\nError: ${error.message}`
@@ -63,21 +73,21 @@ module.exports.deleteLanguage = async (serviceData) => {
   try {
     const response = { ...constants.defaultServerResponse };
 
-    const dbResponse = await languageModel.findOneAndUpdate(
+    const languageResponse = await languageModel.findOneAndUpdate(
       { _id: serviceData.id }, // Condition to find the document
       { isDeleted: true }, // Update to set isDeleted field to true
       { new: true } // Options to return the updated document
     );
-    console.log(dbResponse);
+    console.log(languageResponse);
 
-    if (!dbResponse) {
+    if (!languageResponse) {
       response.errors = {
         error: constants.LanguageMessage.LANGUAGE_NOT_DELETED
       };
       return response;
     }
 
-    response.body = dbResponse;
+    response.body = languageResponse;
     response.status = 200;
 
     return response;
@@ -94,8 +104,8 @@ module.exports.getLanguageById = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
   console.log(serviceData.id)
   try {
-    const dbResponse = await languageModel.findById(serviceData.id);
-    const formatData = formatMongoData(dbResponse);
+    const languageResponse = await languageModel.findOne({_id:serviceData.id,isDeleted:false});
+    const formatData = formatMongoData(languageResponse);
     return formatData;
   } catch (error) {
     console.log(`Something went wrong: service : LaaguageService : getLanguageById`);
@@ -109,11 +119,11 @@ module.exports.updateLanguage = async (serviceData) => {
 
   try {
     const { id, body } = serviceData;
-    const dbResponse = await languageModel.findByIdAndUpdate(id, body, {
+    const languageResponse = await languageModel.findByIdAndUpdate(id, body, {
       new: true,
     });
-    console.log(dbResponse);
-    return formatMongoData(dbResponse);
+    console.log(languageResponse);
+    return formatMongoData(languageResponse);
   } catch (error) {
     console.log(
       `Somthing Went Wrong Service: LanguageService: updateLanguage`,

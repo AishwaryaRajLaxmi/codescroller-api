@@ -5,15 +5,15 @@ const { customCallback } = require("../helpers/joiHelper");
 module.exports.createLanguage = Joi.object({
   name: Joi.string().trim().required().label("Name"),
   description: Joi.string(),
-  isDeleted: Joi.boolean().required(),
-  status: Joi.boolean().required(),
+  
 });
 
 // getAllLanguage
 module.exports.getAllLanguages = Joi.object({
-  skip: Joi.string(),
-  limit: Joi.string(),
-  status: Joi.boolean(),
+  page: Joi.number(),
+  limit: Joi.number(),
+  status: Joi.string().valid("true","false","All"),
+  searchQuery:Joi.string().allow(""),
 });
 
 //getLanguageById

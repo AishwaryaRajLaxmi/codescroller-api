@@ -15,7 +15,7 @@ module.exports.createCourse = Joi.object({
   courseTag: Joi.string(),
   language: Joi.string().custom(customCallback).required(),
   level: Joi.string().custom(customCallback).required(),
-  categories: Joi.array().items({}),
+  categories: Joi.array(),
   subCategories: Joi.array(),
   topics: Joi.array(),
   highlights: Joi.string(),
@@ -27,14 +27,13 @@ module.exports.createCourse = Joi.object({
   isReturnable: Joi.boolean(),
   returnDays: Joi.number(),
   courseStatus: Joi.string(),
-  status: Joi.boolean().required(),
 });
 
 // getAllCourses
 module.exports.getAllCourses = Joi.object({
-  skip: Joi.string(),
+  page: Joi.string(),
   limit: Joi.string(),
-  status: Joi.boolean(),
+  status: Joi.string().valid("true", "false", "All"),
 });
 
 //getCourseById

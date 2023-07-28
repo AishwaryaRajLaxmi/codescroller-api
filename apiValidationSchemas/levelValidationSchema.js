@@ -5,15 +5,14 @@ const { customCallback } = require("../helpers/joiHelper");
 module.exports.createLevel = Joi.object({
   name: Joi.string().trim().required().label("Name"),
   description: Joi.string(),
-  isDeleted: Joi.boolean().required(),
-  status: Joi.boolean().required(),
 });
 
 // getAllLevel
 module.exports.getAllLevels = Joi.object({
-  skip: Joi.string(),
-  limit: Joi.string(),
-  status: Joi.boolean(),
+  page: Joi.number(),
+  limit: Joi.number(),
+  status: Joi.string().valid("true", "false", "All"),
+  searchQuery: Joi.string().allow(""),
 });
 
 //getLevelById

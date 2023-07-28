@@ -25,6 +25,14 @@ const languageSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    toObject: {
+      transform: (doc, ret, option) => {
+        delete ret.__v;
+        ret.id = ret._id;
+        delete ret._id;
+        return ret;
+      },
+    },
   }
 );
 

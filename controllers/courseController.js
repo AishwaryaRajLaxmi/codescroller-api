@@ -1,7 +1,7 @@
 const constants = require("../helpers/constants");
 const courseService = require("../services/courseService");
 
-// createUser
+// createCourse
 module.exports.createCourse = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {

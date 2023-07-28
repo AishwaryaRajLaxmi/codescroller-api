@@ -33,7 +33,10 @@ module.exports.createCourse = async (serviceData) => {
 // getCourseById
 module.exports.getCourseById = async (serviceData) => {
   try {
-    const serviceResponse = await courseModel.findById(serviceData.id);
+    const serviceResponse = await courseModel.findOne({
+      _id: serviceData.id,
+      isDeleted: false,
+    });
     const formatData = formatMongoData(serviceResponse);
     return formatData;
   } catch (error) {
@@ -47,20 +50,32 @@ module.exports.getCourseById = async (serviceData) => {
 // getAllCOu
 module.exports.getAllCourses = async (serviceData) => {
   try {
-    const { limit = 10, skip = 0, status = true } = serviceData;
+    const { limit = 10, page=1, status = "true",searchQuery } = serviceData;
     let conditions = {};
     conditions.isDeleted = false;
 
-    if (status == true || status == false) {
+    if (status == "true" || status == "false") {
       conditions.status = status;
     }
 
+     // count document
+     const totalRecords = await courseModel.countDocuments(conditions);
+     const totalPages = Math.ceil(totalRecords / parseInt(limit));
+
     const serviceResponse = await courseModel
       .find(conditions)
-      .skip(parseInt(skip))
-      .limit(parseInt(limit));
-
-    return formatMongoData(serviceResponse);
+      .skip((parseInt(page)-1)*parseInt(limit))
+      .limit(parseInt(limit))
+      .populate({path:"language", select:"name _id"})
+      .populate({path:"level", select:"name _id"})
+    
+    const formatData = formatMongoData(serviceResponse);
+    return {
+      body: formatData,
+      totalPages,
+      totalRecords,
+      page,
+    };
   } catch (error) {
     console.log(
       `Something went wrong: Service: courseService: getAllCourses\nError: ${error.message}`
@@ -102,7 +117,7 @@ module.exports.updateCourse = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
   try {
     console.log(serviceData);
-    
+
     const { id, body } = serviceData;
     const serviceResponse = await courseModel.findByIdAndUpdate(id, body, {
       new: true,

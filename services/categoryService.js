@@ -107,7 +107,10 @@ module.exports.deleteCategory = async (serviceData) => {
 module.exports.getCategoryById = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const dbResponse = await categoryModel.findById(serviceData.id);
+    const dbResponse = await categoryModel.findOne({
+      _id: serviceData.id,
+      isDeleted: false,
+    });
     const formatData = formatMongoData(dbResponse);
     return formatData;
   } catch (error) {
@@ -121,9 +124,13 @@ module.exports.getCategoryById = async (serviceData) => {
 module.exports.updateCategory = async (serviceData) => {
   try {
     const { id, body } = serviceData;
-    const dbResponse = await categoryModel.findByIdAndUpdate(id, body, {
-      new: true,
-    });
+    const dbResponse = await categoryModel.findOneAndUpdate(
+      { _id: id, isDeleted: false },
+      body,
+      { new: true }
+    );
+    console.log(dbResponse);
+    
     return formatMongoData(dbResponse);
   } catch (error) {
     console.log(

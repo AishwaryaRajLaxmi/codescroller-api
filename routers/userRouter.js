@@ -8,6 +8,7 @@ const {
   validateQuery,
 } = require("../middlewares/joiSchemaValidation");
 const jwtValidation = require("../middlewares/jwtValidation");
+
 // registerUser
 userRouter.post(
   "/register",
@@ -47,6 +48,7 @@ userRouter.get(
 );
 
 // updateUser
+
 userRouter.put(
   "/:id",
   validateParams(userValidationSchema.getUserById),
@@ -54,6 +56,7 @@ userRouter.put(
   validateBody(userValidationSchema.updateUser),
   userController.updateUser
 );
+
 
 // isMobileExists
 userRouter.get(

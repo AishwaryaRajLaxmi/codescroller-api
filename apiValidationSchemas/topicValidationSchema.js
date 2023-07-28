@@ -25,8 +25,8 @@ module.exports.getTopicById = Joi.object({
 
 // Update Topic Validation Schema
 module.exports.updateTopic = Joi.object({
-  name: Joi.string().trim().required().label("Name"),
-  slug: Joi.string().trim().required().label("Slug"),
+  name: Joi.string().trim().label("Name"),
+  slug: Joi.string().trim().label("Slug"),
   description: Joi.string().trim().label("Description"),
   status: Joi.boolean().label("Status"),
   seoDescription: Joi.string().label("SEO Description"),

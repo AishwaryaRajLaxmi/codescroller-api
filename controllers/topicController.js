@@ -6,7 +6,6 @@ module.exports.createTopic = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await topicService.createTopic(req.body);
-    // console.log(serviceResponse);
 
     if (serviceResponse.status === 400) {
       response.errors = serviceResponse.errors;

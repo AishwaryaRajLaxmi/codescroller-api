@@ -109,7 +109,7 @@ module.exports.getSubCategoryById = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const dbResponse = await subCategoryModel
-      .findById(serviceData.id)
+      .findOne({ _id: serviceData.id, isDeleted: false })
       .populate({ path: "category", select: "name _id" });
     const formatData = formatMongoData(dbResponse);
     return formatData;
@@ -126,9 +126,13 @@ module.exports.getSubCategoryById = async (serviceData) => {
 module.exports.updateSubCategory = async (serviceData) => {
   try {
     const { id, body } = serviceData;
-    const dbResponse = await subCategoryModel.findByIdAndUpdate(id, body, {
-      new: true,
-    });
+    const dbResponse = await subCategoryModel.findOneAndUpdate(
+      { _id: serviceData.id, isDeleted: false },
+      body,
+      {
+        new: true,
+      }
+    );
     return formatMongoData(dbResponse);
   } catch (error) {
     console.log(

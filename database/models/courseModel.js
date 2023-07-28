@@ -52,14 +52,14 @@ const courseSchema = mongoose.Schema(
     },
     categories: [
       {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "category",
       },
     ],
 
     subCategories: [
       {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "subCategory",
       },
     ],
@@ -67,6 +67,7 @@ const courseSchema = mongoose.Schema(
     topics: [
       {
         type: String,
+        ref:"topic"
       },
     ],
 

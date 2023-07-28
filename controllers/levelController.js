@@ -33,6 +33,9 @@ module.exports.getAllLevels = async (req, res) => {
     const serviceResponse = await levelService.getAllLevels(req.query);
 
     response.body = serviceResponse;
+    response.totalPages = serviceResponse.totalPages;
+    response.totalRecords = serviceResponse.totalRecords;
+    response.page = serviceResponse.page;
     response.status = 200;
     response.message = constants.LevelMessage.LEVEL_FETCHED;
   } catch (error) {
@@ -93,7 +96,6 @@ module.exports.getLevelById = async (req, res) => {
     response.errors = error;
   }
   res.status(response.status).send(response);
-
 };
 
 // updateLevel

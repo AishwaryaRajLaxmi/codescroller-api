@@ -15,7 +15,7 @@ module.exports.createCategory = Joi.object({
 module.exports.getAllCategories = Joi.object({
   page: Joi.number(),
   limit: Joi.number(),
-  status: Joi.string().valid("true", "false", "All"),
+   status: Joi.string().valid("true", "false", "All"),
   searchQuery: Joi.string().allow(""),
 });
 

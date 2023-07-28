@@ -77,9 +77,14 @@ module.exports.getCategoryById = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await categoryService.getCategoryById(req.params);
-    response.body = serviceResponse;
-    response.status = 200;
-    response.message = constants.CategoryMessage.CATEGORY_FETCHED;
+
+    if (serviceResponse) {
+      response.body = serviceResponse;
+      response.status = 200;
+      response.message = constants.CategoryMessage.CATEGORY_FETCHED;
+    } else {
+      response.message = constants.CategoryMessage.CATEGORY_NOT_FETCHED;
+    }
   } catch (error) {
     console.log(`Something went wrong:controller:categoryController: getCategoryById
     Error:${error.message}`);

@@ -15,7 +15,7 @@ module.exports.createSubCategory = Joi.object({
 module.exports.getAllSubCategories = Joi.object({
   page: Joi.string(),
   limit: Joi.string(),
-  status: Joi.string().valid("true", "false", "All"),
+    status: Joi.string().valid("true", "false", "All"),
   searchQuery: Joi.string().allow(""),
 });
 
@@ -31,6 +31,6 @@ module.exports.updateSubCategory = Joi.object({
   description: Joi.string().trim().allow("").label("Description"),
   seoTitle: Joi.string().trim().allow("").label("SEO Title"),
   seoDescription: Joi.string().trim().allow("").label("SEO Description"),
-  category: Joi.custom(customCallback).required().label("Category"),
-  status: Joi.boolean().required().label("Status"),
+  category: Joi.custom(customCallback).label("Category"),
+  status: Joi.boolean().label("Status"),
 });

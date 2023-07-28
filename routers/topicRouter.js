@@ -14,7 +14,7 @@ const {
 } = require("../middlewares/joiSchemaValidation");
 const { validateAdminToken } = require("../middlewares/jwtValidation");
 
-// createCategory
+// createTopic
 topicRouter.post(
   "/",
   validateAdminToken,
@@ -25,8 +25,8 @@ topicRouter.post(
 //getAllTopics
 topicRouter.get(
   "/",
-  validateAdminToken,
   validateQuery(getAllTopics),
+  validateAdminToken,
   topicController.getAllTopics
 );
 

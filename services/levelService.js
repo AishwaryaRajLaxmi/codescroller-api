@@ -34,25 +34,34 @@ module.exports.createLevel = async (serviceData) => {
 // getAllLevels
 module.exports.getAllLevels = async (serviceData) => {
   // console.log(serviceData);
-  
+
   try {
-    const { limit = 10, skip = 0, status = true } = serviceData;
+    const { limit = 10, page = 1, status = "true", searchQuery } = serviceData;
     let conditions = {};
     // Set the condition for active levels (where isDeleted is false)
     conditions.isDeleted = false;
 
     // status condition
-    if (status == true || status == false) {
+    if (status == "true" || status == "false") {
       conditions.status = status;
     }
 
-    const dbResponse = await levelModel
+    // count document
+    const totalRecords = await levelModel.countDocuments(conditions);
+    const totalPages = Math.ceil(totalRecords / parseInt(limit));
+
+    const levelResponse = await levelModel
       .find(conditions)
-      .skip(parseInt(skip))
+      .skip((parseInt(page) - 1) * parseInt(limit))
       .limit(parseInt(limit));
 
-    const formatData = formatMongoData(dbResponse);
-    return formatData;
+    const formatData = formatMongoData(levelResponse);
+    return {
+      body: formatData,
+      totalPages,
+      totalRecords,
+      page,
+    };
   } catch (error) {
     console.log(
       `Something went wrong: Service: levelService: getAllLevels\nError: ${error.message}`
@@ -64,25 +73,25 @@ module.exports.getAllLevels = async (serviceData) => {
 // deleteLevel
 module.exports.deleteLevel = async (serviceData) => {
   console.log(serviceData);
-  
+
   try {
     const response = { ...constants.defaultServerResponse };
 
-    const dbResponse = await levelModel.findOneAndUpdate(
+    const levelResponse = await levelModel.findOneAndUpdate(
       { _id: serviceData.id }, // Condition to find the document
       { isDeleted: true }, // Update to set isDeleted field to true
       { new: true } // Options to return the updated document
     );
 
-    console.log(dbResponse)
-    if (!dbResponse) {
+    console.log(levelResponse);
+    if (!levelResponse) {
       response.errors = {
         error: constants.LevelMessage.LEVEL_NOT_DELETED,
       };
       return response;
     }
 
-    response.body = dbResponse;
+    response.body = levelResponse;
     response.status = 200;
 
     return response;
@@ -98,8 +107,11 @@ module.exports.deleteLevel = async (serviceData) => {
 module.exports.getLevelById = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const dbResponse = await levelModel.findById(serviceData.id);
-    const formatData = formatMongoData(dbResponse);
+    const levelResponse = await levelModel.findOne({
+      _id: serviceData.id,
+      isDeleted: false,
+    });
+    const formatData = formatMongoData(levelResponse);
     return formatData;
   } catch (error) {
     console.log(
@@ -113,10 +125,10 @@ module.exports.getLevelById = async (serviceData) => {
 module.exports.updateLevel = async (serviceData) => {
   try {
     const { id, body } = serviceData;
-    const dbResponse = await levelModel.findByIdAndUpdate(id, body, {
+    const levelResponse = await levelModel.findByIdAndUpdate(id, body, {
       new: true,
     });
-    return formatMongoData(dbResponse);
+    return formatMongoData(levelResponse);
   } catch (error) {
     console.log(
       `Somthing Went Wrong Service: levelService: updateLevel`,
