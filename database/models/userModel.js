@@ -63,7 +63,7 @@ const userSchema = mongoose.Schema(
     isDeleted: {
       type: Boolean,
       default: false,
-      required:true,
+      required: true,
     },
     isVerified: {
       type: Boolean,
@@ -78,7 +78,6 @@ const userSchema = mongoose.Schema(
         delete ret.__v;
         delete ret.password;
         ret.id = ret._id;
-        delete ret._id;
         delete ret.otp;
         delete ret.otpExpiredAt;
         return ret;

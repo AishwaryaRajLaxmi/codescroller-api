@@ -8,8 +8,7 @@ module.exports.createSubCategory = async (req, res) => {
     const serviceResponse = await subCategoryService.createSubCategory(
       req.body
     );
-    console.log(req.body);
-    
+
     if (serviceResponse.status === 400) {
       response.errors = serviceResponse.errors;
       response.status = 400; // Set the response status to 400
@@ -36,7 +35,10 @@ module.exports.getAllSubCategories = async (req, res) => {
     const serviceResponse = await subCategoryService.getAllSubCategories(
       req.query
     );
-    response.body = serviceResponse;
+    response.body = serviceResponse.body;
+    response.totalPages = serviceResponse.totalPages;
+    response.totalRecords = serviceResponse.totalRecords;
+    response.page = serviceResponse.page;
     response.status = 200;
     response.message = constants.SubCategoryMessage.SUB_CATEGORY_FETCHED;
   } catch (error) {

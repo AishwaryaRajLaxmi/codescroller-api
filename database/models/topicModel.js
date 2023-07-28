@@ -35,11 +35,18 @@ const topicSchema = new mongoose.Schema(
     isDeleted: {
       type: Boolean,
       default: false,
-      required:true,
+      required: true,
     },
   },
   {
     timestamps: true,
+    toObject: {
+      transform: (doc, ret, option) => {
+        delete ret.__v;
+        ret.id = ret._id;
+        return ret;
+      },
+    },
   }
 );
 

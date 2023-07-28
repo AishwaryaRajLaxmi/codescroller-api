@@ -12,7 +12,7 @@ module.exports.createTopic = async (serviceData) => {
 
     if (dbResponse) {
       response.errors = {
-        email: "Topic already exists",
+        name: "Topic already exists",
         status: 400,
       };
       return response;
@@ -32,24 +32,36 @@ module.exports.createTopic = async (serviceData) => {
 // getAllTopics
 module.exports.getAllTopics = async (serviceData) => {
   try {
-    const { limit = 10, skip = 0, status = true } = serviceData;
+    const { limit = 10, page = 1, status = "true", searchQuery } = serviceData;
     let conditions = {};
-    // Set the condition for active users (where isDeleted is false)
     conditions.isDeleted = false;
 
     // status condition
-    if (status == true || status == false) {
+    if (status == "true" || status == "false") {
       conditions.status = status;
     }
+    // search query
+    if (searchQuery) {
+      const regex = new RegExp(searchQuery, "i");
+      conditions.$or = [{ name: regex }, { email: regex }, { mobile: regex }];
+    }
+
+    // count document
+    const totalRecords = await topicModel.countDocuments(conditions);
+    const totalPages = Math.ceil(totalRecords / parseInt(limit));
 
     const dbResponse = await topicModel
       .find(conditions)
-      .skip(parseInt(skip))
+      .skip((parseInt(page) - 1) * parseInt(limit))
       .limit(parseInt(limit));
 
     const formatData = formatMongoData(dbResponse);
-    // console.log(formatData)
-    return formatData;
+    return {
+      body: formatData,
+      totalPages,
+      totalRecords,
+      page,
+    };
   } catch (error) {
     console.log(
       `Something went wrong: Service: TopicService: getAllTopics\nError: ${error.message}`
@@ -68,7 +80,6 @@ module.exports.deleteTopic = async (serviceData) => {
       { isDeleted: true }, // Update to set isDeleted field to true
       { new: true } // Options to return the updated document
     );
-    console.log(dbResponse);
 
     if (!dbResponse) {
       response.errors = {

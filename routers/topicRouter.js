@@ -12,17 +12,29 @@ const {
   validateParams,
   validateQuery,
 } = require("../middlewares/joiSchemaValidation");
+const { validateAdminToken } = require("../middlewares/jwtValidation");
 
 // createCategory
-topicRouter.post("/", validateBody(createTopic), topicController.createTopic);
+topicRouter.post(
+  "/",
+  validateAdminToken,
+  validateBody(createTopic),
+  topicController.createTopic
+);
 
 //getAllTopics
-topicRouter.get("/", validateQuery(getAllTopics), topicController.getAllTopics);
+topicRouter.get(
+  "/",
+  validateAdminToken,
+  validateQuery(getAllTopics),
+  topicController.getAllTopics
+);
 
 // deleteTopic
 topicRouter.delete(
   "/:id",
   validateParams(getTopicById),
+  validateAdminToken,
   topicController.deleteTopic
 );
 
@@ -30,6 +42,7 @@ topicRouter.delete(
 topicRouter.get(
   "/:id",
   validateParams(getTopicById),
+  validateAdminToken,
   topicController.getTopicById
 );
 
@@ -37,6 +50,7 @@ topicRouter.get(
 topicRouter.put(
   "/:id",
   validateParams(getTopicById),
+  validateAdminToken,
   validateBody(updateTopic),
   topicController.updateTopic
 );

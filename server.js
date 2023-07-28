@@ -1,6 +1,7 @@
 // import express and creating app
 const express = require("express");
 const app = express();
+const cors = require("cors");
 
 const dotEnv = require("dotenv");
 dotEnv.config();
@@ -9,11 +10,14 @@ dotEnv.config();
 const dbConnection = require("./database/connection");
 dbConnection.connect();
 
+// cors enabled
+app.use(cors());
 // middleware for converting request into json
 app.use(express.json());
 
 // register the router
 app.use("/api/v1/users", require("./routers/userRouter"));
+app.use("/api/v1/admins", require("./routers/adminRouter"));
 app.use("/api/v1/categories", require("./routers/categoryRouter"));
 app.use("/api/v1/levels", require("./routers/levelRouter"));
 app.use("/api/v1/languages", require("./routers/languageRouter"));

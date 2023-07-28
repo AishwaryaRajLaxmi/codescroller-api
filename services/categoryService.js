@@ -1,4 +1,3 @@
-const bcrypt = require("bcrypt");
 const constants = require("../helpers/constants");
 const { formatMongoData } = require("../helpers/dbHelper");
 const categoryModel = require("../database/models/categoryModel");
@@ -33,24 +32,38 @@ module.exports.createCategory = async (serviceData) => {
 // getAllCategories
 module.exports.getAllCategories = async (serviceData) => {
   try {
-    const { limit = 10, skip = 0, status = true } = serviceData;
+    const { limit = 10, page = 1, status = "true", searchQuery } = serviceData;
     let conditions = {};
     // Set the condition for active users (where isDeleted is false)
     conditions.isDeleted = false;
 
     // status condition
-    if (status == true || status == false) {
+    if (status == "true" || status == "false") {
       conditions.status = status;
     }
 
+    // search query
+    if (searchQuery) {
+      const regex = new RegExp(searchQuery, "i");
+      conditions.$or = [{ name: regex }, { slug: regex }];
+    }
+
+    // count document
+    const totalRecords = await categoryModel.countDocuments(conditions);
+    const totalPages = Math.ceil(totalRecords / parseInt(limit));
+
     const dbResponse = await categoryModel
       .find(conditions)
-      .skip(parseInt(skip))
+      .skip((parseInt(page) - 1) * parseInt(limit))
       .limit(parseInt(limit));
 
     const formatData = formatMongoData(dbResponse);
-    // console.log(formatData)
-    return formatData;
+    return {
+      body: formatData,
+      totalPages,
+      totalRecords,
+      page,
+    };
   } catch (error) {
     console.log(
       `Something went wrong: Service: categoryService: getAllCategories\nError: ${error.message}`

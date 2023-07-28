@@ -6,15 +6,12 @@ module.exports.registerUser = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await userService.registerUser(req.body);
-   
-    
+
     if (serviceResponse.status === 400) {
       response.errors = serviceResponse.errors;
-     
     } else {
       response.body = serviceResponse;
       response.message = constants.UserMessage.USER_REGISTERED;
-    
     }
   } catch (error) {
     console.log(
@@ -97,7 +94,7 @@ module.exports.getAllUsers = async (req, res) => {
     response.body = serviceResponse.body;
     response.totalPages = serviceResponse.totalPages;
     response.totalRecords = serviceResponse.totalRecords;
-    response.currentPage = serviceResponse.currentPage;
+    response.page = serviceResponse.page;
     response.status = 200;
     response.message = constants.UserMessage.USER_FETCHED;
   } catch (error) {

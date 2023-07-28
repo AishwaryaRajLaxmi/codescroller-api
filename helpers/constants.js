@@ -11,6 +11,36 @@ module.exports = {
     TOKEN_MISSING: "Token is Missing, Login First",
   },
 
+  authMessage: {
+    EMAIL_EXISTS: "Email already Exists!",
+    NEED_VERIFICATION: "Account Exists, Need Verification",
+    NEED_LOGIN: "Account Exists, Need Login",
+    ACCOUNT_DISABLED: "Sorry Your Account is Disabled",
+    ACCOUNT_NOT_VERIFIED: "Your Account is Not Verified, Verify First",
+    INVALID_EMAIL: "Invalid Email!",
+    OTP_FAILED: "OTP Failed",
+    OTP_SUCCESS: "OTP Send Successfully !",
+    INVALID_PASSWORD: "Password is Wrong!",
+    LOGIN_SUCCESS: "Successfully Logedin",
+    LOGIN_FAILED: "Login Failed !",
+    REGISTRATION_SUCCESS: "Registration Successfully !",
+    REGISTRATION_FAILED: "Registration Failed !",
+    ACCOUNT_VALIDATED: "Account Validated Successfully !",
+  },
+
+  adminMessage: {
+    CUSTOMER_CREATED: "Admin Register Successfully!",
+    PASSWORD_UPDATED: "Password Updated Successfully!",
+    PASSWORD_NOT_UPDATED: "OOPS ! Password Not Updated !",
+    OLD_PASSWORD_NOT_MATCHED: "OOPS ! Old Password is not Matched !",
+    PROFILE_NOT_UPDATED: "OOPS ! Profile Not Updated !",
+    PROFILE_UPDATED: "Profile Updated Successfully !",
+    PROFILE_FETCHED: "Profile Fetched Successfully !",
+    ACCOUNT_FOUND: "Account Found Successfully !",
+    ACCOUNT_NOT_FOUND: "Account Not Found !",
+    PROFILE_NOT_FETCHED: "OOPS ! Profile Not Fetched !",
+  },
+
   UserMessage: {
     USER_REGISTERED: "USER Registered Successfully",
     USER_FETCHED: "USER Fetched Successfully",

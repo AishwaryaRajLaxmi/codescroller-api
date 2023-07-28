@@ -45,9 +45,7 @@ const categorySchema = new mongoose.Schema(
     toObject: {
       transform: (doc, ret, option) => {
         delete ret.__v;
-        delete ret.password;
         ret.id = ret._id;
-        delete ret._id;
         return ret;
       },
     },

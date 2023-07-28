@@ -33,23 +33,39 @@ module.exports.createSubCategory = async (serviceData) => {
 // getAllSubCategories
 module.exports.getAllSubCategories = async (serviceData) => {
   try {
-    const { limit = 10, skip = 0, status = true } = serviceData;
+    const { limit = 10, page = 1, status = "true", searchQuery } = serviceData;
     let conditions = {};
     // Set the condition for active users (where isDeleted is false)
     conditions.isDeleted = false;
 
     // status condition
-    if (status == true || status == false) {
+    if (status == "true" || status == "false") {
       conditions.status = status;
     }
 
+    // search query
+    if (searchQuery) {
+      const regex = new RegExp(searchQuery, "i");
+      conditions.$or = [{ name: regex }, { slug: regex }];
+    }
+
+    // count document
+    const totalRecords = await subCategoryModel.countDocuments(conditions);
+    const totalPages = Math.ceil(totalRecords / parseInt(limit));
+
     const dbResponse = await subCategoryModel
       .find(conditions)
-      .skip(parseInt(skip))
+      .skip((parseInt(page) - 1) * parseInt(limit))
+      .populate({ path: "category", select: "name _id" })
       .limit(parseInt(limit));
 
     const formatData = formatMongoData(dbResponse);
-    return formatData;
+    return {
+      body: formatData,
+      totalPages,
+      totalRecords,
+      page,
+    };
   } catch (error) {
     console.log(
       `Something went wrong: Service: subcategoryService: getAllSubCategories\nError: ${error.message}`
@@ -68,12 +84,10 @@ module.exports.deleteSubCategory = async (serviceData) => {
       { isDeleted: true }, // Update to set isDeleted field to true
       { new: true } // Options to return the updated document
     );
-    
-
 
     if (!dbResponse) {
       response.errors = {
-        error: constants.SubCategoryMessage.SUB_CATEGORY_DELETED
+        error: constants.SubCategoryMessage.SUB_CATEGORY_DELETED,
       };
       return response;
     }
@@ -94,11 +108,15 @@ module.exports.deleteSubCategory = async (serviceData) => {
 module.exports.getSubCategoryById = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const dbResponse = await subCategoryModel.findById(serviceData.id);
+    const dbResponse = await subCategoryModel
+      .findById(serviceData.id)
+      .populate({ path: "category", select: "name _id" });
     const formatData = formatMongoData(dbResponse);
     return formatData;
   } catch (error) {
-    console.log(`Something went wrong: service : subCategoryService : deletecategoryservice`);
+    console.log(
+      `Something went wrong: service : subCategoryService : deletecategoryservice`
+    );
     throw new Error(error);
   }
 };

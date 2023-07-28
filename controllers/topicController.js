@@ -32,7 +32,10 @@ module.exports.getAllTopics = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await topicService.getAllTopics(req.query);
-    response.body = serviceResponse;
+    response.body = serviceResponse.body;
+    response.totalPages = serviceResponse.totalPages;
+    response.totalRecords = serviceResponse.totalRecords;
+    response.page = serviceResponse.page;
     response.status = 200;
     response.message = constants.TopicMessage.TOPIC_FETCHED;
   } catch (error) {
@@ -52,7 +55,7 @@ module.exports.deleteTopic = async (req, res) => {
     const serviceResponse = await topicService.deleteTopic(req.params);
     if (serviceResponse.status == 200) {
       response.body = serviceResponse.body;
-      response.message = constants.TopicMessage.Topic_DELETED;
+      response.message = constants.TopicMessage.TOPIC_DELETED;
       response.status = 200;
     } else {
       response.message = constants.TopicMessage.TOPIC_DELETED;

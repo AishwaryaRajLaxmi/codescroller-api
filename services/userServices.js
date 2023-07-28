@@ -128,24 +128,36 @@ module.exports.isEmailExists = async (serviceData) => {
 // getAllUsers
 module.exports.getAllUsers = async (serviceData) => {
   try {
-    const { limit = 10, page = 1, status = true, isVerified } = serviceData;
+    const {
+      limit = 10,
+      page = 1,
+      status = "true",
+      isVerified,
+      searchQuery,
+    } = serviceData;
     let conditions = {};
+
     // Set the condition for active users (where isDeleted is false)
     conditions.isDeleted = false;
 
     // Verification condition
-    if (isVerified == true || isVerified == false)
+    if (isVerified == "true" || isVerified == "false")
       conditions.isVerified = isVerified;
 
     // status condition
-    if (status == true || status == false) {
+    if (status == "true" || status == "false") {
       conditions.status = status;
     }
 
-    // count documet
+    // search query
+    if (searchQuery) {
+      const regex = new RegExp(searchQuery, "i");
+      conditions.$or = [{ name: regex }, { email: regex }, { mobile: regex }];
+    }
+
+    // count document
     const totalRecords = await userModel.countDocuments(conditions);
     const totalPages = Math.ceil(totalRecords / parseInt(limit));
-    const currentPage = page;
 
     const dbResponse = await userModel
       .find(conditions)
@@ -157,7 +169,7 @@ module.exports.getAllUsers = async (serviceData) => {
       body: formatData,
       totalPages,
       totalRecords,
-      currentPage,
+      page,
     };
   } catch (error) {
     console.log(

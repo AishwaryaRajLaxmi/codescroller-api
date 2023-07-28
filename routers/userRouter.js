@@ -1,62 +1,70 @@
 const express = require("express");
 const userRouter = express.Router();
 const userController = require("../controllers/userController");
-const {
-  registerUser,
-  loginUser,
-  getAllUsers,
-  getUserById,
-  updateUser,
-  isMobileExists,
-  isEmailExists,
-} = require("../apiValidationSchemas/userValidationSchema");
+const userValidationSchema = require("../apiValidationSchemas/userValidationSchema");
 const {
   validateBody,
   validateParams,
   validateQuery,
 } = require("../middlewares/joiSchemaValidation");
-
+const jwtValidation = require("../middlewares/jwtValidation");
 // registerUser
 userRouter.post(
   "/register",
-  validateBody(registerUser),
+  validateBody(userValidationSchema.registerUser),
   userController.registerUser
 );
 
 // loginUser
-userRouter.post("/login", validateBody(loginUser), userController.loginUser);
+userRouter.post(
+  "/login",
+  validateBody(userValidationSchema.loginUser),
+  userController.loginUser
+);
 
 //getAllUser
-userRouter.get("/", validateQuery(getAllUsers), userController.getAllUsers);
+userRouter.get(
+  "/",
+  jwtValidation.validateAdminToken,
+  validateQuery(userValidationSchema.getAllUsers),
+  userController.getAllUsers
+);
 
 // deleteUser
 userRouter.delete(
   "/:id",
-  validateParams(getUserById),
+  validateParams(userValidationSchema.getUserById),
+  jwtValidation.validateAdminToken,
   userController.deleteUser
 );
 
 // getUser
-userRouter.get("/:id", validateParams(getUserById), userController.getUserById);
+userRouter.get(
+  "/:id",
+  jwtValidation.validateAdminToken,
+  validateParams(userValidationSchema.getUserById),
+  userController.getUserById
+);
 
 // updateUser
 userRouter.put(
   "/:id",
-  validateParams(getUserById),
-  validateBody(updateUser),
+  validateParams(userValidationSchema.getUserById),
+  jwtValidation.validateAdminToken,
+  validateBody(userValidationSchema.updateUser),
   userController.updateUser
 );
 
 // isMobileExists
 userRouter.get(
   "/isMobileExists/:mobile",
-  validateParams(isMobileExists),
+  validateParams(userValidationSchema.isMobileExists),
   userController.isMobileExists
 );
 // isEmailExists
 userRouter.get(
   "/isEmailExists/:email",
-  validateParams(isEmailExists),
+  validateParams(userValidationSchema.isEmailExists),
   userController.isEmailExists
 );
 

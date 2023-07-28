@@ -30,7 +30,10 @@ module.exports.getAllCategories = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await categoryService.getAllCategories(req.query);
-    response.body = serviceResponse;
+    response.body = serviceResponse.body;
+    response.totalPages = serviceResponse.totalPages;
+    response.totalRecords = serviceResponse.totalRecords;
+    response.page = serviceResponse.page;
     response.status = 200;
     response.message = constants.CategoryMessage.CATEGORY_FETCHED;
   } catch (error) {
