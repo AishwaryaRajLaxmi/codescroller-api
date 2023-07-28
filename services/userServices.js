@@ -86,8 +86,6 @@ module.exports.isMobileExists = async (serviceData) => {
       mobile: serviceData.mobile,
     });
 
-    console.log(serviceData.mobile);
-
     if (userResponse) {
       return true;
     } else {
@@ -108,8 +106,6 @@ module.exports.isEmailExists = async (serviceData) => {
     const userResponse = await userModel.findOne({
       email: serviceData.email,
     });
-
-    console.log(serviceData.email);
 
     if (userResponse) {
       return true;

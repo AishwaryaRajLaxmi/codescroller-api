@@ -81,7 +81,7 @@ module.exports.deleteCategory = async (serviceData) => {
       { isDeleted: true }, // Update to set isDeleted field to true
       { new: true } // Options to return the updated document
     );
-    console.log(dbResponse);
+    
 
     if (!dbResponse) {
       response.errors = {

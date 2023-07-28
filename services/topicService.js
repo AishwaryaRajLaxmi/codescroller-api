@@ -100,7 +100,7 @@ module.exports.deleteTopic = async (serviceData) => {
 // getTopicById
 module.exports.getTopicById = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
-  console.log(serviceData.id);
+  
   try {
     const dbResponse = await topicModel.findOne({
       _id: serviceData.id,
@@ -124,7 +124,7 @@ module.exports.updateTopic = async (serviceData) => {
     const dbResponse = await topicModel.findByIdAndUpdate(id, body, {
       new: true,
     });
-    console.log(dbResponse);
+   
     return formatMongoData(dbResponse);
   } catch (error) {
     console.log(

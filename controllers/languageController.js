@@ -77,7 +77,7 @@ module.exports.deleteLanguage = async (req, res) => {
 module.exports.getLanguageById = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    // console.log(req.paramas.id);
+   
 
     const serviceResponse = await LanguageService.getLanguageById(req.params);
     response.body = serviceResponse;

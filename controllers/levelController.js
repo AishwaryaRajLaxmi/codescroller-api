@@ -52,7 +52,7 @@ module.exports.getAllLevels = async (req, res) => {
 // deleteLevel
 module.exports.deleteLevel = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
-  console.log(req.params);
+  
 
   try {
     const serviceResponse = await levelService.deleteLevel(req.params);

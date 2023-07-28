@@ -61,7 +61,7 @@ module.exports.getAllLanguages = async (serviceData) => {
       .limit(parseInt(limit));
 
     const formatData = formatMongoData(languageResponse);
-    // console.log(formatData)
+   
     return {
       body: formatData,
       totalPages,
@@ -86,7 +86,7 @@ module.exports.deleteLanguage = async (serviceData) => {
       { isDeleted: true }, // Update to set isDeleted field to true
       { new: true } // Options to return the updated document
     );
-    console.log(languageResponse);
+   
 
     if (!languageResponse) {
       response.errors = {
@@ -110,7 +110,6 @@ module.exports.deleteLanguage = async (serviceData) => {
 // getLanguageById
 module.exports.getLanguageById = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
-  console.log(serviceData.id);
   try {
     const languageResponse = await languageModel.findOne({
       _id: serviceData.id,
@@ -134,7 +133,6 @@ module.exports.updateLanguage = async (serviceData) => {
     const languageResponse = await languageModel.findByIdAndUpdate(id, body, {
       new: true,
     });
-    console.log(languageResponse);
     return formatMongoData(languageResponse);
   } catch (error) {
     console.log(

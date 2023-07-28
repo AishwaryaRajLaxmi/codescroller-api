@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 module.exports.connect = async () => {
   const mongoUrl = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/codescroller";
-  console.log(mongoUrl);
-  
+   
   try {
     const response = await mongoose.connect(mongoUrl);
 

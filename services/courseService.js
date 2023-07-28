@@ -130,7 +130,7 @@ module.exports.deleteCourse = async (serviceData) => {
 module.exports.updateCourse = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    console.log(serviceData);
+   
 
     const { id, body } = serviceData;
     const serviceResponse = await courseModel.findByIdAndUpdate(id, body, {

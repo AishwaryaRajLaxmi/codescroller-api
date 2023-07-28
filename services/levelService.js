@@ -32,7 +32,6 @@ module.exports.createLevel = async (serviceData) => {
 
 // getAllLevels
 module.exports.getAllLevels = async (serviceData) => {
-  // console.log(serviceData);
 
   try {
     const { limit = 10, page = 1, status = "true", searchQuery } = serviceData;
@@ -81,7 +80,6 @@ module.exports.getAllLevels = async (serviceData) => {
 
 // deleteLevel
 module.exports.deleteLevel = async (serviceData) => {
-  console.log(serviceData);
 
   try {
     const response = { ...constants.defaultServerResponse };
@@ -92,7 +90,6 @@ module.exports.deleteLevel = async (serviceData) => {
       { new: true } // Options to return the updated document
     );
 
-    console.log(levelResponse);
     if (!levelResponse) {
       response.errors = {
         error: constants.LevelMessage.LEVEL_NOT_DELETED,

@@ -27,7 +27,7 @@ module.exports.registerUser = async (req, res) => {
 // loginUser
 module.exports.loginUser = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
-  console.log(req.body);
+ 
 
   try {
     const serviceResponse = await userService.loginUser(req.body);
