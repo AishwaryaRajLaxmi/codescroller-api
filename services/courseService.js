@@ -61,7 +61,7 @@ module.exports.getAllCourses = async (serviceData) => {
      // search query
      if (searchQuery) {
       const regex = new RegExp(searchQuery, "i");
-      conditions.$or = [{ name: regex }, { description: regex } ,{seoTitle:regex},{seoDescription:regex}, {instructor:regex},{sellingPrice:regex},{prerequisite:regex},{requirements:regex},{highlights:regex}];
+      conditions.$or = [{ name: regex }, { description: regex } ,{seoTitle:regex},{seoDescription:regex}, {instructorName:regex},{sellingPrice:regex},{prerequisite:regex},{requirements:regex},{highlights:regex}];
     }
      // count document
      const totalRecords = await courseModel.countDocuments(conditions);

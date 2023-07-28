@@ -34,6 +34,7 @@ module.exports.getAllCourses = Joi.object({
   page: Joi.string(),
   limit: Joi.string(),
   status: Joi.string().valid("true", "false", "All"),
+  searchQuery: Joi.string().allow(""),
 });
 
 //getCourseById

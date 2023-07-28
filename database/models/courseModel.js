@@ -25,12 +25,15 @@ const courseSchema = mongoose.Schema(
     instructorName: {
       type: String,
     },
+
     instructorAbout: {
       type: String,
     },
+
     instructorImage: {
       type: String,
     },
+    
     instructorDesignation: {
       type: String,
     },
