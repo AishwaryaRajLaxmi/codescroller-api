@@ -32,7 +32,7 @@ module.exports.createLanguage = async (serviceData) => {
 // getAllLanguages
 module.exports.getAllLanguages = async (serviceData) => {
   try {
-    const { limit = 10, page = 1, status = "true",searchQuery } = serviceData;
+    const { limit = 10, page = 1, status = "true", searchQuery } = serviceData;
     let conditions = {};
     // Set the condition for active language (where isDeleted is false)
     conditions.isDeleted = false;
@@ -42,24 +42,33 @@ module.exports.getAllLanguages = async (serviceData) => {
       conditions.status = status;
     }
 
-    
-     // count document
-     const totalRecords = await languageModel.countDocuments(conditions);
-     const totalPages = Math.ceil(totalRecords / parseInt(limit));
-   
+    // search query
+    if (searchQuery) {
+      const regex = new RegExp(searchQuery, "i");
+      conditions.$or = [
+        { name: regex },
+        { description: regex },
+        { slug: regex },
+      ];
+    }
+
+    // count document
+    const totalRecords = await languageModel.countDocuments(conditions);
+    const totalPages = Math.ceil(totalRecords / parseInt(limit));
+
     const languageResponse = await languageModel
       .find(conditions)
-      .skip((parseInt(page)-1)*parseInt(limit))
+      .skip((parseInt(page) - 1) * parseInt(limit))
       .limit(parseInt(limit));
 
     const formatData = formatMongoData(languageResponse);
     // console.log(formatData)
     return {
-      body:formatData,
+      body: formatData,
       totalPages,
       totalRecords,
-      page
-    }
+      page,
+    };
   } catch (error) {
     console.log(
       `Something went wrong: Service: LanguageService: getAllLanguages\nError: ${error.message}`
@@ -82,7 +91,7 @@ module.exports.deleteLanguage = async (serviceData) => {
 
     if (!languageResponse) {
       response.errors = {
-        error: constants.LanguageMessage.LANGUAGE_NOT_DELETED
+        error: constants.LanguageMessage.LANGUAGE_NOT_DELETED,
       };
       return response;
     }
@@ -102,13 +111,18 @@ module.exports.deleteLanguage = async (serviceData) => {
 // getLanguageById
 module.exports.getLanguageById = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
-  console.log(serviceData.id)
+  console.log(serviceData.id);
   try {
-    const languageResponse = await languageModel.findOne({_id:serviceData.id,isDeleted:false});
+    const languageResponse = await languageModel.findOne({
+      _id: serviceData.id,
+      isDeleted: false,
+    });
     const formatData = formatMongoData(languageResponse);
     return formatData;
   } catch (error) {
-    console.log(`Something went wrong: service : LaaguageService : getLanguageById`);
+    console.log(
+      `Something went wrong: service : LaaguageService : getLanguageById`
+    );
     throw new Error(error);
   }
 };
@@ -116,7 +130,6 @@ module.exports.getLanguageById = async (serviceData) => {
 // updateLanguage
 
 module.exports.updateLanguage = async (serviceData) => {
-
   try {
     const { id, body } = serviceData;
     const languageResponse = await languageModel.findByIdAndUpdate(id, body, {

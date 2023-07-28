@@ -58,6 +58,11 @@ module.exports.getAllCourses = async (serviceData) => {
       conditions.status = status;
     }
 
+     // search query
+     if (searchQuery) {
+      const regex = new RegExp(searchQuery, "i");
+      conditions.$or = [{ name: regex }, { description: regex } ,{seoTitle:regex},{seoDescription:regex}, {instructor:regex},{sellingPrice:regex},{prerequisite:regex},{requirements:regex},{highlights:regex}];
+    }
      // count document
      const totalRecords = await courseModel.countDocuments(conditions);
      const totalPages = Math.ceil(totalRecords / parseInt(limit));

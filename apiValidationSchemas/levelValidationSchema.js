@@ -4,7 +4,8 @@ const { customCallback } = require("../helpers/joiHelper");
 // createLevel
 module.exports.createLevel = Joi.object({
   name: Joi.string().trim().required().label("Name"),
-  description: Joi.string(),
+  description: Joi.string().allow(""),
+  slug:Joi.string().require().label("Slug")
 });
 
 // getAllLevel

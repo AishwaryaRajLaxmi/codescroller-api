@@ -4,16 +4,16 @@ const { customCallback } = require("../helpers/joiHelper");
 // createLanguage
 module.exports.createLanguage = Joi.object({
   name: Joi.string().trim().required().label("Name"),
-  description: Joi.string(),
-  
+  description: Joi.string().allow("").label("Description"),
+  slug: Joi.string().required().label("Slug"),
 });
 
 // getAllLanguage
 module.exports.getAllLanguages = Joi.object({
   page: Joi.number(),
   limit: Joi.number(),
-  status: Joi.string().valid("true","false","All"),
-  searchQuery:Joi.string().allow(""),
+  status: Joi.string().valid("true", "false", "All"),
+  searchQuery: Joi.string().allow(""),
 });
 
 //getLanguageById

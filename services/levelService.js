@@ -46,6 +46,16 @@ module.exports.getAllLevels = async (serviceData) => {
       conditions.status = status;
     }
 
+    // search query
+    if (searchQuery) {
+      const regex = new RegExp(searchQuery, "i");
+      conditions.$or = [
+        { name: regex },
+        { description: regex },
+        { slug: regex },
+      ];
+    }
+
     // count document
     const totalRecords = await levelModel.countDocuments(conditions);
     const totalPages = Math.ceil(totalRecords / parseInt(limit));
