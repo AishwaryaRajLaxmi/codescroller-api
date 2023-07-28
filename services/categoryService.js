@@ -12,7 +12,7 @@ module.exports.createCategory = async (serviceData) => {
 
     if (categoryResponse) {
       response.errors = {
-        email: "Category already exists",
+        name: "Category already exists",
         status: 400,
       };
       return response;
@@ -130,7 +130,7 @@ module.exports.updateCategory = async (serviceData) => {
       { new: true }
     );
     console.log(dbResponse);
-    
+
     return formatMongoData(dbResponse);
   } catch (error) {
     console.log(

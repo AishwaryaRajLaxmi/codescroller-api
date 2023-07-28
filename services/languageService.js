@@ -12,7 +12,7 @@ module.exports.createLanguage = async (serviceData) => {
 
     if (languageResponse) {
       response.errors = {
-        email: "Language already exists",
+        name: "Language already exists",
         status: 400,
       };
       return response;

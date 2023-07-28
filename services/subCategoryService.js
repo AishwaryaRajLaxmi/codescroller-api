@@ -13,7 +13,7 @@ module.exports.createSubCategory = async (serviceData) => {
 
     if (categoryResponse) {
       response.errors = {
-        email: "SubCategoryalready exists",
+        name: "SubCategoryalready exists",
         status: 400,
       };
       return response;
