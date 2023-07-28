@@ -32,7 +32,7 @@ module.exports.getAllLevels = async (req, res) => {
   try {
     const serviceResponse = await levelService.getAllLevels(req.query);
 
-    response.body = serviceResponse;
+    response.body = serviceResponse.body;
     response.totalPages = serviceResponse.totalPages;
     response.totalRecords = serviceResponse.totalRecords;
     response.page = serviceResponse.page;

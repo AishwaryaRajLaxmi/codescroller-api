@@ -6,7 +6,6 @@ module.exports.createLanguage = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await LanguageService.createLanguage(req.body);
-  
 
     if (serviceResponse.status === 400) {
       response.errors = serviceResponse.errors;
@@ -32,7 +31,10 @@ module.exports.getAllLanguages = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await LanguageService.getAllLanguages(req.query);
-    response.body = serviceResponse;
+    response.body = serviceResponse.body;
+    response.totalPages = serviceResponse.totalPages;
+    response.totalRecords = serviceResponse.totalRecords;
+    response.page = serviceResponse.page;
     response.status = 200;
     response.message = constants.LanguageMessage.LANGUAGEL_FETCHED;
   } catch (error) {
