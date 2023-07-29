@@ -6,7 +6,7 @@ const {
   getAllReveiw,
   getReveiwById,
   updateReveiw,
-} = require("../apiValidationSchemas/reveiwsValidation");
+} = require("../apiValidationSchemas/reveiwsValidationSchema");
 const {
   validateBody,
   validateParams,
