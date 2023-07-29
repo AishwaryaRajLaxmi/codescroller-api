@@ -20,10 +20,11 @@ const courseSchema = mongoose.Schema(
     courseDetails: {
       type: String,
       trim: true,
-    },
+         },
 
     instructorName: {
       type: String,
+      required: true,
     },
 
     instructorAbout: {
@@ -33,7 +34,7 @@ const courseSchema = mongoose.Schema(
     instructorImage: {
       type: String,
     },
-    
+
     instructorDesignation: {
       type: String,
     },
@@ -46,7 +47,12 @@ const courseSchema = mongoose.Schema(
       type: String,
     },
 
-    image: {
+    thumbnail: {
+      type: String,
+      required: true,
+    },
+
+    defaultVideo: {
       type: String,
     },
 
@@ -78,7 +84,7 @@ const courseSchema = mongoose.Schema(
 
     topics: [
       {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "topic",
       },
     ],
@@ -93,22 +99,30 @@ const courseSchema = mongoose.Schema(
       type: String,
     },
     sellingPrice: {
-      type: String,
+      type: Number,
+      required: true,
     },
     mrp: {
       type: Number,
+      required: true,
     },
     validity: {
-      type: Number,
+      type: String,
+      required: true,
     },
     isReturnable: {
       type: Boolean,
+      required: true,
+      default:true,
     },
     returnDays: {
       type: Number,
+      required: true,
     },
     courseStatus: {
-      type: String,
+      type: Boolean,
+      default:true,
+      
     },
     status: {
       type: Boolean,

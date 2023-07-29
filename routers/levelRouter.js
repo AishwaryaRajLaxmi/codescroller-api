@@ -12,17 +12,29 @@ const {
   validateParams,
   validateQuery,
 } = require("../middlewares/joiSchemaValidation");
+const jsonwebtoken = require("../middlewares/jwtValidation");
 
 // createLevel
-levelRouter.post("/", validateBody(createLevel), levelController.createLevel);
+levelRouter.post(
+  "/",
+  validateBody(createLevel),
+  jsonwebtoken.validateAdminToken,
+  levelController.createLevel
+);
 
 //getLevels
-levelRouter.get("/", validateQuery(getAllLevels), levelController.getAllLevels);
+levelRouter.get(
+  "/",
+  validateQuery(getAllLevels),
+  jsonwebtoken.validateAdminToken,
+  levelController.getAllLevels
+);
 
 // getLevel
 levelRouter.get(
   "/:id",
   validateParams(getLevelById),
+  jsonwebtoken.validateAdminToken,
   levelController.getLevelById
 );
 
@@ -30,6 +42,7 @@ levelRouter.get(
 levelRouter.put(
   "/:id",
   validateParams(getLevelById),
+  jsonwebtoken.validateAdminToken,
   validateBody(updateLevel),
   levelController.updateLevel
 );
@@ -38,6 +51,7 @@ levelRouter.put(
 levelRouter.delete(
   "/:id",
   validateParams(getLevelById),
+  jsonwebtoken.validateAdminToken,
   levelController.deleteLevel
 );
 

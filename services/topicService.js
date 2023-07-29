@@ -82,7 +82,7 @@ module.exports.deleteTopic = async (serviceData) => {
 
     if (!dbResponse) {
       response.errors = {
-        error: constants.TopicMessage.TOPIC_NOT_DELETED,
+        error: constants.topicMessage.TOPIC_NOT_DELETED,
       };
       return response;
     }

@@ -92,7 +92,7 @@ module.exports.deleteLevel = async (serviceData) => {
 
     if (!levelResponse) {
       response.errors = {
-        error: constants.LevelMessage.LEVEL_NOT_DELETED,
+        error: constants.levelMessage.LEVEL_NOT_DELETED,
       };
       return response;
     }

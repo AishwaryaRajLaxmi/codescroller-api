@@ -86,7 +86,7 @@ module.exports.deleteSubCategory = async (serviceData) => {
 
     if (!dbResponse) {
       response.errors = {
-        error: constants.SubCategoryMessage.SUB_CATEGORY_DELETED,
+        error: constants.subCategoryMessage.SUB_CATEGORY_DELETED,
       };
       return response;
     }

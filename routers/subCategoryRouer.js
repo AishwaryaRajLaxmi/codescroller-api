@@ -12,11 +12,13 @@ const {
   validateParams,
   validateQuery,
 } = require("../middlewares/joiSchemaValidation");
+const jsonwebtoken = require("../middlewares/jwtValidation");
 
 // createsubcategory
 subcategoryRouter.post(
   "/",
   validateBody(createSubCategory),
+  jsonwebtoken.validateAdminToken,
   subcategoryController.createSubCategory
 );
 
@@ -31,6 +33,7 @@ subcategoryRouter.get(
 subcategoryRouter.delete(
   "/:id",
   validateParams(getSubCategoryById),
+  jsonwebtoken.validateAdminToken,
   subcategoryController.deleteSubCategory
 );
 
@@ -45,6 +48,7 @@ subcategoryRouter.get(
 subcategoryRouter.put(
   "/:id",
   validateParams(getSubCategoryById),
+  jsonwebtoken.validateAdminToken,
   validateBody(updateSubCategory),
   subcategoryController.updateSubCategory
 );

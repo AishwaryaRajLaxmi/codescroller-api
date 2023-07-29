@@ -1,5 +1,10 @@
 const userService = require("../services/userServices");
 const constants = require("../helpers/constants");
+const {
+  defaultServerResponse,
+  authMessage,
+  userMessage,
+} = require("../helpers/constants");
 
 // registerUser
 module.exports.registerUser = async (req, res) => {
@@ -11,7 +16,7 @@ module.exports.registerUser = async (req, res) => {
       response.errors = serviceResponse.errors;
     } else {
       response.body = serviceResponse;
-      response.message = constants.UserMessage.USER_REGISTERED;
+      response.message = constants.userMessage.USER_REGISTERED;
     }
   } catch (error) {
     console.log(
@@ -27,13 +32,17 @@ module.exports.registerUser = async (req, res) => {
 // loginUser
 module.exports.loginUser = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
- 
 
   try {
     const serviceResponse = await userService.loginUser(req.body);
-    response.body = serviceResponse;
-    response.message = constants.UserMessage.USER_LOGEDIN;
-    response.status = 200;
+    if (serviceResponse.body) {
+      response.body = serviceResponse.body;
+      response.message = constants.userMessage.USER_LOGEDIN;
+      response.status = 200;
+    } else {
+      response.errors = serviceResponse.errors;
+      response.message = authMessage.LOGIN_FAILED;
+    }
   } catch (error) {
     console.log(`Something went wrong: controlelr :loginController:loginUser`);
     response.message = error.message;
@@ -50,9 +59,9 @@ module.exports.isEmailExists = async (req, res) => {
     response.status = 200;
     response.body = serviceResponse;
     if (response.body) {
-      response.message = constants.UserMessage.USER_FOUND;
+      response.message = constants.userMessage.USER_FOUND;
     } else {
-      response.message = constants.UserMessage.USER_NOT_FOUND;
+      response.message = constants.userMessage.USER_NOT_FOUND;
     }
   } catch (error) {
     console.log(
@@ -72,9 +81,9 @@ module.exports.isMobileExists = async (req, res) => {
     response.status = 200;
     response.body = serviceResponse;
     if (response.body) {
-      response.message = constants.UserMessage.USER_FOUND;
+      response.message = constants.userMessage.USER_FOUND;
     } else {
-      response.message = constants.UserMessage.USER_NOT_FOUND;
+      response.message = constants.userMessage.USER_NOT_FOUND;
     }
   } catch (error) {
     console.log(
@@ -96,7 +105,7 @@ module.exports.getAllUsers = async (req, res) => {
     response.totalRecords = serviceResponse.totalRecords;
     response.page = serviceResponse.page;
     response.status = 200;
-    response.message = constants.UserMessage.USER_FETCHED;
+    response.message = constants.userMessage.USER_FETCHED;
   } catch (error) {
     console.log(`Something went wrong:controller:userController: getAllUsers 
     Error:${error.message}`);
@@ -114,10 +123,10 @@ module.exports.deleteUser = async (req, res) => {
     const serviceResponse = await userService.deleteUser(req.params);
     if (serviceResponse.status == 200) {
       response.body = serviceResponse.body;
-      response.message = constants.UserMessage.USER_DELETED;
+      response.message = constants.userMessage.USER_DELETED;
       response.status = 200;
     } else {
-      response.message = constants.UserMessage.USER_NOT_DELETED;
+      response.message = constants.userMessage.USER_NOT_DELETED;
       response.status = 400;
       response.errors = serviceResponse.errors;
     }
@@ -140,7 +149,7 @@ module.exports.getUserById = async (req, res) => {
     const serviceResponse = await userService.getUserById(req.params);
     response.body = serviceResponse;
     response.status = 200;
-    response.message = constants.UserMessage.USER_FETCHED;
+    response.message = constants.userMessage.USER_FETCHED;
   } catch (error) {
     console.log(`Something went wrong:controller:userController: getUserById
     Error:${error.message}`);
@@ -162,9 +171,9 @@ module.exports.updateUser = async (req, res) => {
     if (serviceResponse) {
       response.body = serviceResponse;
       response.status = 200;
-      response.message = constants.UserMessage.USER_UPDATED;
+      response.message = constants.userMessage.USER_UPDATED;
     } else {
-      response.message = constants.UserMessage.USER_NOT_UPDATED;
+      response.message = constants.userMessage.USER_NOT_UPDATED;
     }
   } catch (error) {
     console.log(

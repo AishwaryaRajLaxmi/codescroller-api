@@ -12,11 +12,13 @@ const {
   validateParams,
   validateQuery,
 } = require("../middlewares/joiSchemaValidation");
+const jsonwebtoken = require("../middlewares/jwtValidation");
 
 // createCourse
 courseRouter.post(
   "/",
   validateBody(createCourse),
+  jsonwebtoken.validateAdminToken,
   courseController.createCourse
 );
 
@@ -31,6 +33,7 @@ courseRouter.get(
 courseRouter.delete(
   "/:id",
   validateParams(getCourseById),
+  jsonwebtoken.validateAdminToken,
   courseController.deleteCourse
 );
 
@@ -45,6 +48,7 @@ courseRouter.get(
 courseRouter.put(
   "/:id",
   validateParams(getCourseById),
+  jsonwebtoken.validateAdminToken,
   validateBody(updateCourse),
   courseController.updateCourse
 );

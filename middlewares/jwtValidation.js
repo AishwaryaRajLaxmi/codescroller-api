@@ -24,8 +24,8 @@ module.exports.validateAdminToken = (req, res, next) => {
   }
 };
 
-// validateCustomerToken
-module.exports.validateCustomerToken = (req, res, next) => {
+// validateUserToken
+module.exports.validateUserToken = (req, res, next) => {
   const authorization = req.headers.authorization;
   const response = { ...constant.defaultServerResponse };
 
@@ -39,12 +39,9 @@ module.exports.validateCustomerToken = (req, res, next) => {
     // decode the token
     const token = authorization.split("Bearer ")[1];
 
-    const decodeToken = jwt.verify(
-      token,
-      process.env.JWT_CUSTOMER_SECRET_KEY || "codescroller"
-    );
+    const decodeToken = jwt.verify(token, process.env.JWT_USER_SECRET_KEY);
 
-    req.params.customerId = decodeToken.id;
+    req.params.userId = decodeToken.id;
     next();
   } catch (error) {
     response.status = 403;

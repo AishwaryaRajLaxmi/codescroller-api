@@ -26,8 +26,7 @@ topicRouter.post(
 topicRouter.get(
   "/",
   validateQuery(getAllTopics),
-  validateAdminToken,
-  topicController.getAllTopics
+   topicController.getAllTopics
 );
 
 // deleteTopic
@@ -42,8 +41,7 @@ topicRouter.delete(
 topicRouter.get(
   "/:id",
   validateParams(getTopicById),
-  validateAdminToken,
-  topicController.getTopicById
+   topicController.getTopicById
 );
 
 // updateTopic

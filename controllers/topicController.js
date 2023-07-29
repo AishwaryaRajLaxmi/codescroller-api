@@ -12,7 +12,7 @@ module.exports.createTopic = async (req, res) => {
       response.status = 400; // Set the response status to 400
     } else {
       response.body = serviceResponse;
-      response.message = constants.TopicMessage.TOPIC_CREATED;
+      response.message = constants.topicMessage.TOPIC_CREATED;
       response.status = 200;
     }
   } catch (error) {
@@ -36,7 +36,7 @@ module.exports.getAllTopics = async (req, res) => {
     response.totalRecords = serviceResponse.totalRecords;
     response.page = serviceResponse.page;
     response.status = 200;
-    response.message = constants.TopicMessage.TOPIC_FETCHED;
+    response.message = constants.topicMessage.TOPIC_FETCHED;
   } catch (error) {
     console.log(`Something went wrong:controller:TopicController: getAllTopics
     Error:${error.message}`);
@@ -54,10 +54,10 @@ module.exports.deleteTopic = async (req, res) => {
     const serviceResponse = await topicService.deleteTopic(req.params);
     if (serviceResponse.status == 200) {
       response.body = serviceResponse.body;
-      response.message = constants.TopicMessage.TOPIC_DELETED;
+      response.message = constants.topicMessage.TOPIC_DELETED;
       response.status = 200;
     } else {
-      response.message = constants.TopicMessage.TOPIC_DELETED;
+      response.message = constants.topicMessage.TOPIC_DELETED;
       response.status = 400;
       response.errors = serviceResponse.errors;
     }
@@ -77,11 +77,10 @@ module.exports.deleteTopic = async (req, res) => {
 module.exports.getTopicById = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    
     const serviceResponse = await topicService.getTopicById(req.params);
     response.body = serviceResponse;
     response.status = 200;
-    response.message = constants.TopicMessage.TOPIC_FETCHED;
+    response.message = constants.topicMessage.TOPIC_FETCHED;
   } catch (error) {
     console.log(`Something went wrong:controller:TopicController: getTopicById
     Error:${error.message}`);
@@ -103,9 +102,9 @@ module.exports.updateTopic = async (req, res) => {
     if (serviceResponse) {
       response.body = serviceResponse;
       response.status = 200;
-      response.message = constants.TopicMessage.TOPIC_UPDATED;
+      response.message = constants.topicMessage.TOPIC_UPDATED;
     } else {
-      response.message = constants.TopicMessage.TOPIC_NOT_UPDATED;
+      response.message = constants.topicMessage.TOPIC_NOT_UPDATED;
     }
   } catch (error) {
     console.log(

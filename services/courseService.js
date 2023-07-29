@@ -46,7 +46,7 @@ module.exports.getCourseById = async (serviceData) => {
   }
 };
 
-// getAllCOu
+// getAllCourse
 module.exports.getAllCourses = async (serviceData) => {
   try {
     const { limit = 10, page = 1, status = "true", searchQuery } = serviceData;
@@ -66,7 +66,6 @@ module.exports.getAllCourses = async (serviceData) => {
         { seoTitle: regex },
         { seoDescription: regex },
         { instructorName: regex },
-        { sellingPrice: regex },
         { prerequisite: regex },
         { requirements: regex },
         { highlights: regex },
@@ -84,6 +83,7 @@ module.exports.getAllCourses = async (serviceData) => {
       .populate({ path: "level", select: "name _id" });
 
     const formatData = formatMongoData(serviceResponse);
+
     return {
       body: formatData,
       totalPages,
@@ -111,7 +111,7 @@ module.exports.deleteCourse = async (serviceData) => {
 
     if (!serviceResponse) {
       response.errors = {
-        error: constants.CourseMessage.COURSE_DELETED,
+        error: constants.courseMessage.COURSE_DELETED,
       };
       return response;
     }
@@ -130,8 +130,6 @@ module.exports.deleteCourse = async (serviceData) => {
 module.exports.updateCourse = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
   try {
-   
-
     const { id, body } = serviceData;
     const serviceResponse = await courseModel.findByIdAndUpdate(id, body, {
       new: true,

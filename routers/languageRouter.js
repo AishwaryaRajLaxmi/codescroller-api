@@ -12,11 +12,13 @@ const {
   validateParams,
   validateQuery,
 } = require("../middlewares/joiSchemaValidation");
+const jsonwebtoken = require("../middlewares/jwtValidation");
 
 // createCategory
 languageRouter.post(
   "/",
   validateBody(createLanguage),
+  jsonwebtoken.validateAdminToken,
   languageController.createLanguage
 );
 
@@ -24,13 +26,14 @@ languageRouter.post(
 languageRouter.get(
   "/",
   validateQuery(getAllLanguages),
-  languageController.getAllLanguages
+    languageController.getAllLanguages
 );
 
 // deleteLanguage
 languageRouter.delete(
   "/:id",
   validateParams(getLanguageById),
+  jsonwebtoken.validateAdminToken,
   languageController.deleteLanguage
 );
 
@@ -45,6 +48,7 @@ languageRouter.get(
 languageRouter.put(
   "/:id",
   validateParams(getLanguageById),
+  jsonwebtoken.validateAdminToken,
   validateBody(updateLanguage),
   languageController.updateLanguage
 );

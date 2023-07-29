@@ -90,7 +90,7 @@ module.exports.deleteLanguage = async (serviceData) => {
 
     if (!languageResponse) {
       response.errors = {
-        error: constants.LanguageMessage.LANGUAGE_NOT_DELETED,
+        error: constants.LANGUAGE_NOT_DELETED,
       };
       return response;
     }

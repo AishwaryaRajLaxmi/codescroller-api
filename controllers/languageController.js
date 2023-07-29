@@ -12,7 +12,7 @@ module.exports.createLanguage = async (req, res) => {
       response.status = 400; // Set the response status to 400
     } else {
       response.body = serviceResponse;
-      response.message = constants.LanguageMessage.LANGUAGE_CREATED;
+      response.message = constants.languageMessage.LANGUAGE_CREATED;
       response.status = 200;
     }
   } catch (error) {
@@ -36,7 +36,7 @@ module.exports.getAllLanguages = async (req, res) => {
     response.totalRecords = serviceResponse.totalRecords;
     response.page = serviceResponse.page;
     response.status = 200;
-    response.message = constants.LanguageMessage.LANGUAGEL_FETCHED;
+    response.message = constants.languageMessage.LANGUAGEL_FETCHED;
   } catch (error) {
     console.log(`Something went wrong:controller:LanguageController: getAllCategories
     Error:${error.message}`);
@@ -54,10 +54,10 @@ module.exports.deleteLanguage = async (req, res) => {
     const serviceResponse = await LanguageService.deleteLanguage(req.params);
     if (serviceResponse.status == 200) {
       response.body = serviceResponse.body;
-      response.message = constants.LanguageMessage.LANGUAGE_DELETED;
+      response.message = constants.languageMessage.LANGUAGE_DELETED;
       response.status = 200;
     } else {
-      response.message = constants.LanguageMessage.LANGUAGE_DELETED;
+      response.message = constants.languageMessage.LANGUAGE_DELETED;
       response.status = 400;
       response.errors = serviceResponse.errors;
     }
@@ -77,12 +77,10 @@ module.exports.deleteLanguage = async (req, res) => {
 module.exports.getLanguageById = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
-   
-
     const serviceResponse = await LanguageService.getLanguageById(req.params);
     response.body = serviceResponse;
     response.status = 200;
-    response.message = constants.LanguageMessage.LANGUAGEL_FETCHED;
+    response.message = constants.languageMessage.LANGUAGEL_FETCHED;
   } catch (error) {
     console.log(`Something went wrong:controller:LanguageController: getLanguageById
     Error:${error.message}`);
@@ -104,9 +102,9 @@ module.exports.updateLanguage = async (req, res) => {
     if (serviceResponse) {
       response.body = serviceResponse;
       response.status = 200;
-      response.message = constants.LanguageMessage.LANGUAGE_UPDATED;
+      response.message = constants.languageMessage.LANGUAGE_UPDATED;
     } else {
-      response.message = constants.LanguageMessage.LANGUAGE_NOT_UPDATED;
+      response.message = constants.languageMessage.LANGUAGE_NOT_UPDATED;
     }
   } catch (error) {
     console.log(

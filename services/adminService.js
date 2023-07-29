@@ -12,6 +12,7 @@ module.exports.registerAdmin = async (serviceData) => {
   try {
     // Check Email is already exist or not
     const adminData = await adminModel.findOne({ email: serviceData.email });
+    
     if (adminData) {
       response.errors = {
         email: constant.authMessage.EMAIL_EXISTS,

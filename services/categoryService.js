@@ -44,7 +44,11 @@ module.exports.getAllCategories = async (serviceData) => {
     // search query
     if (searchQuery) {
       const regex = new RegExp(searchQuery, "i");
-      conditions.$or = [{ name: regex }, { slug: regex }];
+      conditions.$or = [
+        { name: regex },
+        { slug: regex },
+        { description: regex },
+      ];
     }
 
     // count document
@@ -57,6 +61,7 @@ module.exports.getAllCategories = async (serviceData) => {
       .limit(parseInt(limit));
 
     const formatData = formatMongoData(dbResponse);
+
     return {
       body: formatData,
       totalPages,
@@ -81,11 +86,10 @@ module.exports.deleteCategory = async (serviceData) => {
       { isDeleted: true }, // Update to set isDeleted field to true
       { new: true } // Options to return the updated document
     );
-    
 
     if (!dbResponse) {
       response.errors = {
-        error: constants.CategoryMessage.CATEGORY_NOT_DELETED,
+        error: constants.categoryMessage.CATEGORY_NOT_DELETED,
       };
       return response;
     }

@@ -11,7 +11,7 @@ module.exports.createCategory = async (req, res) => {
       response.status = 400; // Set the response status to 400
     } else {
       response.body = serviceResponse;
-      response.message = constants.CategoryMessage.CATEGORY_CREATED;
+      response.message = constants.categoryMessage.CATEGORY_CREATED;
       response.status = 200;
     }
   } catch (error) {
@@ -31,8 +31,11 @@ module.exports.getAllCategories = async (req, res) => {
   try {
     const serviceResponse = await categoryService.getAllCategories(req.query);
     response.body = serviceResponse.body;
+    response.totalPages = serviceResponse.totalPages;
+    response.totalRecords = serviceResponse.totalRecords;
+    response.page = serviceResponse.page;
     response.status = 200;
-    response.message = constants.CategoryMessage.CATEGORY_FETCHED;
+    response.message = constants.categoryMessage.CATEGORY_FETCHED;
   } catch (error) {
     console.log(`Something went wrong:controller:categoryController: getAllCategories
     Error:${error.message}`);
@@ -50,10 +53,10 @@ module.exports.deleteCategory = async (req, res) => {
     const serviceResponse = await categoryService.deleteCategory(req.params);
     if (serviceResponse.status == 200) {
       response.body = serviceResponse.body;
-      response.message = constants.CategoryMessage.CATEGORY_DELETED;
+      response.message = constants.categoryMessage.CATEGORY_DELETED;
       response.status = 200;
     } else {
-      response.message = constants.CategoryMessage.CATEGORY_NOT_DELETED;
+      response.message = constants.categoryMessage.CATEGORY_NOT_DELETED;
       response.status = 400;
       response.errors = serviceResponse.errors;
     }
@@ -78,9 +81,9 @@ module.exports.getCategoryById = async (req, res) => {
     if (serviceResponse) {
       response.body = serviceResponse;
       response.status = 200;
-      response.message = constants.CategoryMessage.CATEGORY_FETCHED;
+      response.message = constants.categoryMessage.CATEGORY_FETCHED;
     } else {
-      response.message = constants.CategoryMessage.CATEGORY_NOT_FETCHED;
+      response.message = constants.categoryMessage.CATEGORY_NOT_FETCHED;
     }
   } catch (error) {
     console.log(`Something went wrong:controller:categoryController: getCategoryById
@@ -103,9 +106,9 @@ module.exports.updateCategory = async (req, res) => {
     if (serviceResponse) {
       response.body = serviceResponse;
       response.status = 200;
-      response.message = constants.CategoryMessage.CATEGORY_UPDATED;
+      response.message = constants.categoryMessage.CATEGORY_UPDATED;
     } else {
-      response.message = constants.CategoryMessage.CATEGORY_NOT_UPDATED;
+      response.message = constants.categoryMessage.CATEGORY_NOT_UPDATED;
     }
   } catch (error) {
     console.log(

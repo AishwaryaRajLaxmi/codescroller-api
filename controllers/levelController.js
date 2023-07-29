@@ -12,7 +12,7 @@ module.exports.createLevel = async (req, res) => {
       response.status = 400; // Set the response status to 400
     } else {
       response.body = serviceResponse;
-      response.message = constants.LevelMessage.LEVEL_CREATED;
+      response.message = constants.levelMessage.LEVEL_CREATED;
       response.status = 200;
     }
   } catch (error) {
@@ -37,7 +37,7 @@ module.exports.getAllLevels = async (req, res) => {
     response.totalRecords = serviceResponse.totalRecords;
     response.page = serviceResponse.page;
     response.status = 200;
-    response.message = constants.LevelMessage.LEVEL_FETCHED;
+    response.message = constants.levelMessage.LEVEL_FETCHED;
   } catch (error) {
     console.log(
       `Something went wrong in service: levelService: getAllLevels\nError:${error.message}`
@@ -59,10 +59,10 @@ module.exports.deleteLevel = async (req, res) => {
 
     if (serviceResponse.status == 200) {
       response.body = serviceResponse.body;
-      response.message = constants.LevelMessage.LEVEL_DELETED;
+      response.message = constants.levelMessage.LEVEL_DELETED;
       response.status = 200;
     } else {
-      response.message = constants.LevelMessage.LEVEL_NOT_DELETED;
+      response.message = constants.levelMessage.LEVEL_NOT_DELETED;
       response.status = 400;
       response.errors = serviceResponse.errors;
     }
@@ -87,7 +87,7 @@ module.exports.getLevelById = async (req, res) => {
 
     response.body = serviceResponse;
     response.status = 200;
-    response.message = constants.LevelMessage.LEVEL_FETCHED;
+    response.message = constants.levelMessage.LEVEL_FETCHED;
   } catch (error) {
     console.log(
       `Something went wrong in service: levelService: getLevelById\nError:${error.message}`
@@ -109,9 +109,9 @@ module.exports.updateLevel = async (req, res) => {
     if (serviceResponse) {
       response.body = serviceResponse;
       response.status = 200;
-      response.message = constants.LevelMessage.LEVEL_UPDATED;
+      response.message = constants.levelMessage.LEVEL_UPDATED;
     } else {
-      response.message = constants.LevelMessage.LEVEL_NOT_UPDATED;
+      response.message = constants.levelMessage.LEVEL_NOT_UPDATED;
     }
   } catch (error) {
     console.log(

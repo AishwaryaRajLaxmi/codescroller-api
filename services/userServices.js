@@ -1,25 +1,29 @@
-const bcrypt = require("bcrypt");
+const bcryptjs = require("bcryptjs");
 const optGenerator = require("../helpers/otpGenerator");
 const userModel = require("../database/models/userModel");
 const constants = require("../helpers/constants");
 const { formatMongoData } = require("../helpers/dbHelper");
+const jwt = require("jsonwebtoken");
 
 // registerUser
 module.exports.registerUser = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = {};
   try {
+    // Check Email is already exist or not
     const userResponse = await userModel.findOne({
       email: serviceData.email,
-      isDeleted: false,
-      status: true,
     });
 
     if (userResponse) {
       response.errors = {
-        email: "Email already exists",
+        email: constants.authMessage.EMAIL_EXISTS,
       };
       return response;
     }
+    // encrypt password
+    const hashPassword = await bcrypt.hash(newData.password, 10);
+    newData.password = hashPassword;
+    const serviceResponse = await newData.save();
 
     // send otp
     const currentDate = new Date();
@@ -31,10 +35,6 @@ module.exports.registerUser = async (serviceData) => {
     newData.otp = otp;
     newData.otpExpiredAt = otpExpires;
 
-    // encrypt password
-    const hashPassword = await bcrypt.hash(newData.password, 10);
-    newData.password = hashPassword;
-    const serviceResponse = await newData.save();
     return serviceResponse;
   } catch (error) {
     console.log(
@@ -46,30 +46,38 @@ module.exports.registerUser = async (serviceData) => {
 
 // loginUser
 module.exports.loginUser = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = {
+    errors: {},
+  };
   try {
-    const userResponse = await userModel.findOne({
+    // Find user
+
+    const userData = await userModel.findOne({
       email: serviceData.email,
       isDeleted: false,
       status: true,
     });
 
-    if (!userResponse) {
-      response.errors = {
-        email: "user not found",
-        status: 400,
-      };
-      return response;
-    }
-
-    // compare the password
-    const isMatch = await bcrypt.compare(
-      serviceData.password,
-      userResponse.password
-    );
-
-    if (isMatch) {
-      return userResponse;
+    if (userData) {
+      // Check password is matched or not
+      const isCorrect = await bcryptjs.compare(
+        serviceData.password,
+        userData.password
+      );
+      if (isCorrect) {
+        // Sign jwt token
+        const token = jwt.sign(
+          { id: userData._id },
+          process.env.JWT_USER_SECRET_KEY,
+          { expiresIn: "2 days" }
+        );
+        const formatData = userData.toObject();
+        response.body = { ...formatData, token };
+      } else {
+        response.errors.password = constants.authMessage.INVALID_PASSWORD;
+      }
+    } else {
+      response.errors.email = constants.authMessage.INVALID_EMAIL;
     }
   } catch (error) {
     console.log(
@@ -77,6 +85,7 @@ module.exports.loginUser = async (serviceData) => {
     );
     throw new Error(error);
   }
+  return response;
 };
 
 module.exports.isMobileExists = async (serviceData) => {
@@ -187,7 +196,7 @@ module.exports.deleteUser = async (serviceData) => {
 
     if (!dbResponse) {
       response.errors = {
-        error: constants.UserMessage.USER_NOT_DELETED,
+        error: constants.userMessage.USER_NOT_DELETED,
       };
       return response;
     }

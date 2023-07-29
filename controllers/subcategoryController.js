@@ -14,7 +14,7 @@ module.exports.createSubCategory = async (req, res) => {
       response.status = 400; // Set the response status to 400
     } else {
       response.body = serviceResponse;
-      response.message = constants.SubCategoryMessage.SUB_CATEGORY_CREATED;
+      response.message = constants.subCategoryMessage.SUB_CATEGORY_CREATED;
       response.status = 200;
     }
   } catch (error) {
@@ -40,7 +40,7 @@ module.exports.getAllSubCategories = async (req, res) => {
     response.totalRecords = serviceResponse.totalRecords;
     response.page = serviceResponse.page;
     response.status = 200;
-    response.message = constants.SubCategoryMessage.SUB_CATEGORY_FETCHED;
+    response.message = constants.subCategoryMessage.SUB_CATEGORY_FETCHED;
   } catch (error) {
     console.log(`Something went wrong:controller:SubCategoryController: getAllSubCategories
     Error:${error.message}`);
@@ -60,10 +60,10 @@ module.exports.deleteSubCategory = async (req, res) => {
     );
     if (serviceResponse.status == 200) {
       response.body = serviceResponse.body;
-      response.message = constants.SubCategoryMessage.SUB_CATEGORY_DELETED;
+      response.message = constants.subCategoryMessage.SUB_CATEGORY_DELETED;
       response.status = 200;
     } else {
-      response.message = constants.SubCategoryMessage.SUB_CATEGORY_NOT_DELETED;
+      response.message = constants.subCategoryMessage.SUB_CATEGORY_NOT_DELETED;
       response.status = 400;
       response.errors = serviceResponse.errors;
     }
@@ -88,7 +88,7 @@ module.exports.getSubCategoryById = async (req, res) => {
     );
     response.body = serviceResponse;
     response.status = 200;
-    response.message = constants.SubCategoryMessage.SUB_CATEGORY_FETCHED;
+    response.message = constants.subCategoryMessage.SUB_CATEGORY_FETCHED;
   } catch (error) {
     console.log(`Something went wrong:controller:SubCategoryController: getSubCategoryById
     Error:${error.message}`);
@@ -110,9 +110,9 @@ module.exports.updateSubCategory = async (req, res) => {
     if (serviceResponse) {
       response.body = serviceResponse;
       response.status = 200;
-      response.message = constants.SubCategoryMessage.SUB_CATEGORY_UPDATED;
+      response.message = constants.subCategoryMessage.SUB_CATEGORY_UPDATED;
     } else {
-      response.message = constants.SubCategoryMessage.SUB_CATEGORY_NOT_UPDATED;
+      response.message = constants.subCategoryMessage.SUB_CATEGORY_NOT_UPDATED;
     }
   } catch (error) {
     console.log(

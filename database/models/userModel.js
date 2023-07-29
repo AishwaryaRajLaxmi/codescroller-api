@@ -46,6 +46,7 @@ const userSchema = mongoose.Schema(
 
     otp: {
       type: String,
+      trim: true,
     },
     otpExpiredAt: {
       type: Date,
@@ -55,10 +56,6 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       required: true,
       default: true,
-    },
-    otpExpiredAt: {
-      type: Date,
-      trim: true,
     },
     isDeleted: {
       type: Boolean,
