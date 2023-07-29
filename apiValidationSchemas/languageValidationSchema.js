@@ -26,5 +26,6 @@ module.exports.updateLanguage = Joi.object({
   name: Joi.string().trim().required().label("Name"),
   description: Joi.string().allow("").label("Description"),
   slug: Joi.string().required().label("Slug"),
+  status:Joi.boolean().label("Status")
 
 });

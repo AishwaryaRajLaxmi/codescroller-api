@@ -111,7 +111,7 @@ module.exports.getReviewById = async (serviceData) => {
       isDeleted: false,
     });
 
-    console.log(serviceResponse);
+    // console.log(serviceResponse);
 
     const formatData = formatMongoData(serviceResponse);
     return formatData;

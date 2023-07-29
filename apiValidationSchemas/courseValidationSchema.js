@@ -48,6 +48,7 @@ module.exports.getAllCourses = Joi.object({
   category: Joi.string().custom(customCallback),
   subCategory: Joi.string().custom(customCallback),
   topic: Joi.string().custom(customCallback),
+  level: Joi.string().custom(customCallback),
 });
 
 //getCourseById
@@ -90,4 +91,5 @@ module.exports.updateCourse = Joi.object({
   validity: Joi.string().required().label("Validity"),
   isReturnable: Joi.boolean().required().label("Is Returnable"),
   returnDays: Joi.number().required().label("Return Days"),
+  status: Joi.boolean().label("Status"),
 });

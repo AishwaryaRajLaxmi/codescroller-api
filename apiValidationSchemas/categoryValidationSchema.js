@@ -26,11 +26,11 @@ module.exports.getCategoryById = Joi.object({
 
 // updateCategory
 module.exports.updateCategory = Joi.object({
-  name: Joi.string().trim(),
-  slug: Joi.string().trim(),
-  image: Joi.string().trim().allow(""),
-  description: Joi.string().trim().allow(""),
-  seoTitle: Joi.string().trim().allow(""),
-  seoDescription: Joi.string().trim().allow(""),
+  name: Joi.string().trim().required().label("Name"),
+  slug: Joi.string().required().label("Slug"),
+  image: Joi.string().allow(""),
+  description: Joi.string().allow(""),
+  seoTitle: Joi.string().allow(""),
+  seoDescription: Joi.string().allow(""),
   status: Joi.boolean(),
 });

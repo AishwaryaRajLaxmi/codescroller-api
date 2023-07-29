@@ -8,7 +8,6 @@ module.exports.createTopic = Joi.object({
   category: Joi.string().custom(customCallback).required().label("Category"),
   subCategories: Joi.array()
     .items(Joi.string().custom(customCallback).required())
-    .required()
     .label("Sub Categories"),
   description: Joi.string().label("Description").allow(""),
   seoTitle: Joi.string().label("SEO Title").allow(""),
@@ -21,6 +20,8 @@ module.exports.getAllTopics = Joi.object({
   limit: Joi.string(),
   status: Joi.string().valid("true", "false", "All"),
   searchQuery: Joi.string().allow(""),
+  category: Joi.string().custom(customCallback).allow(""),
+  subCategory:Joi.string().custom(customCallback).allow(""),
 });
 
 //getTopicById
@@ -30,15 +31,14 @@ module.exports.getTopicById = Joi.object({
 
 // Update Topic Validation Schema
 module.exports.updateTopic = Joi.object({
+  name: Joi.string().trim().required().label("Name"),
+  slug: Joi.string().trim().required().label("Slug"),
   category: Joi.string().custom(customCallback).required().label("Category"),
   subCategories: Joi.array()
-    .items(Joi.string().custom(customCallback))
-    .required()
+    .items(Joi.string().custom(customCallback).required())
     .label("Sub Categories"),
-  name: Joi.string().trim().label("Name").required().label("Name"),
-  slug: Joi.string().trim().label("Slug").required(),
-  description: Joi.string().trim().label("Description").allow(""),
+  description: Joi.string().label("Description").allow(""),
+  seoTitle: Joi.string().label("SEO Title").allow(""),
+  seoDescription: Joi.string().label("SEO Description").allow(""),
   status: Joi.boolean().label("Status"),
-  seoDescription: Joi.string().label("SEO Description"),
-  seoTitle: Joi.string().label("SEO Title"),
 });

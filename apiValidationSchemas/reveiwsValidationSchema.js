@@ -6,7 +6,6 @@ module.exports.createReveiw = Joi.object({
   course: Joi.string().custom(customCallback).required().label("Course"),
   ratings: Joi.number().allow(""),
   comment: Joi.string().allow(""),
-
 });
 
 // getAllReveiw
@@ -24,14 +23,19 @@ module.exports.getReveiwById = Joi.object({
 
 // updateReveiwByUser
 module.exports.updateReveiwByUser = Joi.object({
-  course: Joi.string().custom(customCallback),
+  course: Joi.string().custom(customCallback).required().label("Course"),
   ratings: Joi.number().allow(""),
-  comments: Joi.string().allow(""),
+  comment: Joi.string().allow(""),
 });
+
 // updateReveiw
 module.exports.updateReveiw = Joi.object({
-  course: Joi.string().custom(customCallback),
+  course: Joi.string().custom(customCallback).required(),
   ratings: Joi.number().allow(""),
   comments: Joi.string().allow(""),
-  reviewStatus: Joi.string().valid("pending", "approved").label("Review Status"),
+  reviewStatus: Joi.string()
+    .valid("pending", "approved")
+    .label("Review Status")
+    .required(),
+  status: Joi.boolean(),
 });

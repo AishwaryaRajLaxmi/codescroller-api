@@ -31,7 +31,14 @@ module.exports.createTopic = async (serviceData) => {
 // getAllTopics
 module.exports.getAllTopics = async (serviceData) => {
   try {
-    const { limit = 10, page = 1, status = "true", searchQuery } = serviceData;
+    const {
+      limit = 10,
+      page = 1,
+      status = "true",
+      searchQuery,
+      category,
+      subCategory,
+    } = serviceData;
     let conditions = {};
     conditions.isDeleted = false;
 
@@ -43,6 +50,13 @@ module.exports.getAllTopics = async (serviceData) => {
     if (searchQuery) {
       const regex = new RegExp(searchQuery, "i");
       conditions.$or = [{ name: regex }, { email: regex }, { mobile: regex }];
+    }
+
+    // search by category and subCategory id
+    if (category) {
+      conditions.category = category;
+    } else if (subCategory) {
+      conditions.subCategory = subCategory;
     }
 
     // count document
@@ -101,8 +115,6 @@ module.exports.deleteTopic = async (serviceData) => {
 
 // getTopicById
 module.exports.getTopicById = async (serviceData) => {
-  
-
   try {
     const dbResponse = await topicModel
       .findOne({

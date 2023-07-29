@@ -27,11 +27,11 @@ module.exports.getSubCategoryById = Joi.object({
 
 // updateSubCategory
 module.exports.updateSubCategory = Joi.object({
-  name: Joi.string().trim().label("Name"),
-  slug: Joi.string().trim().label("Slug"),
-  description: Joi.string().trim().allow("").label("Description"),
-  seoTitle: Joi.string().trim().allow("").label("SEO Title"),
-  seoDescription: Joi.string().trim().allow("").label("SEO Description"),
-  category: Joi.custom(customCallback).label("Category"),
+  name: Joi.string().trim().required().label("Name"),
+  slug: Joi.string().required().label("Slug"),
+  description: Joi.string().allow("").label("Description"),
+  seoTitle: Joi.string().allow("").label("SEO Title"),
+  seoDescription: Joi.string().allow("").label("SEO Description"),
+  category: Joi.custom(customCallback).required().label("Category"),
   status: Joi.boolean().label("Status"),
 });
