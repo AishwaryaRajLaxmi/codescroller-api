@@ -36,7 +36,13 @@ module.exports.createCategory = async (serviceData) => {
 // getAllCategories
 module.exports.getAllCategories = async (serviceData) => {
   try {
-    const { limit = 10, page = 1, status = "true", searchQuery } = serviceData;
+    const {
+      limit = 10,
+      page = 1,
+      status = "true",
+      searchQuery,
+      subCategory,
+    } = serviceData;
     let conditions = {};
     // Set the condition for active users (where isDeleted is false)
     conditions.isDeleted = false;
@@ -55,7 +61,7 @@ module.exports.getAllCategories = async (serviceData) => {
         { description: regex },
       ];
     }
-
+    
     // count document
     const totalRecords = await categoryModel.countDocuments(conditions);
     const totalPages = Math.ceil(totalRecords / parseInt(limit));

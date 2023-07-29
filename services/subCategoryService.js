@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const constants = require("../helpers/constants");
 const { formatMongoData } = require("../helpers/dbHelper");
 const subCategoryModel = require("../database/models/subCategoryModel");
+const checkMongoId = require("../helpers/dbHelper");
 
 // createCategory
 module.exports.createSubCategory = async (serviceData) => {
@@ -38,7 +39,13 @@ module.exports.createSubCategory = async (serviceData) => {
 // getAllSubCategories
 module.exports.getAllSubCategories = async (serviceData) => {
   try {
-    const { limit = 10, page = 1, status = "true", searchQuery } = serviceData;
+    const {
+      limit = 10,
+      page = 1,
+      status = "true",
+      searchQuery,
+      category,
+    } = serviceData;
     let conditions = {};
     // Set the condition for active users (where isDeleted is false)
     conditions.isDeleted = false;
@@ -52,6 +59,11 @@ module.exports.getAllSubCategories = async (serviceData) => {
     if (searchQuery) {
       const regex = new RegExp(searchQuery, "i");
       conditions.$or = [{ name: regex }, { slug: regex }];
+    }
+
+    // search Subcategories by category
+    if (category) {
+      conditions.category = category;
     }
 
     // count document
