@@ -71,3 +71,49 @@ module.exports.deleteReview = async (req, res) => {
   }
   res.status(response.status).send(response);
 };
+
+// getReviewById
+module.exports.getReviewById = async (req, res) => {
+  const response = { ...constants.defaultServerResponse };
+  try {
+    const serviceResponse = await reviewService.getReviewById(req.params);
+    response.body = serviceResponse;
+    response.status = 200;
+    response.message = constants.reviewsMessage.REVIEWS_FETCHED;
+  } catch (error) {
+    console.log(`Something went wrong:controller:ReviewController: getReviewById
+    Error:${error.message}`);
+    response.message = error.message;
+    response.errors = error;
+  }
+  res.status(response.status).send(response);
+};
+
+
+module.exports.updateReview = async (req, res) => {
+  const response = { ...constants.defaultServerResponse };
+  try {
+    const serviceResponse = await reviewService.updateReview({
+      id: req.params.id,
+      body: req.body,
+    });
+
+    if (serviceResponse) {
+      response.body = serviceResponse;
+      response.status = 200;
+      response.message = constants.reviewsMessage.REVIEWS_UPDATED;
+    } else {
+      response.message = constants.reviewsMessage.REVIEWS_NOT_UPDATED;
+    }
+  } catch (error) {
+    console.log(
+      `Somthing Went Wrong Controller: reviewController: updateReview`,
+      error.message
+    );
+
+    response.errors = error;
+    response.message = error.message;
+    throw new Error(error);
+  }
+  res.status(response.status).send(response);
+};

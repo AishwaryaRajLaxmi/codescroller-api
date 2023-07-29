@@ -20,6 +20,11 @@ const reveiwSchema = new mongoose.Schema(
       type: String,
     },
 
+    reviewStatus: {
+      type: String,
+      default: "pending",
+    },
+
     status: {
       type: Boolean,
       default: true,

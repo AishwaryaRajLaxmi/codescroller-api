@@ -52,7 +52,9 @@ module.exports.getAllTopics = async (serviceData) => {
     const dbResponse = await topicModel
       .find(conditions)
       .skip((parseInt(page) - 1) * parseInt(limit))
-      .limit(parseInt(limit));
+      .limit(parseInt(limit))
+      .populate({path:"category", select :"name _id"})
+      .populate({path:"subCategories", select :"name _id"});
 
     const formatData = formatMongoData(dbResponse);
     return {
@@ -105,7 +107,8 @@ module.exports.getTopicById = async (serviceData) => {
     const dbResponse = await topicModel.findOne({
       _id: serviceData.id,
       isDeleted: false,
-    });
+    }).populate({path:"category", select :"name _id"})
+    .populate({path:"subCategories", select :"name _id"});;
     const formatData = formatMongoData(dbResponse);
     return formatData;
   } catch (error) {

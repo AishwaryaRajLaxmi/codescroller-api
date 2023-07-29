@@ -9,12 +9,12 @@ module.exports.createReview = async (userId, body) => {
   try {
     const reveiwResponse = await reveiwModel.findOne({
       user: userId,
-      course: body.course,
+      Review: body.Review,
     });
 
     if (reveiwResponse) {
       response.errors = {
-        course: "Sorry, You Already reviewed this course",
+        Review: "Sorry, You Already reviewed this Review",
       };
       return response;
     }
@@ -99,6 +99,42 @@ module.exports.deleteReview = async (serviceData) => {
     return response;
   } catch (error) {
     console.log(`Something went wrong: service : reviewService : deleteReview`);
+    throw new Error(error);
+  }
+};
+
+// getReviewById
+module.exports.getReviewById = async (serviceData) => {
+  try {
+    const serviceResponse = await reveiwModel.findOne({
+      _id: serviceData.id,
+      isDeleted: false,
+    });
+
+    console.log(serviceResponse);
+
+    const formatData = formatMongoData(serviceResponse);
+    return formatData;
+  } catch (error) {
+    console.log(
+      `Something went wrong: service : ReviewService : getReviewById`
+    );
+    throw new Error(error);
+  }
+};
+
+module.exports.updateReview = async (serviceData) => {
+  
+  try {
+    const { id, body } = serviceData;
+    const serviceResponse = await reveiwModel.findByIdAndUpdate(id, body, {
+      new: true,
+    });
+    return formatMongoData(serviceResponse);
+  } catch (error) {
+    console.log(
+      `Something went wrong: Service : reviewService : updateReview ${error.message}`
+    );
     throw new Error(error);
   }
 };

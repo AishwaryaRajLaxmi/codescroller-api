@@ -6,6 +6,7 @@ const {
   getAllReveiw,
   getReveiwById,
   updateReveiw,
+  updateReveiwByUser,
 } = require("../apiValidationSchemas/reveiwsValidationSchema");
 const {
   validateBody,
@@ -32,12 +33,37 @@ reveiwRouter.get(
   reveiwController.getAllReviews
 );
 
-// deleteReveiw
-reveiwRouter.delete(
+//getReveiwById
+reveiwRouter.get(
   "/:id",
   validateParams(getReveiwById),
-  validateUserToken,
-  reveiwController.deleteReview
+  reveiwController.getReviewById
 );
+
+// // deleteReveiw
+// reveiwRouter.delete(
+//   "/:id",
+//   validateParams(getReveiwById),
+//   validateUserToken,
+//   reveiwController.deleteReview
+// );
+
+// updateReview
+reveiwRouter.put(
+  "/:id",
+  validateParams(getReveiwById),
+  validateAdminToken,
+  validateBody(updateReveiw),
+  reveiwController.updateReview
+);
+
+// // updateReviewByUser
+// courseRouter.put(
+//   "/:id",
+//   validateParams(getReveiwById),
+//   validateUserToken,
+//   validateBody(updateReveiwByUser),
+//   reveiwController.updateReveiw
+// );
 
 module.exports = reveiwRouter;

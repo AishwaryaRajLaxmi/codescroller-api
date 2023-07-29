@@ -40,7 +40,7 @@ module.exports.getCourseById = async (serviceData) => {
     return formatData;
   } catch (error) {
     console.log(
-      `Something went wrong: service : courseService : getLanguageById`
+      `Something went wrong: service : courseService : getCourseById`
     );
     throw new Error(error);
   }
@@ -150,7 +150,7 @@ module.exports.deleteCourse = async (serviceData) => {
 
 // updateCourse
 module.exports.updateCourse = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  
   try {
     const { id, body } = serviceData;
     const serviceResponse = await courseModel.findByIdAndUpdate(id, body, {
