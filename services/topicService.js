@@ -38,7 +38,10 @@ module.exports.getAllTopics = async (serviceData) => {
       searchQuery,
       category,
       subCategory,
+      subCategories,
     } = serviceData;
+
+   
     let conditions = {};
     conditions.isDeleted = false;
 
@@ -55,8 +58,13 @@ module.exports.getAllTopics = async (serviceData) => {
     // search by category and subCategory id
     if (category) {
       conditions.category = category;
-    } else if (subCategory) {
+    }
+    if (subCategory) {
       conditions.subCategory = subCategory;
+    }
+
+    if (subCategory) {
+      conditions.subCategories = { $in: subCategories };
     }
 
     // count document

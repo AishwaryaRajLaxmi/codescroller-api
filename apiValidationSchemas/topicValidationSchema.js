@@ -20,8 +20,10 @@ module.exports.getAllTopics = Joi.object({
   limit: Joi.string(),
   status: Joi.string().valid("true", "false", "All"),
   searchQuery: Joi.string().allow(""),
-  category: Joi.string().custom(customCallback).allow(""),
-  subCategory:Joi.string().custom(customCallback).allow(""),
+  category: Joi.string().custom(customCallback),
+  subCategory:Joi.string().custom(customCallback),
+  subCategories:Joi.array(),
+
 });
 
 //getTopicById
