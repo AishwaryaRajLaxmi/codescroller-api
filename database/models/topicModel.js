@@ -26,6 +26,20 @@ const topicSchema = new mongoose.Schema(
       type: String,
     },
 
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "category",
+      required: true,
+    },
+
+    subCategories: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "subCategory",
+        required: true,
+      },
+    ],
+
     status: {
       type: Boolean,
       required: true,

@@ -49,7 +49,17 @@ module.exports.getCourseById = async (serviceData) => {
 // getAllCourse
 module.exports.getAllCourses = async (serviceData) => {
   try {
-    const { limit = 10, page = 1, status = "true", searchQuery } = serviceData;
+    const {
+      limit = 10,
+      page = 1,
+      status = "true",
+      searchQuery,
+      level,
+      category,
+      subCategory,
+      language,
+      topic,
+    } = serviceData;
     let conditions = {};
     conditions.isDeleted = false;
 
@@ -70,6 +80,18 @@ module.exports.getAllCourses = async (serviceData) => {
         { requirements: regex },
         { highlights: regex },
       ];
+    }
+
+    if (level) {
+      conditions.level = level;
+    } else if (language) {
+      conditions.language = language;
+    } else if (category) {
+      conditions.category = category;
+    } else if (subCategory) {
+      conditions.subCategory = subCategory;
+    } else if (topic) {
+      conditions.topic = topic;
     }
     // count document
     const totalRecords = await courseModel.countDocuments(conditions);

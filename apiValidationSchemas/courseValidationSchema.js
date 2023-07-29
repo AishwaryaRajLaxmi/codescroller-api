@@ -19,10 +19,7 @@ module.exports.createCourse = Joi.object({
   courseTag: Joi.string(),
   language: Joi.string().custom(customCallback).required().label("Language"),
   level: Joi.string().custom(customCallback).required().label("Level"),
-  categories: Joi.array()
-    .items(Joi.string().custom(customCallback).required())
-    .required()
-    .label("Categories"),
+  category: Joi.string().custom(customCallback).required().label("Category"),
   subCategories: Joi.array()
     .items(Joi.string().custom(customCallback).required())
     .required()
@@ -47,6 +44,10 @@ module.exports.getAllCourses = Joi.object({
   limit: Joi.number(),
   status: Joi.string().valid("true", "false", "All"),
   searchQuery: Joi.string().allow(""),
+  language: Joi.string().custom(customCallback),
+  category: Joi.string().custom(customCallback),
+  subCategory: Joi.string().custom(customCallback),
+  topic: Joi.string().custom(customCallback),
 });
 
 //getCourseById
@@ -71,7 +72,7 @@ module.exports.updateCourse = Joi.object({
   courseTag: Joi.string(),
   language: Joi.string().custom(customCallback),
   level: Joi.string().custom(customCallback),
-  categories: Joi.array().items(Joi.string().custom(customCallback)),
+  category: Joi.string().custom(customCallback),
   subCategories: Joi.array().items(Joi.string().custom(customCallback)),
   topics: Joi.array().items(Joi.string().custom(customCallback)),
   highlights: Joi.string(),

@@ -74,13 +74,13 @@ const courseSchema = mongoose.Schema(
       ref: "level",
       required: true,
     },
-    categories: [
+    category: 
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "category",
         required: true,
       },
-    ],
+    
 
     subCategories: [
       {
