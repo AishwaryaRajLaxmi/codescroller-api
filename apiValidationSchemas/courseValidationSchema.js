@@ -12,18 +12,28 @@ module.exports.createCourse = Joi.object({
   instructorAbout: Joi.string(),
   instructorImage: Joi.string(),
   instructorDesignation: Joi.string().allow(""),
-  seoTitle: Joi.string(),
-  seoDescription: Joi.string(),
+  seoTitle: Joi.string().allow(""),
+  seoTags: Joi.string().allow(""),
+  seoDescription: Joi.string().allow(""),
   defaultVideo: Joi.string(),
   courseTag: Joi.string(),
   language: Joi.string().custom(customCallback).required().label("Language"),
   level: Joi.string().custom(customCallback).required().label("Level"),
-  categories: Joi.array().required().label("Categories"),
-  subCategories: Joi.array().label("Sub Categories"),
-  topics: Joi.array().label("Topics"),
-  highlights: Joi.string(),
-  requirements: Joi.string(),
-  prerequisite: Joi.string(),
+  categories: Joi.array()
+    .items(Joi.string().custom(customCallback).required())
+    .required()
+    .label("Categories"),
+  subCategories: Joi.array()
+    .items(Joi.string().custom(customCallback).required())
+    .required()
+    .label("Sub Categories"),
+  topics: Joi.array()
+    .items(Joi.string().custom(customCallback).required())
+    .required()
+    .label("Topics"),
+  highlights: Joi.string().allow(""),
+  requirements: Joi.string().allow(""),
+  prerequisite: Joi.string().allow(""),
   sellingPrice: Joi.number().required().label("Selling Price"),
   mrp: Joi.number().required().label("MRP"),
   validity: Joi.string().required().label("Validity"),
@@ -56,6 +66,7 @@ module.exports.updateCourse = Joi.object({
   instructorImage: Joi.string(),
   instructorDesignation: Joi.string(),
   seoTitle: Joi.string(),
+  seoTags: Joi.string(),
   seoDescription: Joi.string(),
   courseTag: Joi.string(),
   language: Joi.string().custom(customCallback),

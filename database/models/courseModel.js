@@ -14,13 +14,13 @@ const courseSchema = mongoose.Schema(
 
     description: {
       type: String,
-      unique: true,
+     
     },
 
     courseDetails: {
       type: String,
       trim: true,
-         },
+    },
 
     instructorName: {
       type: String,
@@ -40,6 +40,10 @@ const courseSchema = mongoose.Schema(
     },
 
     seoTitle: {
+      type: String,
+    },
+
+    seoTags: {
       type: String,
     },
 
@@ -63,15 +67,18 @@ const courseSchema = mongoose.Schema(
     language: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "language",
+      required: true,
     },
     level: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "level",
+      required: true,
     },
     categories: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "category",
+        required: true,
       },
     ],
 
@@ -79,6 +86,7 @@ const courseSchema = mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "subCategory",
+        required: true,
       },
     ],
 
@@ -86,6 +94,7 @@ const courseSchema = mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "topic",
+        required:true
       },
     ],
 
@@ -113,7 +122,7 @@ const courseSchema = mongoose.Schema(
     isReturnable: {
       type: Boolean,
       required: true,
-      default:true,
+      default: true,
     },
     returnDays: {
       type: Number,
@@ -121,8 +130,7 @@ const courseSchema = mongoose.Schema(
     },
     courseStatus: {
       type: Boolean,
-      default:true,
-      
+      default: true,
     },
     status: {
       type: Boolean,
