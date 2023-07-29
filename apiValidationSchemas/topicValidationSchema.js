@@ -34,7 +34,7 @@ module.exports.updateTopic = Joi.object({
   subCategories: Joi.array().items(Joi.string().custom(customCallback)),
   name: Joi.string().trim().label("Name"),
   slug: Joi.string().trim().label("Slug"),
-  description: Joi.string().trim().label("Description"),
+  description: Joi.string().trim().label("Description").allow(""),
   status: Joi.boolean().label("Status"),
   seoDescription: Joi.string().label("SEO Description"),
   seoTitle: Joi.string().label("SEO Title"),

@@ -32,10 +32,16 @@ module.exports.createCourse = async (serviceData) => {
 // getCourseById
 module.exports.getCourseById = async (serviceData) => {
   try {
-    const serviceResponse = await courseModel.findOne({
-      _id: serviceData.id,
-      isDeleted: false,
-    });
+    const serviceResponse = await courseModel
+      .findOne({
+        _id: serviceData.id,
+        isDeleted: false,
+      })
+      .populate({ path: "language", select: "name _id" })
+      .populate({ path: "level", select: "name _id" })
+      .populate({ path: "category", select: "name _id" })
+      .populate({ path: "subCategories", select: "name _id" })
+      .populate({ path: "topics", select: "name _id" });
     const formatData = formatMongoData(serviceResponse);
     return formatData;
   } catch (error) {
@@ -102,7 +108,10 @@ module.exports.getAllCourses = async (serviceData) => {
       .skip((parseInt(page) - 1) * parseInt(limit))
       .limit(parseInt(limit))
       .populate({ path: "language", select: "name _id" })
-      .populate({ path: "level", select: "name _id" });
+      .populate({ path: "level", select: "name _id" })
+      .populate({ path: "category", select: "name _id" })
+      .populate({ path: "subCategories", select: "name _id" })
+      .populate({ path: "topics", select: "name _id" });
 
     const formatData = formatMongoData(serviceResponse);
 
@@ -150,7 +159,6 @@ module.exports.deleteCourse = async (serviceData) => {
 
 // updateCourse
 module.exports.updateCourse = async (serviceData) => {
-  
   try {
     const { id, body } = serviceData;
     const serviceResponse = await courseModel.findByIdAndUpdate(id, body, {

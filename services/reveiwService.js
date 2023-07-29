@@ -123,6 +123,7 @@ module.exports.getReviewById = async (serviceData) => {
   }
 };
 
+// updateReview By Admin
 module.exports.updateReview = async (serviceData) => {
   
   try {
@@ -134,6 +135,23 @@ module.exports.updateReview = async (serviceData) => {
   } catch (error) {
     console.log(
       `Something went wrong: Service : reviewService : updateReview ${error.message}`
+    );
+    throw new Error(error);
+  }
+};
+
+// updateReviw By Admin
+module.exports.updateReviewByUser = async (serviceData) => {
+  
+  try {
+    const { id, body } = serviceData;
+    const serviceResponse = await reveiwModel.findByIdAndUpdate(id, body, {
+      new: true,
+    });
+    return formatMongoData(serviceResponse);
+  } catch (error) {
+    console.log(
+      `Something went wrong: Service : reviewService : updateReviewByUser ${error.message}`
     );
     throw new Error(error);
   }

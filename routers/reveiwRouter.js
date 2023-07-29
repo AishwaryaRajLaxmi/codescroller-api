@@ -57,13 +57,13 @@ reveiwRouter.put(
   reveiwController.updateReview
 );
 
-// // updateReviewByUser
-// courseRouter.put(
-//   "/:id",
-//   validateParams(getReveiwById),
-//   validateUserToken,
-//   validateBody(updateReveiwByUser),
-//   reveiwController.updateReveiw
-// );
+// updateReviewByUser
+reveiwRouter.put(
+  "/updateReviewByUser/:id",
+  validateParams(getReveiwById),
+  validateUserToken,
+  validateBody(updateReveiwByUser),
+  reveiwController.updateReviewByUser
+);
 
 module.exports = reveiwRouter;

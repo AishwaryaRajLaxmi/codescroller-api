@@ -53,8 +53,8 @@ module.exports.getAllTopics = async (serviceData) => {
       .find(conditions)
       .skip((parseInt(page) - 1) * parseInt(limit))
       .limit(parseInt(limit))
-      .populate({path:"category", select :"name _id"})
-      .populate({path:"subCategories", select :"name _id"});
+      .populate({ path: "category", select: "name _id" })
+      .populate({ path: "subCategories", select: "name _id" });
 
     const formatData = formatMongoData(dbResponse);
     return {
@@ -101,14 +101,16 @@ module.exports.deleteTopic = async (serviceData) => {
 
 // getTopicById
 module.exports.getTopicById = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
   
+
   try {
-    const dbResponse = await topicModel.findOne({
-      _id: serviceData.id,
-      isDeleted: false,
-    }).populate({path:"category", select :"name _id"})
-    .populate({path:"subCategories", select :"name _id"});;
+    const dbResponse = await topicModel
+      .findOne({
+        _id: serviceData.id,
+        isDeleted: false,
+      })
+      .populate({ path: "category", select: "name _id" })
+      .populate({ path: "subCategories", select: "name _id" });
     const formatData = formatMongoData(dbResponse);
     return formatData;
   } catch (error) {
@@ -127,7 +129,7 @@ module.exports.updateTopic = async (serviceData) => {
     const dbResponse = await topicModel.findByIdAndUpdate(id, body, {
       new: true,
     });
-   
+
     return formatMongoData(dbResponse);
   } catch (error) {
     console.log(

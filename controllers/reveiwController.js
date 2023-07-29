@@ -90,6 +90,7 @@ module.exports.getReviewById = async (req, res) => {
 };
 
 
+// updateReview By Admin
 module.exports.updateReview = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
@@ -108,6 +109,35 @@ module.exports.updateReview = async (req, res) => {
   } catch (error) {
     console.log(
       `Somthing Went Wrong Controller: reviewController: updateReview`,
+      error.message
+    );
+
+    response.errors = error;
+    response.message = error.message;
+    throw new Error(error);
+  }
+  res.status(response.status).send(response);
+};
+
+// updateReviewByUser
+module.exports.updateReviewByUser = async (req, res) => {
+  const response = { ...constants.defaultServerResponse };
+  try {
+    const serviceResponse = await reviewService.updateReviewByUser({
+      id: req.params.id,
+      body: req.body,
+    });
+
+    if (serviceResponse) {
+      response.body = serviceResponse;
+      response.status = 200;
+      response.message = constants.reviewsMessage.REVIEWS_UPDATED;
+    } else {
+      response.message = constants.reviewsMessage.REVIEWS_NOT_UPDATED;
+    }
+  } catch (error) {
+    console.log(
+      `Somthing Went Wrong Controller: reviewController: updateReviewByUser`,
       error.message
     );
 

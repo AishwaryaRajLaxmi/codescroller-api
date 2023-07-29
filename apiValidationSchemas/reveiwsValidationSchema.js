@@ -33,5 +33,5 @@ module.exports.updateReveiw = Joi.object({
   course: Joi.string().custom(customCallback),
   ratings: Joi.number().allow(""),
   comments: Joi.string().allow(""),
-  reviewStatus: Joi.string().valid("pending", "approved"),
+  reviewStatus: Joi.string().valid("pending", "approved").label("Review Status"),
 });
