@@ -2,8 +2,8 @@ const Joi = require("joi");
 
 // registerAdmin
 module.exports.registerAdmin = Joi.object({
-  name: Joi.string().trim().required().min(3),
-  email: Joi.string().email().trim().required(),
+  name: Joi.string().trim().required().min(3).label("Name"),
+  email: Joi.string().email().trim().required().label("Email"),
   password: Joi.string()
     .regex(
       /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[a-zA-Z!#$%&@? "])[a-zA-Z0-9!#$%&@?]{6,20}$/
@@ -13,12 +13,13 @@ module.exports.registerAdmin = Joi.object({
     .messages({
       "string.empty": `"Password" must not be empty`,
       "string.pattern.base": `"Pasword" must be a mix of number, char, and special char`,
-    }),
+    })
+    .label("Password"),
 });
 
 // loginAdmin
 module.exports.loginAdmin = Joi.object({
-  email: Joi.string().email().trim().required(),
+  email: Joi.string().email().trim().required().label("Email"),
   password: Joi.string()
     .regex(
       /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[a-zA-Z!#$%&@? "])[a-zA-Z0-9!#$%&@?]{6,20}$/
@@ -28,7 +29,8 @@ module.exports.loginAdmin = Joi.object({
     .messages({
       "string.empty": `"Password" must not be empty`,
       "string.pattern.base": `"Pasword" must be a mix of number, char, and special char`,
-    }),
+    })
+    .label("Password"),
 });
 
 // updateProfile
@@ -64,13 +66,13 @@ module.exports.updateProfile = Joi.object({
 
 // findAccount
 module.exports.findAccount = Joi.object({
-  email: Joi.string().email().trim().required(),
+  email: Joi.string().email().trim().required().label("Email"),
 });
 
 // verifyOTP
 module.exports.verifyOTP = Joi.object({
-  email: Joi.string().email().trim().required(),
-  otp: Joi.string().trim().required().min(4),
+  email: Joi.string().email().trim().required().label("Email"),
+  otp: Joi.string().trim().required().min(4).label("OTP"),
 });
 
 // createNewPassword
@@ -84,7 +86,8 @@ module.exports.createNewPassword = Joi.object({
     .messages({
       "string.empty": `"Password" must not be empty`,
       "string.pattern.base": `"Pasword" must be a mix of number, char, and special char`,
-    }),
+    })
+    .label("Password"),
   cPassword: Joi.any()
     .equal(Joi.ref("password"))
     .required()

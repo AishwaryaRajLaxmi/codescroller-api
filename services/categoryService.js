@@ -22,9 +22,14 @@ module.exports.createCategory = async (serviceData) => {
     return formatMongoData(serviceResponse);
   } catch (error) {
     console.log(
-      `Something went wrong service : userService : createCategory\nError: ${error.message}`
+      `Something went wrong service : categoryService : createCategory\nError: ${error.message}`
     );
-    throw new Error(error.message);
+    const keyValue = {};
+    for (const key of Object.keys(error.keyValue)) {
+      keyValue[key] = error.keyValue[key];
+    }
+    const errorMessage = JSON.stringify(keyValue);
+    throw new Error(errorMessage + " is duplicate");
   }
 };
 
@@ -117,7 +122,9 @@ module.exports.getCategoryById = async (serviceData) => {
     const formatData = formatMongoData(dbResponse);
     return formatData;
   } catch (error) {
-    console.log(`Something went wrong: service : userService : deleteUser`);
+    console.log(
+      `Something went wrong: service : categoryService : deleteCategory`
+    );
     throw new Error(error);
   }
 };

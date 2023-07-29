@@ -10,6 +10,7 @@ module.exports.createTopic = Joi.object({
   seoDescription: Joi.string().label("SEO Description").allow(""),
 });
 
+
 // getAllTopics
 module.exports.getAllTopics = Joi.object({
   page: Joi.string(),

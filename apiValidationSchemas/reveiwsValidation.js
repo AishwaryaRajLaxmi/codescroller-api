@@ -3,7 +3,7 @@ const { customCallback } = require("../helpers/joiHelper");
 
 // createReveiw
 module.exports.createReveiw = Joi.object({
-  course: Joi.string().custom(customCallback).required(),
+  course: Joi.string().custom(customCallback).required().label("Course"),
   ratings: Joi.number().allow(""),
   comment: Joi.string().allow(""),
 });
@@ -23,7 +23,6 @@ module.exports.getReveiwById = Joi.object({
 
 // updateReveiw
 module.exports.updateReveiw = Joi.object({
-  user: Joi.string().custom(customCallback),
   course: Joi.string().custom(customCallback),
   ratings: Joi.number().allow(""),
   comments: Joi.string().allow(""),

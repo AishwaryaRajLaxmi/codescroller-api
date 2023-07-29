@@ -11,6 +11,6 @@ module.exports.connect = async () => {
       );
     }
   } catch (error) {
-    console.log(`Database connection error\nError: ${error.message}`);
+    console.log(`Database connection error\nError: ${error}`);
   }
 };

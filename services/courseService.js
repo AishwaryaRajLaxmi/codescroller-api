@@ -12,7 +12,7 @@ module.exports.createCourse = async (serviceData) => {
 
     if (courseResponse) {
       response.errors = {
-        name: "course already exists",
+        name: "Course already exists",
       };
 
       return response;

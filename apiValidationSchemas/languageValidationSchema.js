@@ -25,6 +25,6 @@ module.exports.getLanguageById = Joi.object({
 module.exports.updateLanguage = Joi.object({
   name: Joi.string().trim(),
   description: Joi.string().trim().allow(""),
-  slug: Joi.string().required(),
+  slug: Joi.string().required().label("Slug"),
   status: Joi.boolean(),
 });

@@ -92,7 +92,7 @@ module.exports = {
   },
   courseMessage: {
     COURSE_CREATED: "Course  Created Successfully",
-    COURSE_NOT_CREATED: "Course Not Created Successfully",
+    COURSE_NOT_CREATED: "Course Not Created ",
     COURSE_FETCHED: "Course Fetched Successfully",
     COURSE_NOT_FETCHED: "Course Not Fetched",
     COURSE_LOGEDIN: "Course Logedin Successfully",

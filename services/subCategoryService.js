@@ -13,7 +13,7 @@ module.exports.createSubCategory = async (serviceData) => {
 
     if (categoryResponse) {
       response.errors = {
-        name: "SubCategoryalready exists",
+        name: "Sub Category already exists",
       };
       return response;
     }
@@ -23,9 +23,15 @@ module.exports.createSubCategory = async (serviceData) => {
     return formatMongoData(serviceResponse);
   } catch (error) {
     console.log(
-      `Something went wrong service : userService : createSubCategory\nError: ${error.message}`
+      `Something went wrong service : subCategoryService : createSubCategory\nError: ${error.message}`
     );
-    throw new Error(error.message);
+
+    const keyValue = {};
+    for (const key of Object.keys(error.keyValue)) {
+      keyValue[key] = error.keyValue[key];
+    }
+    const errorMessage = JSON.stringify(keyValue);
+    throw new Error(errorMessage + " is duplicate");
   }
 };
 

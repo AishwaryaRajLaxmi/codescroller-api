@@ -10,11 +10,12 @@ module.exports.registerUser = Joi.object({
     .regex(/^[6-9]\d{9}$/)
     .required()
     .messages({
-      "string.empty": `"Mobile Number" should be 10 digit`,
+      "string.empty": `"Mobile Number" shld be 10 digitou`,
       "string.pattern.base": `"Mobile Number" must be a valid number`,
       "any.required": `"Mobile Number" is a required field`,
-    }),
-  password: Joi.string().min(5).trim().required(),
+    })
+    .label("Mobile"),
+  password: Joi.string().min(5).trim().required().label("Password"),
   cPassword: Joi.any()
     .equal(Joi.ref("password"))
     .required()
@@ -68,10 +69,11 @@ module.exports.isMobileExists = Joi.object({
       "string.empty": `"Mobile Number" should be 10 digit`,
       "string.pattern.base": `"Mobile Number" must be valid number`,
       "any.required": `"Mobile Number" is a required field`,
-    }),
+    })
+    .label("Mobile"),
 });
 
 // isEmailExists
 module.exports.isEmailExists = Joi.object({
-  email: Joi.string().email().trim().required(),
+  email: Joi.string().email().trim().required().label("Email"),
 });

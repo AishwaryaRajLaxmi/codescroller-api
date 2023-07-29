@@ -40,21 +40,4 @@ reveiwRouter.delete(
   reveiwController.deleteReview
 );
 
-// // getreveiw
-// reveiwRouter.get(
-//   "/:id",
-//   validateParams(getReveiwById),
-//   jwtValidation.validateUserToken,
-//   reveiwController.getReveiwById
-// );
-
-// // updatereveiw
-// reveiwRouter.put(
-//   "/:id",
-//   validateParams(getReveiwById),
-//   jwtValidation.validateUserToken,
-//   validateBody(updateReveiw),
-//   reveiwController.updateReveiw
-// );
-
 module.exports = reveiwRouter;
