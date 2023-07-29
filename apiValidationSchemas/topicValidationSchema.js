@@ -30,11 +30,12 @@ module.exports.getTopicById = Joi.object({
 
 // Update Topic Validation Schema
 module.exports.updateTopic = Joi.object({
-  category: Joi.string().custom(customCallback).required(),
+  category: Joi.string().custom(customCallback).required().label("Category"),
   subCategories: Joi.array()
     .items(Joi.string().custom(customCallback))
-    .required(),
-  name: Joi.string().trim().label("Name").required(),
+    .required()
+    .label("Sub Categories"),
+  name: Joi.string().trim().label("Name").required().label("Name"),
   slug: Joi.string().trim().label("Slug").required(),
   description: Joi.string().trim().label("Description").allow(""),
   status: Joi.boolean().label("Status"),

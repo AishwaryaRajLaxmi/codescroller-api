@@ -23,8 +23,8 @@ module.exports.getLanguageById = Joi.object({
 
 // Update Language Validation Schema
 module.exports.updateLanguage = Joi.object({
-  name: Joi.string().trim(),
-  description: Joi.string().trim().allow(""),
+  name: Joi.string().trim().required().label("Name"),
+  description: Joi.string().allow("").label("Description"),
   slug: Joi.string().required().label("Slug"),
-  status: Joi.boolean(),
+
 });
