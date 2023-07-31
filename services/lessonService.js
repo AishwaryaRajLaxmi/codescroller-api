@@ -151,4 +151,6 @@ module.exports.updateLesson = async (serviceData) => {
     );
     throw new Error(error);
   }
-};
+}
+
+// lessonModel.findOne({_id:courseId}).sort({createdAt:-1}).limit(1)

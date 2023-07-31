@@ -10,8 +10,8 @@ dotEnv.config();
 const dbConnection = require("./database/connection");
 dbConnection.connect();
 
-// middleware for converting request into json
 app.use(cors());
+// middleware for converting request into json
 app.use(express.json());
 
 // register the router

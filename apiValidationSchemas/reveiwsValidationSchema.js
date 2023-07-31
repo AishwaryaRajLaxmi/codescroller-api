@@ -32,7 +32,7 @@ module.exports.updateReveiwByUser = Joi.object({
 module.exports.updateReveiw = Joi.object({
   course: Joi.string().custom(customCallback).required(),
   ratings: Joi.number().allow(""),
-  comments: Joi.string().allow(""),
+  comment: Joi.string().allow(""),
   reviewStatus: Joi.string()
     .valid("pending", "approved")
     .label("Review Status")
