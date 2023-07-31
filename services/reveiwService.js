@@ -14,7 +14,7 @@ module.exports.createReview = async (userId, body) => {
 
     if (reveiwResponse) {
       response.errors = {
-        Review: "Sorry, You Already reviewed this Review",
+        course: "Sorry, You Already reviewed this course",
       };
       return response;
     }
@@ -125,7 +125,6 @@ module.exports.getReviewById = async (serviceData) => {
 
 // updateReview By Admin
 module.exports.updateReview = async (serviceData) => {
-  
   try {
     const { id, body } = serviceData;
     const serviceResponse = await reveiwModel.findByIdAndUpdate(id, body, {
@@ -142,7 +141,6 @@ module.exports.updateReview = async (serviceData) => {
 
 // updateReviw By Admin
 module.exports.updateReviewByUser = async (serviceData) => {
-  
   try {
     const { id, body } = serviceData;
     const serviceResponse = await reveiwModel.findByIdAndUpdate(id, body, {

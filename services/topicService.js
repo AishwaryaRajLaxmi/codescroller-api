@@ -41,7 +41,6 @@ module.exports.getAllTopics = async (serviceData) => {
       subCategories,
     } = serviceData;
 
-   
     let conditions = {};
     conditions.isDeleted = false;
 
@@ -60,10 +59,10 @@ module.exports.getAllTopics = async (serviceData) => {
       conditions.category = category;
     }
     if (subCategory) {
-      conditions.subCategory = subCategory;
+      conditions.subCategories = subCategory;
     }
 
-    if (subCategory) {
+    if (subCategories) {
       conditions.subCategories = { $in: subCategories };
     }
 
