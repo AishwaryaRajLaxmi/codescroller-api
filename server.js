@@ -12,6 +12,7 @@ dbConnection.connect();
 
 // middleware for converting request into json
 app.use(cors());
+app.use(express.json());
 
 // register the router
 app.use("/api/v1/users", require("./routers/userRouter"));
