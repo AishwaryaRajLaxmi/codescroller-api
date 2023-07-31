@@ -10,8 +10,6 @@
 //       name: serviceData.name,
 //     });
 
-        
-
 //     if (contentResponse) {
 //       response.errors = {
 //         name: "content already exists",

@@ -115,7 +115,6 @@ module.exports.getReviewById = async (serviceData) => {
       .populate({ path: "course", select: "name _id" })
       .populate({ path: "user", select: "name _id" });
 
-    // console.log(serviceResponse);
 
     const formatData = formatMongoData(serviceResponse);
     return formatData;
