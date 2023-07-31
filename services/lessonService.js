@@ -17,6 +17,9 @@ module.exports.createLesson = async (serviceData) => {
 
       return response;
     }
+    
+    // const courseLesson=await lessonModel.findOne({course:serviceData.course}).sort({createdAt:-1}).limit(1)
+    // console.log(courseLesson);
 
     const newData = new lessonModel(serviceData);
     const serviceResponse = await newData.save();
@@ -58,7 +61,7 @@ module.exports.getAllLessons = async (serviceData) => {
       status = "true",
       searchQuery,
       course,
-      serialNo
+      serialNo,
     } = serviceData;
     let conditions = {};
     conditions.isDeleted = false;
@@ -151,6 +154,6 @@ module.exports.updateLesson = async (serviceData) => {
     );
     throw new Error(error);
   }
-}
+};
 
-// lessonModel.findOne({_id:courseId}).sort({createdAt:-1}).limit(1)
+//
