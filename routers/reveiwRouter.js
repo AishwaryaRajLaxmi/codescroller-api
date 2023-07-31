@@ -40,13 +40,13 @@ reveiwRouter.get(
   reveiwController.getReviewById
 );
 
-// // deleteReveiw
-// reveiwRouter.delete(
-//   "/:id",
-//   validateParams(getReveiwById),
-//   validateUserToken,
-//   reveiwController.deleteReview
-// );
+// deleteReveiw
+reveiwRouter.delete(
+  "/:id",
+  validateParams(getReveiwById),
+  validateUserToken,
+  reveiwController.deleteReview
+);
 
 // updateReview
 reveiwRouter.put(

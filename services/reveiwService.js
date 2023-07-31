@@ -57,7 +57,8 @@ module.exports.getAllReviews = async (serviceData) => {
       .find(conditions)
       .skip(parseInt(page - 1) * parseInt(limit))
       .limit(parseInt(limit))
-      .populate({ path: "course", select: "name _id" });
+      .populate({ path: "course", select: "name _id" })
+      .populate({ path: "user", select: "name _id" });
 
     const formatData = formatMongoData(serviceResponse);
 
@@ -88,7 +89,7 @@ module.exports.deleteReview = async (serviceData) => {
 
     if (!serviceResponse) {
       response.errors = {
-        error: constants.reviewsMessage.REVIEWS_DELETED,
+        error: constants.reviewsMessage.REVIEWS_NOT_DELETED,
       };
       return response;
     }
@@ -106,10 +107,13 @@ module.exports.deleteReview = async (serviceData) => {
 // getReviewById
 module.exports.getReviewById = async (serviceData) => {
   try {
-    const serviceResponse = await reveiwModel.findOne({
-      _id: serviceData.id,
-      isDeleted: false,
-    });
+    const serviceResponse = await reveiwModel
+      .findOne({
+        _id: serviceData.id,
+        isDeleted: false,
+      })
+      .populate({ path: "course", select: "name _id" })
+      .populate({ path: "user", select: "name _id" });
 
     // console.log(serviceResponse);
 

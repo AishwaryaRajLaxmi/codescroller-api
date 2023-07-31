@@ -10,8 +10,7 @@ dotEnv.config();
 const dbConnection = require("./database/connection");
 dbConnection.connect();
 
-// cors enabled
-app.use(cors());
+
 // middleware for converting request into json
 app.use(express.json());
 
