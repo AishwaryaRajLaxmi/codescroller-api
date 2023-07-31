@@ -47,7 +47,7 @@ module.exports.getLessonById = async (req, res) => {
 module.exports.getAllLessons = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const serviceResponse = await lessonService.getAllLessons(req.query);
+    const serviceResponse = await lessonService.getAllLessons(req.query);    
     response.body = serviceResponse.body;
     response.totalPages = serviceResponse.totalPages;
     response.totalRecords = serviceResponse.totalRecords;

@@ -8,7 +8,7 @@ module.exports.createLesson = Joi.object({
   description: Joi.string().required().label("Description").allow(""),
 
   course: Joi.string().custom(customCallback).required().label("Course"),
-  serialNo: Joi.string().required().label("Serial Number"),
+  serialNo: Joi.number().label("Serial Number"),
 });
 
 // updateLesson
@@ -18,7 +18,7 @@ module.exports.updateLesson = Joi.object({
   description: Joi.string().required().label("Description").allow(""),
   status: Joi.boolean().required().label("Status"),
   course: Joi.string().custom(customCallback).required().label("Course"),
-  serialNo: Joi.string().required(),
+  serialNo: Joi.number().label("Serial Number"),
 });
 
 // getLessonById
@@ -30,7 +30,7 @@ module.exports.getLessonById = Joi.object({
 module.exports.getAllLessons = Joi.object({
   searchQuery: Joi.string().allow(""),
   status: Joi.string().valid("true", "false", "All"),
-  serialNo: Joi.string().allow(""),
+  serialNo: Joi.number().label("Serial Number"),
   page: Joi.number(),
   limit: Joi.number(),
 });

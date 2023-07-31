@@ -30,7 +30,7 @@ const lessonSchema = new mongoose.Schema(
       required: true,
     },
     serialNo: {
-      type: String,
+      type: Number,
       required: true,
     },
 

@@ -17,9 +17,42 @@ module.exports.createLesson = async (serviceData) => {
 
       return response;
     }
-    
-    // const courseLesson=await lessonModel.findOne({course:serviceData.course}).sort({createdAt:-1}).limit(1)
-    // console.log(courseLesson);
+
+    const courseLesson = await lessonModel
+      .findOne({ course: serviceData.course })
+      .sort({ createdAt: -1 })
+      .limit(1);
+
+    // if user is not sending serial number
+    if (!serviceData.serialNo) {
+      if (!courseLesson) {
+        serviceData.serialNo = 1;
+      } else {
+        if (courseLesson.serialNo) {
+          serviceData.serialNo = courseLesson.serialNo + 1;
+        }
+      }
+    } else {
+      // find record with the specified serialNo and course
+      const existingLesson = await lessonModel
+        .findOne({ serialNo: serviceData.serialNo, course: serviceData.course })
+        .sort({ createdAt: -1 })
+        .limit(1);
+
+      if (existingLesson) {
+        response.errors = {
+          course: "This Serial Number already exists",
+        };
+        return response;
+      } else {
+        if (
+          courseLesson &&
+          courseLesson.serialNo !== serviceData.serialNo + 1
+        ) {
+          serviceData.serialNo = courseLesson.serialNo + 1;
+        }
+      }
+    }
 
     const newData = new lessonModel(serviceData);
     const serviceResponse = await newData.save();
@@ -79,7 +112,6 @@ module.exports.getAllLessons = async (serviceData) => {
         { slug: regex },
       ];
     }
-
     if (serialNo) {
       conditions.serialNo = serialNo;
     }
@@ -95,6 +127,7 @@ module.exports.getAllLessons = async (serviceData) => {
       .skip((parseInt(page) - 1) * parseInt(limit))
       .limit(parseInt(limit))
       .populate({ path: "course", select: "name _id" });
+     
 
     const formatData = formatMongoData(serviceResponse);
 
