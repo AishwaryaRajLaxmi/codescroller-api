@@ -11,7 +11,6 @@ const dbConnection = require("./database/connection");
 dbConnection.connect();
 
 // middleware for converting request into json
-app.use(express.json());
 app.use(cors());
 
 // register the router
