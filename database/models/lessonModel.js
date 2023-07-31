@@ -1,4 +1,3 @@
-
 const mongoose = require("mongoose");
 const lessonSchema = new mongoose.Schema(
   {
@@ -46,35 +45,32 @@ const lessonSchema = new mongoose.Schema(
         },
         description: {
           type: String,
-          required: true,
         },
         contentType: {
           type: String,
           enum: ["video", "pdf"],
-          default: "video",
-          required: true,
         },
         contentSource: {
           type: String,
           enum: ["youtube", "dailymotion"],
-          default: "youtube",
-          required: true,
         },
         contentUrl: {
           type: String,
-          required: true,
         },
         isDeleted: {
           type: Boolean,
           default: false,
+          required: true,
         },
         status: {
           type: Boolean,
           default: true,
+          required: true,
         },
         isFree: {
           type: Boolean,
           default: false,
+          required: true,
         },
       },
     ],

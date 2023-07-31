@@ -5,17 +5,17 @@ const { customCallback } = require("../helpers/joiHelper");
 module.exports.createLesson = Joi.object({
   name: Joi.string().required().label("Name"),
   slug: Joi.string().required().label("Slug"),
-  description: Joi.string().required().label("Description").allow(""),
-
+  description: Joi.string().label("Description").allow(""),
   course: Joi.string().custom(customCallback).required().label("Course"),
   serialNo: Joi.number().label("Serial Number"),
+  
 });
 
 // updateLesson
 module.exports.updateLesson = Joi.object({
   name: Joi.string().required().label("Name"),
   slug: Joi.string().required().label("Slug"),
-  description: Joi.string().required().label("Description").allow(""),
+  description: Joi.string().label("Description").allow(""),
   status: Joi.boolean().required().label("Status"),
   course: Joi.string().custom(customCallback).required().label("Course"),
   serialNo: Joi.number().label("Serial Number"),

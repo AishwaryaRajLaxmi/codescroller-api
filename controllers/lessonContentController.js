@@ -1,35 +1,39 @@
-// const constants = require("../helpers/constants");
-// const contentService = require("../services/contentService");
+const constants = require("../helpers/constants");
+const lessonContentService = require("../services/lessonContentService");
 
-// // createContent
-// module.exports.createContent = async (req, res) => {
-//   const response = { ...constants.defaultServerResponse };
-//   try {
-//     const serviceResponse = await contentService.createContent(req.body);
+// createContent
+module.exports.createLessonContent = async (req, res) => {
+  const response = { ...constants.defaultServerResponse };
+  try {
+    const serviceResponse = await lessonContentService.createLessonContent(
+      req.params.lessonId,
+      req.body
+    );
+    
 
-//     if (serviceResponse.status === 400) {
-//       response.errors = serviceResponse.errors;
-//       response.message = constants.contentMessage.CONTENT_NOT_CREATED;
-//     } else {
-//       response.body = serviceResponse;
-//       response.message = constants.contentMessage.CONTENT_CREATED;
-//       response.status = 200;
-//     }
-//   } catch (error) {
-//     console.log(`Something went wrong:controller:Content Controller: createContent 
-//     Error:${error.message}`);
-//     response.message = error.message;
-//     response.errors = error;
-//   }
-//   res.status(response.status).send(response);
-// };
+    if (serviceResponse.status === 400) {
+      response.errors = serviceResponse.errors;
+      response.message = constants.contentMessage.CONTENT_NOT_CREATED;
+    } else {
+      response.body = serviceResponse;
+      response.message = constants.contentMessage.CONTENT_CREATED;
+      response.status = 200;
+    }
+  } catch (error) {
+    console.log(`Something went wrong:controller:lessonContentController: createLessonContent 
+    Error:${error.message}`);
+    response.message = error.message;
+    response.errors = error;
+  }
+  res.status(response.status).send(response);
+};
 
 // // getContent ByID
 
 // module.exports.getContentById = async (req, res) => {
 //   const response = { ...constants.defaultServerResponse };
 //   try {
-//     const serviceResponse = await contentService.getContentById(req.params);
+//     const serviceResponse = await lessonContentService.getContentById(req.params);
 //     response.body = serviceResponse;
 //     response.status = 200;
 //     response.message = constants.contentMessage.CONTENT_FETCHED;
@@ -47,7 +51,7 @@
 // module.exports.getAllContents = async (req, res) => {
 //   const response = { ...constants.defaultServerResponse };
 //   try {
-//     const serviceResponse = await contentService.getAllContents(req.query);
+//     const serviceResponse = await lessonContentService.getAllContents(req.query);
 //     response.body = serviceResponse.body;
 //     response.totalPages = serviceResponse.totalPages;
 //     response.totalRecords = serviceResponse.totalRecords;
@@ -68,7 +72,7 @@
 // module.exports.deleteContent = async (req, res) => {
 //   const response = { ...constants.defaultServerResponse };
 //   try {
-//     const serviceResponse = await contentService.deleteContent(req.params);
+//     const serviceResponse = await lessonContentService.deleteContent(req.params);
 //     if (serviceResponse.status == 200) {
 //       response.body = serviceResponse.body;
 //       response.message = constants.contentMessage.CONTENT_DELETED;
@@ -94,7 +98,7 @@
 // module.exports.updateContent = async (req, res) => {
 //   const response = { ...constants.defaultServerResponse };
 //   try {
-//     const serviceResponse = await contentService.updateContent({
+//     const serviceResponse = await lessonContentService.updateContent({
 //       id: req.params.id,
 //       body: req.body,
 //     });

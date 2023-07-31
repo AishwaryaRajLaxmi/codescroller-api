@@ -1,33 +1,36 @@
-// const lessonModel = require("../database/models/lessonModel");
-// const constants = require("../helpers/constants");
-// const { formatMongoData } = require("../helpers/dbHelper");
+const lessonModel = require("../database/models/lessonModel");
+const constants = require("../helpers/constants");
+const { formatMongoData } = require("../helpers/dbHelper");
 
-// // createContent
-// module.exports.createContent = async (serviceData) => {
-//   const response = { ...constants.defaultServerResponse };
-//   try {
-//     const contentResponse = await lessonModel.findOne({
-//       name: serviceData.name,
-//     });
+// createContent
+module.exports.createLessonContent = async (lessonId,body) => {
+ 
+  const response = { ...constants.defaultServerResponse };
+  console.log(lessonId,body);
+  
+  try {
+    const lessonResponse = await lessonModel.findOne({
+      _id: lessonId,
+    });
 
-//     if (contentResponse) {
-//       response.errors = {
-//         name: "content already exists",
-//       };
+    if (lessonResponse) {
+      lessonResponse.contents.push(body);
+    }
+  
+    
+    const serviceResponse = await lessonResponse.save();
+   
 
-//       return response;
-//     }
-
-//     const newData = new lessonModel(serviceData);
-//     const serviceResponse = await newData.save();
-//     return serviceResponse;
-//   } catch (error) {
-//     console.log(
-//       `Something went wrong service : contentService : createcontent\nError: ${error.message}`
-//     );
-//     throw new Error(error.message);
-//   }
-// };
+    return serviceResponse.body={
+      message:"content added"
+    };
+  } catch (error) {
+    console.log(
+      `Something went wrong service : lessonContentService : createlessonContent\nError: ${error.message}`
+    );
+    throw new Error(error.message);
+  }
+};
 
 // // getContentById
 // module.exports.getContentById = async (serviceData) => {
