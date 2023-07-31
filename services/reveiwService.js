@@ -37,6 +37,7 @@ module.exports.getAllReviews = async (serviceData) => {
   try {
     const { limit = 10, page = 1, status = "true", searchQuery } = serviceData;
     let conditions = {};
+    conditions.isDeleted = false;
 
     if (status == "true" || status == "false") {
       conditions.status = status;

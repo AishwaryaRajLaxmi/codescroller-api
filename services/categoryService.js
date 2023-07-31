@@ -145,7 +145,6 @@ module.exports.updateCategory = async (serviceData) => {
       body,
       { new: true }
     );
-    console.log(dbResponse);
 
     return formatMongoData(dbResponse);
   } catch (error) {
