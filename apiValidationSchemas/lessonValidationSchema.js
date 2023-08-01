@@ -8,7 +8,6 @@ module.exports.createLesson = Joi.object({
   description: Joi.string().label("Description").allow(""),
   course: Joi.string().custom(customCallback).required().label("Course"),
   serialNo: Joi.number().label("Serial Number"),
-  
 });
 
 // updateLesson
@@ -32,5 +31,6 @@ module.exports.getAllLessons = Joi.object({
   status: Joi.string().valid("true", "false", "All"),
   serialNo: Joi.number().label("Serial Number"),
   page: Joi.number(),
+  course: Joi.string().custom(customCallback).label("Course"),
   limit: Joi.number(),
 });

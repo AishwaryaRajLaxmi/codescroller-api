@@ -68,7 +68,7 @@ module.exports.deleteLevel = async (req, res) => {
     }
   } catch (error) {
     console.log(
-      `Something went wrong in service: levelService: deleteLevel\nError:${error.message}`
+      `Something went wrong in Controller: levelController: deleteLevel\nError:${error.message}`
     );
 
     response.message = error.message;

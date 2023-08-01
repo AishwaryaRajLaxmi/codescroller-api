@@ -4,9 +4,13 @@ const lessonContentRouter = express.Router();
 const lessonContentController = require("../controllers/lessonContentController");
 const {
   createLessonContent,
-  checkMongoId
+  updateLessonContent,
+  checkContentMongoId,
+  checkLessonMongoId,
 } = require("../apiValidationSchemas/lessonContentValidationSchema");
-const {getLessonById}=require('../apiValidationSchemas/lessonValidationSchema')
+const {
+  getLessonById,
+} = require("../apiValidationSchemas/lessonValidationSchema");
 const {
   validateBody,
   validateParams,
@@ -17,9 +21,29 @@ const jsonwebtoken = require("../middlewares/jwtValidation");
 // createLessonContent
 lessonContentRouter.post(
   "/:lessonId",
-  validateParams(checkMongoId),
+  validateParams(checkLessonMongoId),
   validateBody(createLessonContent),
   lessonContentController.createLessonContent
 );
+
+// updateLessonContent
+lessonContentRouter.put(
+  "/:contentId",
+  validateParams(checkContentMongoId),
+  validateBody(updateLessonContent),
+  lessonContentController.updateLessonContent
+);
+
+// deleteLessonContent
+lessonContentRouter.delete(
+  "/:contentId",
+  validateParams(checkContentMongoId),
+  lessonContentController.deleteLessonContent
+);
+// // getAllLessonContents
+// lessonContentRouter.get(
+//   "/",
+//    lessonContentController.getAllLessonsContents
+// );
 
 module.exports = lessonContentRouter;
