@@ -56,7 +56,6 @@ module.exports.updateLessonContent = async (serviceData) => {
 
 // getLessonContentById
 module.exports.getLessonContentById = async (serviceData) => {
-  console.log(serviceData);
   try {
     const serviceResponse = await lessonModel.findOne(
       {
