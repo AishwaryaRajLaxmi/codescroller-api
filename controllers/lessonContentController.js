@@ -125,30 +125,30 @@ module.exports.updateLessonContent = async (req, res) => {
 };
 
 // deleteLessonContent
-module.exports.deleteLessonContent = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
-  try {
-    const serviceResponse = await lessonContentService.deleteLessonContent(
-      req.params
-    );
+// module.exports.deleteLessonContent = async (req, res) => {
+//   const response = { ...constants.defaultServerResponse };
+//   try {
+//     const serviceResponse = await lessonContentService.deleteLessonContent(
+//       req.params
+//     );
 
-    if (serviceResponse.status == 200) {
-      response.body = serviceResponse.body;
-      response.message = constants.contentMessage.CONTENT_DELETED;
-      response.status = 200;
-    } else {
-      response.message = constants.contentMessage.CONTENT_NOT_DELETED;
-      response.status = 400;
-      response.errors = serviceResponse.errors;
-    }
-  } catch (error) {
-    console.log(
-      `Something went wrong in Controller : lessonContent : deleteLessonContent\nError:${error.message}`
-    );
-    response.message = error.message;
-    response.errors = {
-      error: error.message,
-    };
-  }
-  res.status(response.status).send(response);
-};
+//     if (serviceResponse.status == 200) {
+//       response.body = serviceResponse.body;
+//       response.message = constants.contentMessage.CONTENT_DELETED;
+//       response.status = 200;
+//     } else {
+//       response.message = constants.contentMessage.CONTENT_NOT_DELETED;
+//       response.status = 400;
+//       response.errors = serviceResponse.errors;
+//     }
+//   } catch (error) {
+//     console.log(
+//       `Something went wrong in Controller : lessonContent : deleteLessonContent\nError:${error.message}`
+//     );
+//     response.message = error.message;
+//     response.errors = {
+//       error: error.message,
+//     };
+//   }
+//   res.status(response.status).send(response);
+// };

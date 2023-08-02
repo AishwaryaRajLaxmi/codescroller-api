@@ -139,35 +139,35 @@ module.exports.getLessonContentById = async (serviceData) => {
 // };
 
 // deleteService
-module.exports.deleteLessonContent = async (serviceData) => {
-  try {
-    const response = { ...constants.defaultServerResponse };
+// module.exports.deleteLessonContent = async (serviceData) => {
+//   try {
+//     const response = { ...constants.defaultServerResponse };
 
-    // Ensure serviceData has the required properties
-    if (!serviceData || !serviceData.contentId) {
-      throw new Error("Invalid serviceData. Missing contentId.");
-    }
+//     // Ensure serviceData has the required properties
+//     if (!serviceData || !serviceData.contentId) {
+//       throw new Error("Invalid serviceData. Missing contentId.");
+//     }
 
-    let filter = { _id: serviceData.contentId }; // Corrected filter using _id
-    const serviceResponse = await lessonModel.findOneAndUpdate(
-      filter,
-      { $pull: { contents: { _id: serviceData.contentId } } },
-      { new: true }
-    );
+//     let filter = { _id: serviceData.contentId }; // Corrected filter using _id
+//     const serviceResponse = await lessonModel.findOneAndUpdate(
+//       filter,
+//       { $pull: { contents: { _id: serviceData.contentId } } },
+//       { new: true }
+//     );
 
-    if (!serviceResponse) {
-      response.errors = {
-        error: constants.contentMessage.CONTENT_DELETED,
-      };
-      return response;
-    }
+//     if (!serviceResponse) {
+//       response.errors = {
+//         error: constants.contentMessage.CONTENT_NOT_DELETED,
+//       };
+//       return response;
+//     }
 
-    response.body = constants.contentMessage.CONTENT_DELETED;
-    response.status = 200;
+//     response.body = constants.contentMessage.CONTENT_DELETED;
+//     response.status = 200;
 
-    return response;
-  } catch (error) {
-    console.error("Something went wrong:", error.message);
-    throw error;
-  }
-};
+//     return response;
+//   } catch (error) {
+//     console.error("Something went wrong:", error.message);
+//     throw error;
+//   }
+// };

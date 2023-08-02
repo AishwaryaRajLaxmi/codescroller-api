@@ -14,7 +14,7 @@ module.exports.createLessonContent = Joi.object({
   isFree: Joi.boolean().required(),
 });
 module.exports.updateLessonContent = Joi.object({
-    name: Joi.string().required().label("Name"),
+  name: Joi.string().required().label("Name"),
   slug: Joi.string().required().label("Slug"),
   description: Joi.string().allow("").label("Description"),
   contentType: Joi.string().valid("video", "pdf").label("Content Type"),
@@ -23,6 +23,7 @@ module.exports.updateLessonContent = Joi.object({
     .label("Content Source"),
   contentUrl: Joi.string().label("Content Url"),
   isFree: Joi.boolean().required(),
+  status: Joi.boolean().required(),
 });
 
 // checkLessonMongoId
@@ -41,5 +42,4 @@ module.exports.getAllLessonsContents = Joi.object({
   status: Joi.string().valid("true", "false", "All"),
   page: Joi.number(),
   limit: Joi.number(),
-  
 });
