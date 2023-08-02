@@ -155,8 +155,7 @@ module.exports.deleteLessonContent = async (serviceData) => {
       { new: true }
     );
 
-
-    if (!serviceResponse) {
+    if (serviceResponse) {
       response.errors = {
         error: constants.contentMessage.CONTENT_NOT_DELETED,
       };

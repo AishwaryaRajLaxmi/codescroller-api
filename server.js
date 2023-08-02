@@ -27,7 +27,7 @@ app.use("/api/v1/reviews", require("./routers/reveiwRouter"));
 app.use("/api/v1/lessons", require("./routers/lessonRouter"));
 app.use("/api/v1/lessonContents", require("./routers/lessonContentRouter"));
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5300;
 app.listen(port, () => {
   console.log(`Server is running at ${port}`);
 });

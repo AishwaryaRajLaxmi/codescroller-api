@@ -97,15 +97,7 @@ module.exports.getAllLessons = async (serviceData) => {
       serialNo,
     } = serviceData;
     let conditions = {};
-    // conditions.isDeleted = false;
-    //  conditions = {
-    //   isDeleted: false,
-    //   contents: {
-    //     $elemMatch: {
-    //       isDeleted: false,
-    //     }
-    //   }
-    //  }
+ 
 
     if (status == "true" || status == "false") {
       conditions.status = status;
@@ -196,4 +188,4 @@ module.exports.updateLesson = async (serviceData) => {
   }
 };
 
-//
+

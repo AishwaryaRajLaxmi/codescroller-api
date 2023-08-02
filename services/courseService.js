@@ -49,12 +49,13 @@ module.exports.getCourseById = async (serviceData, lessonData) => {
       lessonResponse = await lessonModel.findOne({ course: serviceData.id });
     }
 
-    // Convert serviceResponse to an array if it's not already an array
-
     if (lessonResponse) {
-      serviceResponse.lessons = lessonResponse;
+      // Merge the properties of serviceResponse with the lessonResponse
+      serviceResponse = {
+        ...serviceResponse._doc,
+        lessons: lessonResponse,
+      };
     }
-
     return serviceResponse;
   } catch (error) {
     console.log(
@@ -101,13 +102,17 @@ module.exports.getAllCourses = async (serviceData) => {
 
     if (level) {
       conditions.level = level;
-    } else if (language) {
+    }
+    if (language) {
       conditions.language = language;
-    } else if (category) {
+    }
+    if (category) {
       conditions.category = category;
-    } else if (subCategory) {
+    }
+    if (subCategory) {
       conditions.subCategory = subCategory;
-    } else if (topic) {
+    }
+    if (topic) {
       conditions.topic = topic;
     }
     // count document
