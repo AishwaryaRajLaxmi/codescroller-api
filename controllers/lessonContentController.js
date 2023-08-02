@@ -33,7 +33,9 @@ module.exports.createLessonContent = async (req, res) => {
 module.exports.getLessonContentById = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const serviceResponse = await lessonContentService.getLessonContentById(req.params);
+    const serviceResponse = await lessonContentService.getLessonContentById(
+      req.params
+    );
     response.body = serviceResponse;
     response.status = 200;
     response.message = constants.contentMessage.CONTENT_FETCHED;
@@ -118,7 +120,6 @@ module.exports.updateLessonContent = async (req, res) => {
 
     response.errors = error;
     response.message = error.message;
-    throw new Error(error);
   }
   res.status(response.status).send(response);
 };
@@ -127,7 +128,9 @@ module.exports.updateLessonContent = async (req, res) => {
 module.exports.deleteLessonContent = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const serviceResponse = await lessonContentService.deleteLessonContent(req.params);
+    const serviceResponse = await lessonContentService.deleteLessonContent(
+      req.params
+    );
 
     if (serviceResponse.status == 200) {
       response.body = serviceResponse.body;
