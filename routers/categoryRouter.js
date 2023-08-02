@@ -47,8 +47,8 @@ categoryRouter.get(
 // updateCategory
 categoryRouter.put(
   "/:id",
-  jwtValidation.validateAdminToken,
   validateParams(getCategoryById),
+  jwtValidation.validateAdminToken,
   validateBody(updateCategory),
   categoryController.updateCategory
 );

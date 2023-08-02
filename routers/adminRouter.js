@@ -51,8 +51,8 @@ router.put(
 // updateProfile
 router.put(
   "/",
-  jwtValidation.validateAdminToken,
   joiSchemaValidation.validateBody(adminValidationSchema.updateProfile),
+  jwtValidation.validateAdminToken,
   adminController.updateProfile
 );
 

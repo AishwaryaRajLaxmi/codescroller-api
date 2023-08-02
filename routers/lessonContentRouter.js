@@ -35,11 +35,11 @@ lessonContentRouter.put(
 );
 
 // deleteLessonContent
-// lessonContentRouter.delete(
-//   "/:contentId",
-//   validateParams(checkContentMongoId),
-//   lessonContentController.deleteLessonContent
-// );
+lessonContentRouter.delete(
+  "/:contentId",
+  validateParams(checkContentMongoId),
+  lessonContentController.deleteLessonContent
+);
 
 // getLessonContentById
 lessonContentRouter.get(

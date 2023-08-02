@@ -50,14 +50,9 @@ module.exports.getCourseById = async (serviceData, lessonData) => {
     }
 
     // Convert serviceResponse to an array if it's not already an array
-    if (!Array.isArray(serviceResponse)) {
-      serviceResponse = [serviceResponse];
-    }
-
+   
     if (lessonResponse) {
-      serviceResponse.push({
-        lesson: lessonResponse,
-      });
+      serviceResponse.lesson=lessonResponse;
     }
 
     return serviceResponse;

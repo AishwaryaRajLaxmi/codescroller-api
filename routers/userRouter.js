@@ -42,8 +42,8 @@ userRouter.delete(
 // getUser
 userRouter.get(
   "/:id",
-  jwtValidation.validateAdminToken,
   validateParams(userValidationSchema.getUserById),
+  jwtValidation.validateAdminToken,
   userController.getUserById
 );
 
@@ -56,7 +56,6 @@ userRouter.put(
   validateBody(userValidationSchema.updateUser),
   userController.updateUser
 );
-
 
 // isMobileExists
 userRouter.get(
