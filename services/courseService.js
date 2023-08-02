@@ -89,7 +89,6 @@ module.exports.getAllCourses = async (serviceData) => {
     if (status == "true" || status == "false") {
       conditions.status = status;
     }
-
     // search query
     if (searchQuery) {
       const regex = new RegExp(searchQuery, "i");

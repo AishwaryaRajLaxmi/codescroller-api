@@ -13,10 +13,14 @@ module.exports.createLessonContent = async (lessonId, body) => {
 
     if (lessonResponse) {
       lessonResponse.contents.push(body);
+      const serviceResponse = await lessonResponse.save();
+    } else {
+      throw new Error("Lesson not found");
     }
 
-    const serviceResponse = await lessonResponse.save();
-    return (serviceResponse.body = "Content Added");
+    return (response.body = {
+      message: "Content Created successfully",
+    });
   } catch (error) {
     console.log(
       `Something went wrong service : lessonContentService : createlessonContent\nError: ${error.message}`
@@ -64,8 +68,11 @@ module.exports.getLessonContentById = async (serviceData) => {
       }
     );
 
-
-    if (!serviceResponse || !serviceResponse.contents || serviceResponse.contents.length === 0) {
+    if (
+      !serviceResponse ||
+      !serviceResponse.contents ||
+      serviceResponse.contents.length === 0
+    ) {
       console.log(`Content with ID ${serviceData.contentId} not found.`);
       return null;
     }
@@ -75,10 +82,9 @@ module.exports.getLessonContentById = async (serviceData) => {
     console.log(
       `Something went wrong: service : lessonContentService : getLessonContentById`
     );
-    throw new Error(error)
+    throw new Error(error);
   }
 };
-
 
 // // getAllcontent
 // module.exports.getAllLessonsContents = async (serviceData) => {
@@ -88,7 +94,7 @@ module.exports.getLessonContentById = async (serviceData) => {
 //       page = 1,
 //       status = "true",
 //       searchQuery,
-      
+
 //     } = serviceData;
 //     let conditions = {};
 //     conditions.isDeleted = false;
@@ -107,7 +113,6 @@ module.exports.getLessonContentById = async (serviceData) => {
 //       ];
 //     }
 
-    
 //     // count document
 //     const totalRecords = await lessonModel.countDocuments(conditions);
 //     const totalPages = Math.ceil(totalRecords / parseInt(limit));
@@ -135,35 +140,35 @@ module.exports.getLessonContentById = async (serviceData) => {
 // };
 
 // deleteService
-// module.exports.deleteLessonContent = async (serviceData) => {
-//   try {
-//     const response = { ...constants.defaultServerResponse };
+module.exports.deleteLessonContent = async (serviceData) => {
+  try {
+    const response = { ...constants.defaultServerResponse };
 
-//     // Ensure serviceData has the required properties
-//     if (!serviceData || !serviceData.contentId) {
-//       throw new Error('Invalid serviceData. Missing contentId.');
-//     }
-    
-//     let filter = { id: serviceData.contentId };
-//     const serviceResponse = await lessonModel.findOneAndUpdate(
-//       filter,
-//       { $pull: { contents: { _id: serviceData.contentId } } },
-//       { new: true }
-//     );
+    // Ensure serviceData has the required properties
+    if (!serviceData || !serviceData.contentId) {
+      throw new Error("Invalid serviceData. Missing contentId.");
+    }
 
-//     if (!serviceResponse) {
-//       response.errors = {
-//         error: constants.contentMessage.CONTENT_DELETED,
-//       };
-//       return response;
-//     }
+    let filter = { _id: serviceData.contentId }; // Corrected filter using _id
+    const serviceResponse = await lessonModel.findOneAndUpdate(
+      filter,
+      { $pull: { contents: { _id: serviceData.contentId } } },
+      { new: true }
+    );
 
-//     response.body = constants.contentMessage.CONTENT_DELETED;
-//     response.status = 200;
+    if (!serviceResponse) {
+      response.errors = {
+        error: constants.contentMessage.CONTENT_DELETED,
+      };
+      return response;
+    }
 
-//     return response;
-//   } catch (error) {
-//     console.error('Something went wrong:', error.message);
-//     throw error;
-//   }
-// };
+    response.body = constants.contentMessage.CONTENT_DELETED;
+    response.status = 200;
+
+    return response;
+  } catch (error) {
+    console.error("Something went wrong:", error.message);
+    throw error;
+  }
+};

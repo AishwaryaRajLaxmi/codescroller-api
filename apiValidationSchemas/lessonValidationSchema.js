@@ -16,7 +16,6 @@ module.exports.updateLesson = Joi.object({
   slug: Joi.string().required().label("Slug"),
   description: Joi.string().label("Description").allow(""),
   status: Joi.boolean().required().label("Status"),
-  course: Joi.string().custom(customCallback).required().label("Course"),
   serialNo: Joi.number().label("Serial Number"),
   contents: Joi.array(),
 });
