@@ -155,7 +155,6 @@ module.exports.deleteLessonContent = async (serviceData) => {
       { new: true }
     );
 
-    console.log(serviceResponse)
 
     if (!serviceResponse) {
       response.errors = {
@@ -170,6 +169,6 @@ module.exports.deleteLessonContent = async (serviceData) => {
     return response;
   } catch (error) {
     console.error("Something went wrong:", error.message);
-    throw error;
+    throw new Error(error)
   }
 };
