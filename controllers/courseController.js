@@ -29,7 +29,7 @@ module.exports.createCourse = async (req, res) => {
 module.exports.getCourseById = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const serviceResponse = await courseService.getCourseById(req.params);
+    const serviceResponse = await courseService.getCourseById(req.params,req.query);
     response.body = serviceResponse;
     response.status = 200;
     response.message = constants.courseMessage.COURSE_FETCHED;

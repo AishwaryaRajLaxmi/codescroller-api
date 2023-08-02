@@ -54,6 +54,7 @@ module.exports.getAllCourses = Joi.object({
 //getCourseById
 module.exports.getCourseById = Joi.object({
   id: Joi.string().custom(customCallback),
+  lessonData: Joi.string().valid("true","false").label('Lesson Data'),
 });
 
 // Update Course Validation Schema

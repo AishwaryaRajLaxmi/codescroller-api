@@ -18,6 +18,7 @@ module.exports.updateLesson = Joi.object({
   status: Joi.boolean().required().label("Status"),
   course: Joi.string().custom(customCallback).required().label("Course"),
   serialNo: Joi.number().label("Serial Number"),
+  contents: Joi.array(),
 });
 
 // getLessonById

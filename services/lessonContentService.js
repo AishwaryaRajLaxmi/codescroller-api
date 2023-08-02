@@ -50,26 +50,35 @@ module.exports.updateLessonContent = async (serviceData) => {
   }
 };
 
-// contents._id
-// // getContentById
-// module.exports.getContentById = async (serviceData) => {
-//   try {
-//     const serviceResponse = await lessonModel
-//       .findOne({
-//         _id: serviceData.id,
-//         isDeleted: false,
-//       })
-//       .populate({ path: "course", select: "name _id" });
+// getLessonContentById
+module.exports.getLessonContentById = async (serviceData) => {
+  console.log(serviceData);
+  try {
+    const serviceResponse = await lessonModel.findOne(
+      {
+        "contents._id": serviceData.contentId,
+        "contents.isDeleted": false,
+      },
+      {
+        "contents.$": 1,
+      }
+    );
 
-//     const formatData = formatMongoData(serviceResponse);
-//     return formatData;
-//   } catch (error) {
-//     console.log(
-//       `Something went wrong: service : contentService : gegetContentById`
-//     );
-//     throw new Error(error);
-//   }
-// };
+
+    if (!serviceResponse || !serviceResponse.contents || serviceResponse.contents.length === 0) {
+      console.log(`Content with ID ${serviceData.contentId} not found.`);
+      return null;
+    }
+    const formatData = formatMongoData(serviceResponse.contents[0]);
+    return formatData;
+  } catch (error) {
+    console.log(
+      `Something went wrong: service : lessonContentService : getLessonContentById`
+    );
+    throw new Error(error)
+  }
+};
+
 
 // // getAllcontent
 // module.exports.getAllLessonsContents = async (serviceData) => {

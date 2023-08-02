@@ -40,10 +40,11 @@ lessonContentRouter.delete(
   validateParams(checkContentMongoId),
   lessonContentController.deleteLessonContent
 );
-// // getAllLessonContents
-// lessonContentRouter.get(
-//   "/",
-//    lessonContentController.getAllLessonsContents
-// );
+
+// getLessonContentById
+lessonContentRouter.get(
+  "/:contentId",
+   lessonContentController.getLessonContentById
+);
 
 module.exports = lessonContentRouter;

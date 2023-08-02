@@ -41,6 +41,7 @@ courseRouter.delete(
 courseRouter.get(
   "/:id",
   validateParams(getCourseById),
+  validateQuery(getCourseById),
   courseController.getCourseById
 );
 

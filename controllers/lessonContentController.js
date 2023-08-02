@@ -28,23 +28,23 @@ module.exports.createLessonContent = async (req, res) => {
   res.status(response.status).send(response);
 };
 
-// // getContent ByID
+// getLessonContent ByID
 
-// module.exports.getContentById = async (req, res) => {
-//   const response = { ...constants.defaultServerResponse };
-//   try {
-//     const serviceResponse = await lessonContentService.getContentById(req.params);
-//     response.body = serviceResponse;
-//     response.status = 200;
-//     response.message = constants.contentMessage.CONTENT_FETCHED;
-//   } catch (error) {
-//     console.log(`Something went wrong:controller:Content Controller: getContentById
-//     Error:${error.message}`);
-//     response.message = error.message;
-//     response.errors = error;
-//   }
-//   res.status(response.status).send(response);
-// };
+module.exports.getLessonContentById = async (req, res) => {
+  const response = { ...constants.defaultServerResponse };
+  try {
+    const serviceResponse = await lessonContentService.getLessonContentById(req.params);
+    response.body = serviceResponse;
+    response.status = 200;
+    response.message = constants.contentMessage.CONTENT_FETCHED;
+  } catch (error) {
+    console.log(`Something went wrong:controller:lessonContent Controller: getLessonContentById
+    Error:${error.message}`);
+    response.message = error.message;
+    response.errors = error;
+  }
+  res.status(response.status).send(response);
+};
 
 //getAllLessonsContents
 

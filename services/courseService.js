@@ -1,4 +1,5 @@
 const courseModel = require("../database/models/courseModel");
+const lessonModel = require("../database/models/lessonModel");
 const constants = require("../helpers/constants");
 const { formatMongoData } = require("../helpers/dbHelper");
 
@@ -30,9 +31,9 @@ module.exports.createCourse = async (serviceData) => {
 };
 
 // getCourseById
-module.exports.getCourseById = async (serviceData) => {
+module.exports.getCourseById = async (serviceData, lessonData) => {
   try {
-    const serviceResponse = await courseModel
+    let serviceResponse = await courseModel
       .findOne({
         _id: serviceData.id,
         isDeleted: false,
@@ -42,8 +43,24 @@ module.exports.getCourseById = async (serviceData) => {
       .populate({ path: "category", select: "name _id" })
       .populate({ path: "subCategories", select: "name _id" })
       .populate({ path: "topics", select: "name _id" });
-    const formatData = formatMongoData(serviceResponse);
-    return formatData;
+
+    let lessonResponse;
+    if (lessonData.lessonData === "true") {
+      lessonResponse = await lessonModel.findOne({ course: serviceData.id });
+    }
+
+    // Convert serviceResponse to an array if it's not already an array
+    if (!Array.isArray(serviceResponse)) {
+      serviceResponse = [serviceResponse];
+    }
+
+    if (lessonResponse) {
+      serviceResponse.push({
+        lesson: lessonResponse,
+      });
+    }
+
+    return serviceResponse;
   } catch (error) {
     console.log(
       `Something went wrong: service : courseService : getCourseById`
