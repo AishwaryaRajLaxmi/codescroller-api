@@ -50,9 +50,9 @@ module.exports.getCourseById = async (serviceData, lessonData) => {
     }
 
     // Convert serviceResponse to an array if it's not already an array
-   
+
     if (lessonResponse) {
-      serviceResponse.lesson=lessonResponse;
+      serviceResponse.lessons = lessonResponse;
     }
 
     return serviceResponse;
