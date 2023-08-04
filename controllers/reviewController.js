@@ -14,7 +14,7 @@ module.exports.createReview = async (req, res) => {
       response.errors = reveiwResponse.errors;
       response.message = reveiwResponse.message;
     } else {
-      response.body = reveiwResponse;
+      response.body = reveiwResponse.body;
       response.message = constants.reviewsMessage.REVIEWS_CREATED;
       response.status = 200;
     }
@@ -32,12 +32,18 @@ module.exports.getAllReviews = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await reviewService.getAllReviews(req.query);
-    response.body = serviceResponse.body;
-    response.totalPages = serviceResponse.totalPages;
-    response.totalRecords = serviceResponse.totalRecords;
-    response.page = serviceResponse.page;
-    response.status = 200;
-    response.message = constants.reviewsMessage.REVIEWS_FETCHED;
+
+    if (serviceResponse.status === 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
+      response.body = serviceResponse.body;
+      response.totalPages = serviceResponse.totalPages;
+      response.totalRecords = serviceResponse.totalRecords;
+      response.page = serviceResponse.page;
+      response.status = 200;
+      response.message = constants.reviewsMessage.REVIEWS_FETCHED;
+    }
   } catch (error) {
     console.log(`Something went wrong:controller:reviewController: getAllReviews
     Error:${error.message}`);
