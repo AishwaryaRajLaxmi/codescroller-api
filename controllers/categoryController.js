@@ -8,9 +8,9 @@ module.exports.createCategory = async (req, res) => {
     const serviceResponse = await categoryService.createCategory(req.body);
     if (serviceResponse.status === 400) {
       response.errors = serviceResponse.errors;
-      response.status = 400; // Set the response status to 400
+      response.message = serviceResponse.message;
     } else {
-      response.body = serviceResponse;
+      response.body = serviceResponse.body;
       response.message = constants.categoryMessage.CATEGORY_CREATED;
       response.status = 200;
     }
@@ -18,7 +18,6 @@ module.exports.createCategory = async (req, res) => {
     console.log(
       `Something went wrong controller : categoryController :createCategory \nError: ${error.message}`
     );
-
     response.message = error.message;
     response.errors = error;
   }
@@ -30,12 +29,17 @@ module.exports.getAllCategories = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await categoryService.getAllCategories(req.query);
-    response.body = serviceResponse.body;
-    response.totalPages = serviceResponse.totalPages;
-    response.totalRecords = serviceResponse.totalRecords;
-    response.page = serviceResponse.page;
-    response.status = 200;
-    response.message = constants.categoryMessage.CATEGORY_FETCHED;
+    if (serviceResponse.status == 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
+      response.body = serviceResponse.body;
+      response.totalPages = serviceResponse.totalPages;
+      response.totalRecords = serviceResponse.totalRecords;
+      response.page = serviceResponse.page;
+      response.status = 200;
+      response.message = constants.categoryMessage.CATEGORY_FETCHED;
+    }
   } catch (error) {
     console.log(`Something went wrong:controller:categoryController: getAllCategories
     Error:${error.message}`);
@@ -56,8 +60,7 @@ module.exports.deleteCategory = async (req, res) => {
       response.message = constants.categoryMessage.CATEGORY_DELETED;
       response.status = 200;
     } else {
-      response.message = constants.categoryMessage.CATEGORY_NOT_DELETED;
-      response.status = 400;
+      response.message = serviceResponse.message;
       response.errors = serviceResponse.errors;
     }
   } catch (error) {
@@ -72,18 +75,19 @@ module.exports.deleteCategory = async (req, res) => {
   res.status(response.status).send(response);
 };
 
-// getCategory
+// getCategoryById
 module.exports.getCategoryById = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await categoryService.getCategoryById(req.params);
 
-    if (serviceResponse) {
-      response.body = serviceResponse;
+    if (serviceResponse.status === 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
+      response.body = serviceResponse.body;
       response.status = 200;
       response.message = constants.categoryMessage.CATEGORY_FETCHED;
-    } else {
-      response.message = constants.categoryMessage.CATEGORY_NOT_FETCHED;
     }
   } catch (error) {
     console.log(`Something went wrong:controller:categoryController: getCategoryById
@@ -103,12 +107,13 @@ module.exports.updateCategory = async (req, res) => {
       body: req.body,
     });
 
-    if (serviceResponse) {
-      response.body = serviceResponse;
+    if (serviceResponse.status === 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
+      response.body = serviceResponse.body;
       response.status = 200;
       response.message = constants.categoryMessage.CATEGORY_UPDATED;
-    } else {
-      response.message = constants.categoryMessage.CATEGORY_NOT_UPDATED;
     }
   } catch (error) {
     console.log(

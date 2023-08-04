@@ -9,15 +9,15 @@ module.exports.createLanguage = async (req, res) => {
 
     if (serviceResponse.status === 400) {
       response.errors = serviceResponse.errors;
-      response.status = 400; // Set the response status to 400
+      response.message = serviceResponse.message;
     } else {
-      response.body = serviceResponse;
+      response.body = serviceResponse.body;
       response.message = constants.languageMessage.LANGUAGE_CREATED;
       response.status = 200;
     }
   } catch (error) {
     console.log(
-      `Something went wrong controller : LanguageController :createLanguage \nError: ${error.message}`
+      `Something went wrong controller :  languageController :createLanguage Error: ${error.message}`
     );
 
     response.message = error.message;
@@ -31,14 +31,20 @@ module.exports.getAllLanguages = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await LanguageService.getAllLanguages(req.query);
-    response.body = serviceResponse.body;
-    response.totalPages = serviceResponse.totalPages;
-    response.totalRecords = serviceResponse.totalRecords;
-    response.page = serviceResponse.page;
-    response.status = 200;
-    response.message = constants.languageMessage.LANGUAGEL_FETCHED;
+
+    if (serviceResponse.status == 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
+      response.body = serviceResponse.body;
+      response.totalPages = serviceResponse.totalPages;
+      response.totalRecords = serviceResponse.totalRecords;
+      response.page = serviceResponse.page;
+      response.status = 200;
+      response.message = constants.languageMessage.LANGUAGEL_FETCHED;
+    }
   } catch (error) {
-    console.log(`Something went wrong:controller:LanguageController: getAllCategories
+    console.log(`Something went wrong:controller: languageController: getAllLanguages
     Error:${error.message}`);
 
     response.message = error.message;
@@ -52,19 +58,18 @@ module.exports.deleteLanguage = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await LanguageService.deleteLanguage(req.params);
-    if (serviceResponse.status == 200) {
+
+    if (serviceResponse.status == 400) {
+      response.message = serviceResponse.message;
+      response.errors = serviceResponse.errors;
+    } else {
       response.body = serviceResponse.body;
       response.message = constants.languageMessage.LANGUAGE_DELETED;
       response.status = 200;
-    } else {
-      response.message = constants.languageMessage.LANGUAGE_DELETED;
-      response.status = 400;
-      response.errors = serviceResponse.errors;
     }
   } catch (error) {
-    console.log(`Something went wrong:controller:LanguageController: getAllCategories
+    console.log(`Something went wrong:controller: languageController: deleteLanguage
       Error:${error.message}`);
-
     response.message = error.message;
     response.errors = {
       error: error.message,
@@ -78,11 +83,17 @@ module.exports.getLanguageById = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await LanguageService.getLanguageById(req.params);
-    response.body = serviceResponse;
-    response.status = 200;
-    response.message = constants.languageMessage.LANGUAGEL_FETCHED;
+
+    if (serviceResponse.status === 400) {
+      response.message = serviceResponse.message;
+      response.errors = serviceResponse.errors;
+    } else {
+      response.body = serviceResponse.body;
+      response.status = 200;
+      response.message = constants.languageMessage.LANGUAGEL_FETCHED;
+    }
   } catch (error) {
-    console.log(`Something went wrong:controller:LanguageController: getLanguageById
+    console.log(`Something went wrong:controller: languageController: getLanguageById
     Error:${error.message}`);
     response.message = error.message;
     response.errors = error;
@@ -99,16 +110,17 @@ module.exports.updateLanguage = async (req, res) => {
       body: req.body,
     });
 
-    if (serviceResponse) {
-      response.body = serviceResponse;
+    if (serviceResponse.status === 400) {
+      response.message = serviceResponse.message;
+      response.errors = serviceResponse.errors;
+    } else {
+      response.body = serviceResponse.body;
       response.status = 200;
       response.message = constants.languageMessage.LANGUAGE_UPDATED;
-    } else {
-      response.message = constants.languageMessage.LANGUAGE_NOT_UPDATED;
     }
   } catch (error) {
     console.log(
-      `Something went wrong: Controller : LanguageController : updateLanguage ${error.message}`
+      `Something went wrong: Controller :  languageController : updateLanguage ${error.message}`
     );
 
     response.errors = error;

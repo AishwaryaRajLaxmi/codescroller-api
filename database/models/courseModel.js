@@ -3,67 +3,74 @@ const courseSchema = mongoose.Schema(
   {
     name: {
       type: String,
+      trim: true,
       required: true,
     },
-
     slug: {
       type: String,
+      trim: true,
       required: true,
-      unique: true,
     },
-
     description: {
       type: String,
-     
+      trim: true,
+      default: "",
     },
-
     courseDetails: {
       type: String,
       trim: true,
+      default: "",
     },
-
     instructorName: {
       type: String,
       required: true,
+      trim: true,
     },
-
     instructorAbout: {
       type: String,
+      trim: true,
+      default: "",
     },
-
     instructorImage: {
       type: String,
+      trim: true,
+      default: "",
     },
-
     instructorDesignation: {
       type: String,
+      default: "",
+      trim: true,
     },
-
     seoTitle: {
       type: String,
+      trim: true,
+      default: "",
     },
-
     seoTags: {
       type: String,
+      default: "",
+      trim: true,
     },
-
     seoDescription: {
       type: String,
+      default: "",
+      trim: true,
     },
-
     thumbnail: {
       type: String,
-      required: true,
+      trim: true,
+      default: "",
     },
-
     defaultVideo: {
       type: String,
+      default: "",
+      trim: true,
     },
-
     courseTag: {
       type: String,
+      trim: true,
+      default: "",
     },
-
     language: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "language",
@@ -74,14 +81,11 @@ const courseSchema = mongoose.Schema(
       ref: "level",
       required: true,
     },
-    category: 
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "category",
-        required: true,
-      },
-    
-
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "category",
+      required: true,
+    },
     subCategories: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -89,23 +93,27 @@ const courseSchema = mongoose.Schema(
         required: true,
       },
     ],
-
     topics: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "topic",
-        required:true
+        required: true,
       },
     ],
-
     highlights: {
       type: String,
+      trim: true,
+      default: "",
     },
     requirements: {
       type: String,
+      trim: true,
+      default: "",
     },
     prerequisite: {
       type: String,
+      trim: true,
+      default: "",
     },
     sellingPrice: {
       type: Number,
@@ -122,15 +130,16 @@ const courseSchema = mongoose.Schema(
     isReturnable: {
       type: Boolean,
       required: true,
-      default: true,
+      default: false,
     },
     returnDays: {
       type: Number,
       required: true,
     },
     courseStatus: {
-      type: Boolean,
-      default: true,
+      type: String,
+      trim: true,
+      enum: ["purchased", "returned"],
     },
     status: {
       type: Boolean,
@@ -142,7 +151,6 @@ const courseSchema = mongoose.Schema(
       default: false,
     },
   },
-
   {
     timestamps: true,
     toObject: {

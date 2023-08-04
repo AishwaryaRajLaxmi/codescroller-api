@@ -13,15 +13,24 @@ module.exports.createCourse = async (serviceData) => {
 
     if (courseResponse) {
       response.errors = {
-        name: "Course already exists",
+        name: constants.courseMessage.COURSE_ALREADY_EXISTS,
       };
-
+      response.message = constants.courseMessage.COURSE_ALREADY_EXISTS;
       return response;
     }
 
     const newData = new courseModel(serviceData);
-    const serviceResponse = await newData.save();
-    return serviceResponse;
+    const dbResponse = await newData.save();
+    if (dbResponse) {
+      response.body = formatMongoData(dbResponse);
+      response.status = 200;
+    } else {
+      response.errors = {
+        error: constants.courseMessage.COURSE_NOT_CREATED,
+      };
+      response.message = constants.courseMessage.COURSE_NOT_CREATED;
+    }
+    return response;
   } catch (error) {
     console.log(
       `Something went wrong service : courseService : createCourse\nError: ${error.message}`
@@ -32,8 +41,9 @@ module.exports.createCourse = async (serviceData) => {
 
 // getCourseById
 module.exports.getCourseById = async (serviceData, lessonData) => {
+  const response = { ...constants.defaultServerResponse };
   try {
-    let serviceResponse = await courseModel
+    let dbResponse = await courseModel
       .findOne({
         _id: serviceData.id,
         isDeleted: false,
@@ -44,19 +54,29 @@ module.exports.getCourseById = async (serviceData, lessonData) => {
       .populate({ path: "subCategories", select: "name _id" })
       .populate({ path: "topics", select: "name _id" });
 
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.courseMessage.COURSE_NOT_FOUND,
+      };
+      response.message = constants.courseMessage.COURSE_NOT_FOUND;
+      return response;
+    }
+
     let lessonResponse;
     if (lessonData.lessonData === "true") {
       lessonResponse = await lessonModel.findOne({ course: serviceData.id });
     }
 
     if (lessonResponse) {
-      // Merge the properties of serviceResponse with the lessonResponse
-      serviceResponse = {
-        ...serviceResponse._doc,
+      // Merge the properties of dbResponse with the lessonResponse
+      dbResponse = {
+        ...dbResponse._doc,
         lessons: lessonResponse,
       };
     }
-    return serviceResponse;
+    response.body = formatMongoData(dbResponse);
+    response.status = 200;
+    return response;
   } catch (error) {
     console.log(
       `Something went wrong: service : courseService : getCourseById`
@@ -67,6 +87,7 @@ module.exports.getCourseById = async (serviceData, lessonData) => {
 
 // getAllCourse
 module.exports.getAllCourses = async (serviceData) => {
+  const response = { ...constants.defaultServerResponse };
   try {
     const {
       limit = 10,
@@ -110,16 +131,16 @@ module.exports.getAllCourses = async (serviceData) => {
       conditions.category = category;
     }
     if (subCategory) {
-      conditions.subCategory = subCategory;
+      conditions.subCategories = subCategory;
     }
     if (topic) {
-      conditions.topic = topic;
+      conditions.topics = topic;
     }
     // count document
     const totalRecords = await courseModel.countDocuments(conditions);
     const totalPages = Math.ceil(totalRecords / parseInt(limit));
 
-    const serviceResponse = await courseModel
+    const dbResponse = await courseModel
       .find(conditions)
       .skip((parseInt(page) - 1) * parseInt(limit))
       .limit(parseInt(limit))
@@ -129,7 +150,16 @@ module.exports.getAllCourses = async (serviceData) => {
       .populate({ path: "subCategories", select: "name _id" })
       .populate({ path: "topics", select: "name _id" });
 
-    const formatData = formatMongoData(serviceResponse);
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.courseMessage.COURSE_NOT_FOUND,
+      };
+      response.message = constants.categoryMessage.COURSE_NOT_FOUND;
+      return response;
+    }
+
+    const formatData = formatMongoData(dbResponse);
+    response.status = 200;
 
     return {
       body: formatData,
@@ -150,22 +180,33 @@ module.exports.deleteCourse = async (serviceData) => {
   try {
     const response = { ...constants.defaultServerResponse };
 
-    const serviceResponse = await courseModel.findOneAndUpdate(
+    const isCourseExist = await courseModel.findOne({
+      _id: serviceData.id,
+      isDeleted: true,
+    });
+    if (isCourseExist) {
+      response.errors = {
+        name: constants.courseMessage.COURSE_NOT_EXISTS,
+      };
+      return response;
+    }
+
+    const dbResponse = await courseModel.findOneAndUpdate(
       { _id: serviceData.id },
       { isDeleted: true },
       { new: true }
     );
 
-    if (!serviceResponse) {
+    if (!dbResponse) {
       response.errors = {
         error: constants.courseMessage.COURSE_DELETED,
       };
+      response.message = constants.categoryMessage.COURSE_NOT_DELETED;
       return response;
     }
 
-    response.body = serviceResponse;
+    response.body = formatMongoData(dbResponse);
     response.status = 200;
-
     return response;
   } catch (error) {
     console.log(`Something went wrong: service : courseService : deleteCourse`);
@@ -175,12 +216,22 @@ module.exports.deleteCourse = async (serviceData) => {
 
 // updateCourse
 module.exports.updateCourse = async (serviceData) => {
+  const response = { ...constants.defaultServerResponse };
   try {
     const { id, body } = serviceData;
-    const serviceResponse = await courseModel.findByIdAndUpdate(id, body, {
+    const dbResponse = await courseModel.findByIdAndUpdate(id, body, {
       new: true,
     });
-    return formatMongoData(serviceResponse);
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.courseMessage.COURSE_NOT_UPDATED,
+      };
+      response.message = constants.categoryMessage.COURSE_NOT_UPDATED;
+      return response;
+    }
+    response.body = formatMongoData(dbResponse);
+    response.status = 200;
+    return response;
   } catch (error) {
     console.log(
       `Something went wrong: Service : courseService : updateCourse ${error.message}`

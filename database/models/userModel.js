@@ -4,53 +4,60 @@ const userSchema = mongoose.Schema(
     name: {
       type: String,
       required: true,
+      trim: true,
     },
-
     email: {
       type: String,
       required: true,
       unique: true,
+      trim: true,
     },
-
     mobile: {
       type: String,
       required: true,
       unique: true,
+      trim: true,
     },
-
     password: {
       type: String,
       required: true,
       trim: true,
     },
-
     address: {
       type: String,
+      trim: true,
+      default: "",
     },
-
     city: {
       type: String,
+      trim: true,
+      default: "",
     },
-
     landmark: {
       type: String,
+      trim: true,
+      default: "",
     },
-
     pincode: {
       type: String,
+      trim: true,
+      default: "",
     },
-
     state: {
       type: String,
-    },
-
-    otp: {
-      type: String,
       trim: true,
+      default: "",
+    },
+    otp: {
+      type: Number,
     },
     otpExpiredAt: {
       type: Date,
       trim: true,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
     },
     status: {
       type: Boolean,
@@ -62,12 +69,7 @@ const userSchema = mongoose.Schema(
       default: false,
       required: true,
     },
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
   },
-
   {
     timestamps: true,
     toObject: {

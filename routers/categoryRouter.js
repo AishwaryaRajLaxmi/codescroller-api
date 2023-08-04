@@ -37,10 +37,11 @@ categoryRouter.delete(
   categoryController.deleteCategory
 );
 
-// getCategory
+// getCategoryById
 categoryRouter.get(
   "/:id",
   validateParams(getCategoryById),
+  jwtValidation.validateAdminToken,
   categoryController.getCategoryById
 );
 

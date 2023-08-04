@@ -1,10 +1,8 @@
-const bcrypt = require("bcrypt");
 const constants = require("../helpers/constants");
 const { formatMongoData } = require("../helpers/dbHelper");
 const subCategoryModel = require("../database/models/subCategoryModel");
-const checkMongoId = require("../helpers/dbHelper");
 
-// createCategory
+// createSubCategory
 module.exports.createSubCategory = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
   try {
@@ -14,30 +12,36 @@ module.exports.createSubCategory = async (serviceData) => {
 
     if (categoryResponse) {
       response.errors = {
-        name: "Sub Category already exists",
+        name: constants.subCategoryMessage.SUB_CATEGORY_ALREADY_EXISTS,
       };
+      response.message =
+        constants.subCategoryMessage.SUB_CATEGORY_ALREADY_EXISTS;
       return response;
     }
-    const newData = new subCategoryModel(serviceData);
 
-    const serviceResponse = await newData.save();
-    return formatMongoData(serviceResponse);
+    const newData = new subCategoryModel(serviceData);
+    const dbResponse = await newData.save();
+
+    if (dbResponse) {
+      response.body = formatMongoData(dbResponse);
+      response.status = 200;
+    } else {
+      response.errors = {
+        error: constants.subCategoryMessage.SUB_CATEGORY_NOT_CREATED,
+      };
+      response.message = constants.subCategoryMessage.SUB_CATEGORY_NOT_CREATED;
+    }
+    return response;
   } catch (error) {
     console.log(
       `Something went wrong service : subCategoryService : createSubCategory\nError: ${error.message}`
     );
-
-    const keyValue = {};
-    for (const key of Object.keys(error.keyValue)) {
-      keyValue[key] = error.keyValue[key];
-    }
-    const errorMessage = JSON.stringify(keyValue);
-    throw new Error(errorMessage + " is duplicate");
   }
 };
 
 // getAllSubCategories
 module.exports.getAllSubCategories = async (serviceData) => {
+  const response = { ...constants.defaultServerResponse };
   try {
     const {
       limit = 10,
@@ -76,6 +80,15 @@ module.exports.getAllSubCategories = async (serviceData) => {
       .populate({ path: "category", select: "name _id" })
       .limit(parseInt(limit));
 
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.subCategoryMessage.SUB_CATEGORY_NOT_FOUND,
+      };
+      response.message = constants.subCategoryMessage.SUB_CATEGORY_NOT_FOUND;
+      return response;
+    }
+
+    response.status = 200;
     const formatData = formatMongoData(dbResponse);
     return {
       body: formatData,
@@ -91,10 +104,79 @@ module.exports.getAllSubCategories = async (serviceData) => {
   }
 };
 
-// deleteCategory
+// getSubCategoryById
+module.exports.getSubCategoryById = async (serviceData) => {
+  const response = { ...constants.defaultServerResponse };
+  try {
+    const dbResponse = await subCategoryModel
+      .findOne({ _id: serviceData.id, isDeleted: false })
+      .populate({ path: "category", select: "name _id" });
+
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.subCategoryMessage.SUB_CATEGORY_NOT_FOUND,
+      };
+      response.message = constants.subCategoryMessage.SUB_CATEGORY_NOT_FOUND;
+      return response;
+    }
+    response.body = formatMongoData(dbResponse);
+    response.status = 200;
+    return response;
+  } catch (error) {
+    console.log(
+      `Something went wrong: service : subCategoryService : getSubcategoryservice`
+    );
+    throw new Error(error);
+  }
+};
+
+// updateSubCategory
+module.exports.updateSubCategory = async (serviceData) => {
+  try {
+    const response = { ...constants.defaultServerResponse };
+    const { id, body } = serviceData;
+    const dbResponse = await subCategoryModel.findOneAndUpdate(
+      { _id: id },
+      body,
+      {
+        new: true,
+      }
+    );
+
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.subCategoryMessage.SUB_CATEGORY_NOT_UPDATED,
+      };
+      response.message = constants.subCategoryMessage.SUB_CATEGORY_NOT_UPDATED;
+      return response;
+    }
+    response.body = formatMongoData(dbResponse);
+    response.status = 200;
+    return response;
+  } catch (error) {
+    console.log(
+      `Somthing Went Wrong Service: subcategoryService: updateSubCategory`,
+      error.message
+    );
+    throw new Error(error);
+  }
+};
+
+// deleteSubCategory
 module.exports.deleteSubCategory = async (serviceData) => {
   try {
     const response = { ...constants.defaultServerResponse };
+
+    const isSubCategoryExist = await subCategoryModel.findOne({
+      _id: serviceData.id,
+      isDeleted: true,
+    });
+    if (isSubCategoryExist) {
+      response.errors = {
+        name: constants.subCategoryMessage.SUB_CATEGORY_NOT_EXISTS,
+      };
+      return response;
+    }
 
     const dbResponse = await subCategoryModel.findOneAndUpdate(
       { _id: serviceData.id }, // Condition to find the document
@@ -104,57 +186,18 @@ module.exports.deleteSubCategory = async (serviceData) => {
 
     if (!dbResponse) {
       response.errors = {
-        error: constants.subCategoryMessage.SUB_CATEGORY_DELETED,
+        error: constants.subCategoryMessage.SUB_CATEGORY_NOT_DELETED,
       };
+      response.message = constants.subCategoryMessage.SUB_CATEGORY_NOT_DELETED;
       return response;
     }
 
-    response.body = dbResponse;
+    response.body = formatMongoData(dbResponse);
     response.status = 200;
-
     return response;
   } catch (error) {
     console.log(
       `Something went wrong: service : subcategoryService : deletesubcategory`
-    );
-    throw new Error(error);
-  }
-};
-
-// getSubCategoryById
-module.exports.getSubCategoryById = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
-  try {
-    const dbResponse = await subCategoryModel
-      .findOne({ _id: serviceData.id, isDeleted: false })
-      .populate({ path: "category", select: "name _id" });
-    const formatData = formatMongoData(dbResponse);
-    return formatData;
-  } catch (error) {
-    console.log(
-      `Something went wrong: service : subCategoryService : deletecategoryservice`
-    );
-    throw new Error(error);
-  }
-};
-
-// updateCategory
-
-module.exports.updateSubCategory = async (serviceData) => {
-  try {
-    const { id, body } = serviceData;
-    const dbResponse = await subCategoryModel.findOneAndUpdate(
-      { _id: serviceData.id, isDeleted: false },
-      body,
-      {
-        new: true,
-      }
-    );
-    return formatMongoData(dbResponse);
-  } catch (error) {
-    console.log(
-      `Somthing Went Wrong Service: subcategoryService: updateSubCategory`,
-      error.message
     );
     throw new Error(error);
   }

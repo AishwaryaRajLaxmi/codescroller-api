@@ -12,9 +12,9 @@ module.exports.createLesson = async (serviceData) => {
 
     if (lessonResponse) {
       response.errors = {
-        name: "lesson already exists",
+        name: constants.lessonMessage.LESSON_ALREADY_EXISTS,
       };
-
+      response.message = constants.lessonMessage.LESSON_ALREADY_EXISTS;
       return response;
     }
 
@@ -55,8 +55,16 @@ module.exports.createLesson = async (serviceData) => {
     }
 
     const newData = new lessonModel(serviceData);
-    const serviceResponse = await newData.save();
-    return serviceResponse;
+    const dbResponse = await newData.save();
+    if (dbResponse) {
+      response.body = formatMongoData(dbResponse);
+      response.status = 200;
+    } else {
+      response.errors = {
+        error: constants.lessonMessage.LESSON_NOT_CREATED,
+      };
+      response.message = constants.lessonMessage.LESSON_NOT_CREATED;
+    }
   } catch (error) {
     console.log(
       `Something went wrong service : lessonService : createLesson\nError: ${error.message}`
@@ -67,16 +75,25 @@ module.exports.createLesson = async (serviceData) => {
 
 // getlessonById
 module.exports.getLessonById = async (serviceData) => {
+  const response = { ...constants.defaultServerResponse };
   try {
-    const serviceResponse = await lessonModel
+    const dbResponse = await lessonModel
       .findOne({
         _id: serviceData.id,
         isDeleted: false,
       })
       .populate({ path: "course", select: "name _id" });
 
-    const formatData = formatMongoData(serviceResponse);
-    return formatData;
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.lessonMessage.LESSON_NOT_FOUND,
+      };
+      response.message = constants.lessonMessage.LESSON_NOT_FOUND;
+      return response;
+    }
+    response.body = formatMongoData(dbResponse);
+    response.status = 200;
+    return response;
   } catch (error) {
     console.log(
       `Something went wrong: service : lessonService : getLessonById`
@@ -87,6 +104,7 @@ module.exports.getLessonById = async (serviceData) => {
 
 // getAlllesson
 module.exports.getAllLessons = async (serviceData) => {
+  const response = { ...constants.defaultServerResponse };
   try {
     const {
       limit = 10,
@@ -97,7 +115,6 @@ module.exports.getAllLessons = async (serviceData) => {
       serialNo,
     } = serviceData;
     let conditions = {};
- 
 
     if (status == "true" || status == "false") {
       conditions.status = status;
@@ -122,13 +139,22 @@ module.exports.getAllLessons = async (serviceData) => {
     const totalRecords = await lessonModel.countDocuments(conditions);
     const totalPages = Math.ceil(totalRecords / parseInt(limit));
 
-    const serviceResponse = await lessonModel
+    const dbResponse = await lessonModel
       .find(conditions)
       .skip((parseInt(page) - 1) * parseInt(limit))
       .limit(parseInt(limit))
       .populate({ path: "course", select: "name _id" });
 
-    const formatData = formatMongoData(serviceResponse);
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.lessonMessage.LESSON_NOT_FOUND,
+      };
+      response.message = constants.lessonMessage.LESSON_NOT_FOUND;
+      return response;
+    }
+
+    const formatData = formatMongoData(dbResponse);
+    response.status = 200;
 
     return {
       body: formatData,
@@ -149,20 +175,32 @@ module.exports.deleteLesson = async (serviceData) => {
   try {
     const response = { ...constants.defaultServerResponse };
 
-    const serviceResponse = await lessonModel.findOneAndUpdate(
+    const isLessonExist = await lessonModel.findOne({
+      _id: serviceData.id,
+      isDeleted: true,
+    });
+    if (isLessonExist) {
+      response.errors = {
+        name: constants.lessonMessage.LESSON_NOT_EXISTS,
+      };
+      return response;
+    }
+
+    const dbResponse = await lessonModel.findOneAndUpdate(
       { _id: serviceData.id },
       { isDeleted: true },
       { new: true }
     );
 
-    if (!serviceResponse) {
+    if (!dbResponse) {
       response.errors = {
-        error: constants.lessonMessage.LESSON_DELETED,
+        error: constants.lessonMessage.LESSON_NOT_DELETED,
       };
+      response.message = constants.lessonMessage.LESSON_NOT_DELETED;
       return response;
     }
 
-    response.body = serviceResponse;
+    response.body = formatMongoData(dbResponse);
     response.status = 200;
 
     return response;
@@ -174,12 +212,21 @@ module.exports.deleteLesson = async (serviceData) => {
 
 // updateLesson
 module.exports.updateLesson = async (serviceData) => {
+  const response = { ...constants.defaultServerResponse };
   try {
     const { id, body } = serviceData;
-    const serviceResponse = await lessonModel.findByIdAndUpdate(id, body, {
+    const dbResponse = await lessonModel.findByIdAndUpdate(id, body, {
       new: true,
     });
-    return formatMongoData(serviceResponse);
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.lessonMessage.LESSON_NOT_UPDATED,
+      };
+      response.message = constants.lessonMessage.LESSON_NOT_UPDATED;
+      return response;
+    }
+    response.body = formatMongoData(dbResponse);
+    response.status = 200;
   } catch (error) {
     console.log(
       `Something went wrong: Service : lessonService : updateLesson ${error.message}`
@@ -187,5 +234,3 @@ module.exports.updateLesson = async (serviceData) => {
     throw new Error(error);
   }
 };
-
-

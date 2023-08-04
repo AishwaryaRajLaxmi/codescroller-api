@@ -1,22 +1,26 @@
+const purchasedCourseModel = require("../database/models/purchasedCourseModel");
 const constants = require("../helpers/constants");
-const lessonService = require("../services/lessonService");
+const purchasedCourseService = require("../services/purchasedCourseService");
 
-// createlesson
-module.exports.createLesson = async (req, res) => {
+// createPurchasedCourse
+module.exports.createPurchasedCourse = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const serviceResponse = await lessonService.createLesson(req.body);
+    const serviceResponse = await purchasedCourseService.createPurchasedCourse(
+      req.params,
+      req.body
+    );
 
     if (serviceResponse.status === 400) {
       response.errors = serviceResponse.errors;
       response.message = serviceResponse.message;
     } else {
       response.body = serviceResponse.body;
-      response.message = constants.lessonMessage.LESSON_CREATED;
+      response.message = constants.courseMessage.COURSE_CREATED;
       response.status = 200;
     }
   } catch (error) {
-    console.log(`Something went wrong:controller:lessonController: createlesson
+    console.log(`Something went wrong:controller:courseController: createPurchasedCourse
     Error:${error.message}`);
     response.message = error.message;
     response.errors = error;
@@ -24,23 +28,26 @@ module.exports.createLesson = async (req, res) => {
   res.status(response.status).send(response);
 };
 
-// getlessonByID
+// getPurchasedCourseByID
 
-module.exports.getLessonById = async (req, res) => {
+module.exports.getPurchasedCourseById = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const serviceResponse = await lessonService.getLessonById(req.params);
+    const serviceResponse = await purchasedCourseService.getPurchasedCourseById(
+      req.params
+    );
 
     if (serviceResponse.status === 400) {
       response.errors = serviceResponse.errors;
       response.message = serviceResponse.message;
     } else {
-      response.body = serviceResponse;
-      response.message = constants.lessonMessage.LESSON_FETCHED;
+      response.body = serviceResponse.body;
       response.status = 200;
+      response.message =
+        constants.purchasedCourseMessage.PURCHASED_COURSE_FETCHED;
     }
   } catch (error) {
-    console.log(`Something went wrong:controller:lessonController: getLessonById
+    console.log(`Something went wrong:controller:purchasedCourseController: getPurchasedCourseById
     Error:${error.message}`);
     response.message = error.message;
     response.errors = error;
@@ -48,13 +55,16 @@ module.exports.getLessonById = async (req, res) => {
   res.status(response.status).send(response);
 };
 
-// getAllLessons
+// getAllCourses
 
-module.exports.getAllLessons = async (req, res) => {
+module.exports.getAllPurchasedCourses = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const serviceResponse = await lessonService.getAllLessons(req.query);
-    if (serviceResponse === 400) {
+    const serviceResponse = await purchasedCourseService.getAllPurchasedCourses(
+      req.query
+    );
+
+    if (serviceResponse.status === 400) {
       response.message = serviceResponse.message;
       response.errors = serviceResponse.errors;
     } else {
@@ -63,10 +73,11 @@ module.exports.getAllLessons = async (req, res) => {
       response.totalRecords = serviceResponse.totalRecords;
       response.page = serviceResponse.page;
       response.status = 200;
-      response.message = constants.lessonMessage.LESSON_FETCHED;
+      response.message =
+        constants.purchasedCourseMessage.PURCHASED_COURSE_FETCHED;
     }
   } catch (error) {
-    console.log(`Something went wrong:controller:lessonController: getAllLessons
+    console.log(`Something went wrong:controller:purchasedCourseController: getAllPurchasedCourses
     Error:${error.message}`);
 
     response.message = error.message;
@@ -75,21 +86,23 @@ module.exports.getAllLessons = async (req, res) => {
   res.status(response.status).send(response);
 };
 
-// deletelesson
-module.exports.deleteLesson = async (req, res) => {
+// deleteCourse
+module.exports.deletePurchasedCourse = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const serviceResponse = await lessonService.deleteLesson(req.params);
+    const serviceResponse = await purchasedCourseService.deletePurchasedCourse(
+      req.params
+    );
     if (serviceResponse.status == 400) {
       response.message = serviceResponse.message;
       response.errors = serviceResponse.errors;
     } else {
       response.body = serviceResponse.body;
-      response.message = constants.lessonMessage.LESSON_DELETED;
+      response.message = constants.courseMessage.COURSE_DELETED;
       response.status = 200;
     }
   } catch (error) {
-    console.log(`Something went wrong:controller:lessonController: deleteLesson
+    console.log(`Scomething went wrong:controller:courseController: getAllCourses
       Error:${error.message}`);
 
     response.message = error.message;
@@ -100,11 +113,11 @@ module.exports.deleteLesson = async (req, res) => {
   res.status(response.status).send(response);
 };
 
-// updatelesson
-module.exports.updateLesson = async (req, res) => {
+// updatePurchasedCourse
+module.exports.updatePurchasedCourse = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const serviceResponse = await lessonService.updateLesson({
+    const serviceResponse = await purchasedCourseService.updatePurchasedCourse({
       id: req.params.id,
       body: req.body,
     });
@@ -113,19 +126,18 @@ module.exports.updateLesson = async (req, res) => {
       response.errors = serviceResponse.errors;
       response.message = serviceResponse.message;
     } else {
-      response.body = serviceResponse;
+      response.body = serviceResponse.body;
       response.status = 200;
-      response.message = constants.lessonMessage.LESSON_UPDATED;
+      response.message = constants.courseMessage.COURSE_UPDATED;
     }
   } catch (error) {
     console.log(
-      `Somthing Went Wrong Controller: lessonController: updateLesson`,
+      `Something Went Wrong Controller: courseController: updatePurchasedCourse`,
       error.message
     );
 
     response.errors = error;
     response.message = error.message;
-    throw new Error(error);
   }
   res.status(response.status).send(response);
 };

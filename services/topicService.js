@@ -6,23 +6,33 @@ const topicModel = require("../database/models/topicModel");
 module.exports.createTopic = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const dbResponse = await topicModel.findOne({
+    const topicResponse = await topicModel.findOne({
       name: serviceData.name,
     });
 
-    if (dbResponse) {
+    if (topicResponse) {
       response.errors = {
-        name: "Topic already exists",
+        name: constants.topicMessage.TOPIC_ALREADY_EXISTS,
       };
+      response.message = constants.categoryMessage.TOPIC_ALREADY_EXISTS;
       return response;
     }
-    const newData = new topicModel(serviceData);
 
-    const serviceResponse = await newData.save();
-    return formatMongoData(serviceResponse);
+    const newData = new topicModel(serviceData);
+    const dbResponse = await newData.save();
+    if (dbResponse) {
+      response.body = formatMongoData(dbResponse);
+      response.status = 200;
+    } else {
+      response.errors = {
+        error: constants.topicMessage.TOPIC_CREATED,
+      };
+      response.message = constants.topicMessage.TOPIC_CREATED;
+    }
+    return response;
   } catch (error) {
     console.log(
-      `Something went wrong service : userService : createTopic\nError: ${error.message}`
+      `Something went wrong service : topicService : createTopic\nError: ${error.message}`
     );
     throw new Error(error.message);
   }
@@ -30,6 +40,7 @@ module.exports.createTopic = async (serviceData) => {
 
 // getAllTopics
 module.exports.getAllTopics = async (serviceData) => {
+  const response = { ...constants.defaultServerResponse };
   try {
     const {
       limit = 10,
@@ -77,6 +88,15 @@ module.exports.getAllTopics = async (serviceData) => {
       .populate({ path: "category", select: "name _id" })
       .populate({ path: "subCategories", select: "name _id" });
 
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.topicMessage.TOPIC_NOT_FOUND,
+      };
+      response.message = constants.topicMessage.TOPIC_NOT_FOUND;
+      return response;
+    }
+
+    response.status = 200;
     const formatData = formatMongoData(dbResponse);
     return {
       body: formatData,
@@ -97,6 +117,17 @@ module.exports.deleteTopic = async (serviceData) => {
   try {
     const response = { ...constants.defaultServerResponse };
 
+    const isTopicExist = await topicModel.findOne({
+      _id: serviceData.id,
+      isDeleted: true,
+    });
+    if (isTopicExist) {
+      response.errors = {
+        name: constants.topicMessage.TOPIC_NOT_EXISTS,
+      };
+      return response;
+    }
+
     const dbResponse = await topicModel.findOneAndUpdate(
       { _id: serviceData.id }, // Condition to find the document
       { isDeleted: true }, // Update to set isDeleted field to true
@@ -105,14 +136,14 @@ module.exports.deleteTopic = async (serviceData) => {
 
     if (!dbResponse) {
       response.errors = {
-        error: constants.topicMessage.TOPIC_NOT_DELETED,
+        error: constants.topicMessage.TOPIC_ALREADY_EXISTS,
       };
+      response.message = constants.topicMessage.TOPIC_ALREADY_EXISTS;
       return response;
     }
 
-    response.body = dbResponse;
+    response.body = formatMongoData(dbResponse);
     response.status = 200;
-
     return response;
   } catch (error) {
     console.log(`Something went wrong: service : TopicService : deleteTopic`);
@@ -122,6 +153,7 @@ module.exports.deleteTopic = async (serviceData) => {
 
 // getTopicById
 module.exports.getTopicById = async (serviceData) => {
+  const response = { ...constants.defaultServerResponse };
   try {
     const dbResponse = await topicModel
       .findOne({
@@ -130,18 +162,24 @@ module.exports.getTopicById = async (serviceData) => {
       })
       .populate({ path: "category", select: "name _id" })
       .populate({ path: "subCategories", select: "name _id" });
-    const formatData = formatMongoData(dbResponse);
-    return formatData;
+
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.categoryMessage.CATEGORY_NOT_FOUND,
+      };
+      response.message = constants.categoryMessage.CATEGORY_NOT_FOUND;
+      return response;
+    }
+    response.body = formatMongoData(dbResponse);
+    response.status = 200;
+    return response;
   } catch (error) {
-    console.log(
-      `Something went wrong: service : LaaguageService : deleteTopic`
-    );
+    console.log(`Something went wrong: service : laguageService : deleteTopic`);
     throw new Error(error);
   }
 };
 
 // updateTopic
-
 module.exports.updateTopic = async (serviceData) => {
   try {
     const { id, body } = serviceData;

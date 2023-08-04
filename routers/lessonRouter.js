@@ -5,21 +5,20 @@ const {
   createLesson,
   getAllLessons,
   getLessonById,
-  updateLesson
+  updateLesson,
 } = require("../apiValidationSchemas/lessonValidationSchema");
 const {
   validateBody,
   validateParams,
   validateQuery,
 } = require("../middlewares/joiSchemaValidation");
-const jsonwebtoken = require("../middlewares/jwtValidation");
-
+const { validateAdminToken } = require("../middlewares/jwtValidation");
 
 // createLesson
 lessonRouter.post(
   "/",
   validateBody(createLesson),
-  jsonwebtoken.validateAdminToken,
+  validateAdminToken,
   lessonController.createLesson
 );
 
@@ -34,14 +33,15 @@ lessonRouter.get(
 lessonRouter.delete(
   "/:id",
   validateParams(getLessonById),
-  jsonwebtoken.validateAdminToken,
+  validateAdminToken,
   lessonController.deleteLesson
 );
 
-// getLesson
+// getLessonById
 lessonRouter.get(
   "/:id",
   validateParams(getLessonById),
+  validateAdminToken,
   lessonController.getLessonById
 );
 
@@ -49,7 +49,7 @@ lessonRouter.get(
 lessonRouter.put(
   "/:id",
   validateParams(getLessonById),
-  jsonwebtoken.validateAdminToken,
+  validateAdminToken,
   validateBody(updateLesson),
   lessonController.updateLesson
 );

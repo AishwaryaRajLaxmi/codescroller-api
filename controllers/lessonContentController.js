@@ -15,7 +15,7 @@ module.exports.createLessonContent = async (req, res) => {
       response.errors = serviceResponse.errors;
       response.message = constants.contentMessage.CONTENT_NOT_CREATED;
     } else {
-      response.body = serviceResponse;
+      response.body = serviceResponse.body;
       response.message = constants.contentMessage.CONTENT_CREATED;
       response.status = 200;
     }
@@ -36,9 +36,15 @@ module.exports.getLessonContentById = async (req, res) => {
     const serviceResponse = await lessonContentService.getLessonContentById(
       req.params
     );
-    response.body = serviceResponse;
-    response.status = 200;
-    response.message = constants.contentMessage.CONTENT_FETCHED;
+
+    if (serviceResponse.status === 200) {
+      response.body = serviceResponse.body;
+      response.status = 200;
+      response.message = constants.contentMessage.CONTENT_FETCHED;
+    } else {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    }
   } catch (error) {
     console.log(`Something went wrong:controller:lessonContent Controller: getLessonContentById
     Error:${error.message}`);
@@ -105,12 +111,13 @@ module.exports.updateLessonContent = async (req, res) => {
       body: req.body,
     });
 
-    if (serviceResponse) {
-      response.body = serviceResponse;
+    if (serviceResponse == 400) {
+      response.message = serviceResponse.message;
+      response.errors = serviceResponse.errors;
+    } else {
+      response.body = serviceResponse.body;
       response.status = 200;
       response.message = constants.contentMessage.CONTENT_UPDATED;
-    } else {
-      response.message = constants.contentMessage.CONTENT_NOT_UPDATED;
     }
   } catch (error) {
     console.log(
@@ -132,14 +139,13 @@ module.exports.deleteLessonContent = async (req, res) => {
       req.params
     );
 
-    if (serviceResponse.status == 200) {
+    if (serviceResponse.status == 400) {
+      response.message = serviceResponse.message;
+      response.errors = serviceResponse.errors;
+    } else {
       response.body = serviceResponse.body;
       response.message = constants.contentMessage.CONTENT_DELETED;
       response.status = 200;
-    } else {
-      response.message = constants.contentMessage.CONTENT_NOT_DELETED;
-      response.status = 400;
-      response.errors = serviceResponse.errors;
     }
   } catch (error) {
     console.log(

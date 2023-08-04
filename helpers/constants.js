@@ -5,7 +5,6 @@ module.exports = {
     errors: {},
     status: 400,
   },
-
   validationMessage: {
     VALIDATION_FAILED: "Validation Failed",
     TOKEN_MISSING: "Token is Missing, Login First",
@@ -43,6 +42,7 @@ module.exports = {
 
   userMessage: {
     USER_REGISTERED: "User Registered Successfully",
+    USER_NOT_REGISTERED: "User Not Registered ",
     USER_FETCHED: "User Fetched Successfully",
     USER_NOT_FETCHED: "User Fetched Successfully",
     USER_LOGEDIN: "User Logedin Successfully",
@@ -53,9 +53,12 @@ module.exports = {
     USER_NOT_DELETED: "User Not Deleted",
     USER_NOT_FOUND: "User Not Found",
     USER_FOUND: "User Found",
+    USER_ALREADY_EXISTS: "User Already Exists",
+    USER_NOT_EXISTS: "User Not Exists",
   },
   categoryMessage: {
     CATEGORY_CREATED: "Category Created Successfully",
+    CATEGORY_NOT_CREATED: "Category Not Created",
     CATEGORY_FETCHED: "Category Fetched Successfully",
     CATEGORY_NOT_FETCHED: "Category Not Fetched ",
     CATEGORY_LOGEDIN: "Category Logedin Successfully",
@@ -65,9 +68,27 @@ module.exports = {
     CATEGORY_DELETED: "Category Deleted Successfully",
     CATEGORY_NOT_DELETED: "Category Not Deleted",
     CATEGORY_NOT_FOUND: "Category Not Found",
+    CATEGORY_ALREADY_EXISTS: "Category Already Exists",
+    CATEGORY_NOT_EXISTS: "Category Not Exists",
+  },
+  subCategoryMessage: {
+    SUB_CATEGORY_CREATED: "Subcategory Created Successfully",
+    SUB_CATEGORY_NOT_CREATED: "Subcategory Not Created",
+    SUB_CATEGORY_FETCHED: "Subcategory Fetched Successfully",
+    SUB_CATEGORY_NOT_FETCHED: "Subcategory Not Fetched",
+    SUB_CATEGORY_LOGEDIN: "Subcategory Logedin Successfully",
+    SUB_CATEGORY_NOT_LOGEDIN: "Subcategory Not Logedin",
+    SUB_CATEGORY_UPDATED: "Subcategory Updated Successfully",
+    SUB_CATEGORY_NOT_UPDATED: "Subcategory Not Updated",
+    SUB_CATEGORY_DELETED: "Subcategory Deleted Successfully",
+    SUB_CATEGORY_NOT_DELETED: "Subcategory Not Deleted",
+    SUB_CATEGORY_NOT_FOUND: "Subcategory Not Found",
+    SUB_CATEGORY_ALREADY_EXISTS: "Subcategory Already Exists",
+    SUB_CATEGORY_NOT_EXISTS: "Subcategory Not Exists",
   },
   languageMessage: {
     LANGUAGE_CREATED: "Language Created Successfully",
+    LANGUAGE_NOT_CREATED: "Language Not Created",
     LANGUAGEL_FETCHED: "Language Fetched Successfully",
     LANGUAGE_NOT_FETCHED: "Language Not Fetched",
     LANGUAGE_LOGEDIN: "Language Logedin Successfully",
@@ -77,9 +98,12 @@ module.exports = {
     LANGUAGE_DELETED: "Language Deleted Successfully",
     LANGUAGE_NOT_DELETED: "Language Not Deleted",
     LANGUAGE_NOT_FOUND: "Language Not Found",
+    LANGUAGE_ALREADY_EXISTS: "Language Already Exists",
+    LANGUAGE_NOT_EXISTS: "Language Not Exists",
   },
   levelMessage: {
     LEVEL_CREATED: "level Created Successfully",
+    LEVEL_NOT_CREATED: "level Not Created",
     LEVEL_FETCHED: "level Fetched Successfully",
     LEVEL_NOT_FETCHED: "Level Not Fetched",
     LEVEL_LOGEDIN: "Level Logedin Successfully",
@@ -89,9 +113,11 @@ module.exports = {
     LEVEL_DELETED: "Level Deleted Successfully",
     LEVEL_NOT_DELETED: "Level Not Deleted",
     LEVEL_NOT_FOUND: "Level Not Found",
+    LEVEL_ALREADY_EXISTS: "Level Already Exists",
+    LEVEL_NOT_EXISTS: "Level Not Exists",
   },
   courseMessage: {
-    COURSE_CREATED: "Course  Created Successfully",
+    COURSE_CREATED: "Course Created Successfully",
     COURSE_NOT_CREATED: "Course Not Created ",
     COURSE_FETCHED: "Course Fetched Successfully",
     COURSE_NOT_FETCHED: "Course Not Fetched",
@@ -100,6 +126,43 @@ module.exports = {
     COURSE_DELETED: "Course Deleted Successfully",
     COURSE_NOT_DELETED: "Course Not Deleted",
     COURSE_NOT_FOUND: "Course Not Found",
+    COURSE_ALREADY_EXISTS: "Course Already Exists",
+    COURSE_NOT_EXISTS: "Course Not Exists",
+  },
+  purchasedCourseMessage: {
+    PURCHASED_COURSE_CREATED: "Purchased Course Created Successfully",
+    PURCHASED_COURSE_NOT_CREATED: "Purchased Course Not Created",
+    PURCHASED_COURSE_FETCHED: "Purchased Course Fetched Successfully",
+    PURCHASED_COURSE_NOT_FETCHED: "Purchased Course Not Fetched",
+    PURCHASED_COURSE_UPDATED: "Purchased Course Updated Successfully",
+    PURCHASED_COURSE_NOT_UPDATED: "Purchased Course Not Updated",
+    PURCHASED_COURSE_DELETED: "Purchased Course Deleted Successfully",
+    PURCHASED_COURSE_NOT_DELETED: "Purchased Course Not Deleted",
+    PURCHASED_COURSE_NOT_FOUND: "Purchased Course Not Found",
+    PURCHASED_COURSE_ALREADY_EXISTS: "This   Course is Already Purchased ",
+    PURCHASED_COURSE_NOT_EXISTS: "Purchased Course Not Exists",
+  },
+  purchasedCourseHistoryMessage: {
+    PURCHASED_COURSE_HISTORY_CREATED:
+      "Purchased Course History Created Successfully",
+    PURCHASED_COURSE_HISTORY_NOT_CREATED:
+      "Purchased Course History Not Created",
+    PURCHASED_COURSE_HISTORY_FETCHED:
+      "Purchased Course History Fetched Successfully",
+    PURCHASED_COURSE_HISTORY_NOT_FETCHED:
+      "Purchased Course History Not Fetched",
+    PURCHASED_COURSE_HISTORY_UPDATED:
+      "Purchased Course History Updated Successfully",
+    PURCHASED_COURSE_HISTORY_NOT_UPDATED:
+      "Purchased Course History Not Updated",
+    PURCHASED_COURSE_HISTORY_DELETED:
+      "Purchased Course History Deleted Successfully",
+    PURCHASED_COURSE_HISTORY_NOT_DELETED:
+      "Purchased Course History Not Deleted",
+    PURCHASED_COURSE_HISTORY_NOT_FOUND: "Purchased Course History Not Found",
+    PURCHASED_COURSE_HISTORY_ALREADY_EXISTS:
+      "Purchased Course History Already Exists",
+    PURCHASED_COURSE_HISTORY_NOT_EXISTS: "Purchased Course History Not Exists",
   },
   lessonMessage: {
     LESSON_CREATED: "Lesson Created Successfully",
@@ -112,6 +175,8 @@ module.exports = {
     LESSON_NOT_DELETED: "Lesson Not Deleted",
     LESSON_NOT_FOUND: "Lesson Not Found",
     LESSON_FOUND: "Lesson Found",
+    LESSON_ALREADY_EXISTS: "Lesson Already Exists",
+    LESSON_NOT_EXISTS: "Lesson Not Exists",
   },
   contentMessage: {
     CONTENT_CREATED: "Content Created Successfully",
@@ -124,6 +189,8 @@ module.exports = {
     CONTENT_NOT_DELETED: "Content Not Deleted",
     CONTENT_NOT_FOUND: "Content Not Found",
     CONTENT_FOUND: "Content Found",
+    CONETENT_ALREADY_EXISTS: "Content Already Exists",
+    CONETENT_NOT_EXISTS: "Content NOT Exists",
   },
   topicMessage: {
     TOPIC_CREATED: "Topic Created Successfully",
@@ -136,9 +203,12 @@ module.exports = {
     TOPIC_DELETED: "Topic Deleted Successfully",
     TOPIC_NOT_DELETED: "Topic Not Deleted",
     TOPIC_NOT_FOUND: "Topic Not Found",
+    TOPIC_ALREADY_EXISTS: "Topic Already Exists",
+    TOPIC_NOT_EXISTS: "Topic Not Exists",
   },
   reviewsMessage: {
     REVIEWS_CREATED: "Reviews Created Successfully",
+    REVIEWS_NOT_CREATED: "Reviews Not Created ",
     REVIEWS_FETCHED: "Reviews Fetched Successfully",
     REVIEWS_NOT_FETCHED: "Reviews Not Fetched",
     REVIEWS_UPDATED: "Reviews Updated Successfully",
@@ -146,17 +216,7 @@ module.exports = {
     REVIEWS_DELETED: "Reviews Deleted Successfully",
     REVIEWS_NOT_DELETED: "Reviews Not Deleted",
     REVIEWS_NOT_FOUND: "Reviews Not Found",
-  },
-  subCategoryMessage: {
-    SUB_CATEGORY_CREATED: "Subcategory Created Successfully",
-    SUB_CATEGORY_FETCHED: "Subcategory Fetched Successfully",
-    SUB_CATEGORY_NOT_FETCHED: "Subcategory Not Fetched",
-    SUB_CATEGORY_LOGEDIN: "Subcategory Logedin Successfully",
-    SUB_CATEGORY_NOT_LOGEDIN: "Subcategory Not Logedin",
-    SUB_CATEGORY_UPDATED: "Subcategory Updated Successfully",
-    SUB_CATEGORY_NOT_UPDATED: "Subcategory Not Updated",
-    SUB_CATEGORY_DELETED: "Subcategory Deleted Successfully",
-    SUB_CATEGORY_NOT_DELETED: "Subcategory Not Deleted",
-    SUB_CATEGORY_NOT_FOUND: "Subcategory Not Found",
+    REVIEWS_ALREADY_EXISTS: "Reviews Already Exists",
+    REVIEWS_NOT_EXISTS: "Reviews Not Exists",
   },
 };

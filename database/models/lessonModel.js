@@ -9,19 +9,11 @@ const lessonSchema = new mongoose.Schema(
     slug: {
       type: String,
       trim: true,
-      required: true,
     },
     description: {
       type: String,
       trim: true,
-    },
-    status: {
-      type: Boolean,
-      default: true,
-    },
-    isDeleted: {
-      type: Boolean,
-      default: false,
+      default: "",
     },
     course: {
       type: mongoose.Schema.Types.ObjectId,
@@ -32,32 +24,47 @@ const lessonSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-
+    status: {
+      type: Boolean,
+      default: true,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
     contents: [
       {
         name: {
           type: String,
           required: true,
+          trim: "",
         },
         slug: {
           type: String,
           required: true,
+          trim: "",
         },
         description: {
           type: String,
+          trim: true,
+          default: "",
         },
         contentType: {
           type: String,
           enum: ["video", "pdf"],
+          trim: true,
         },
         contentSource: {
           type: String,
           enum: ["youtube", "dailymotion"],
+          trim: true,
         },
         contentUrl: {
           type: String,
+          trim: true,
+          default: "",
         },
-        isDeleted: {
+        isFree: {
           type: Boolean,
           default: false,
           required: true,
@@ -67,7 +74,7 @@ const lessonSchema = new mongoose.Schema(
           default: true,
           required: true,
         },
-        isFree: {
+        isDeleted: {
           type: Boolean,
           default: false,
           required: true,

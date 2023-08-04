@@ -1,7 +1,7 @@
 const subCategoryService = require("../services/subCategoryService");
 const constants = require("../helpers/constants");
 
-// createCategory
+// createSubCategory
 module.exports.createSubCategory = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
@@ -11,9 +11,9 @@ module.exports.createSubCategory = async (req, res) => {
 
     if (serviceResponse.status === 400) {
       response.errors = serviceResponse.errors;
-      response.status = 400; // Set the response status to 400
+      response.message = serviceResponse.message;
     } else {
-      response.body = serviceResponse;
+      response.body = serviceResponse.body;
       response.message = constants.subCategoryMessage.SUB_CATEGORY_CREATED;
       response.status = 200;
     }
@@ -21,7 +21,6 @@ module.exports.createSubCategory = async (req, res) => {
     console.log(
       `Something went wrong controller : SubCategoryController :createSubCategory \nError: ${error.message}`
     );
-
     response.message = error.message;
     response.errors = error;
   }
@@ -35,12 +34,18 @@ module.exports.getAllSubCategories = async (req, res) => {
     const serviceResponse = await subCategoryService.getAllSubCategories(
       req.query
     );
-    response.body = serviceResponse.body;
-    response.totalPages = serviceResponse.totalPages;
-    response.totalRecords = serviceResponse.totalRecords;
-    response.page = serviceResponse.page;
-    response.status = 200;
-    response.message = constants.subCategoryMessage.SUB_CATEGORY_FETCHED;
+
+    if (serviceResponse.status === 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
+      response.body = serviceResponse.body;
+      response.totalPages = serviceResponse.totalPages;
+      response.totalRecords = serviceResponse.totalRecords;
+      response.page = serviceResponse.page;
+      response.status = 200;
+      response.message = constants.subCategoryMessage.SUB_CATEGORY_FETCHED;
+    }
   } catch (error) {
     console.log(`Something went wrong:controller:SubCategoryController: getAllSubCategories
     Error:${error.message}`);
@@ -51,44 +56,21 @@ module.exports.getAllSubCategories = async (req, res) => {
   res.status(response.status).send(response);
 };
 
-// deleteSubCategory
-module.exports.deleteSubCategory = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
-  try {
-    const serviceResponse = await subCategoryService.deleteSubCategory(
-      req.params
-    );
-    if (serviceResponse.status == 200) {
-      response.body = serviceResponse.body;
-      response.message = constants.subCategoryMessage.SUB_CATEGORY_DELETED;
-      response.status = 200;
-    } else {
-      response.message = constants.subCategoryMessage.SUB_CATEGORY_NOT_DELETED;
-      response.status = 400;
-      response.errors = serviceResponse.errors;
-    }
-  } catch (error) {
-    console.log(`Something went wrong:controller:SubCategoryController: getAllCategories
-      Error:${error.message}`);
-
-    response.message = error.message;
-    response.errors = {
-      error: error.message,
-    };
-  }
-  res.status(response.status).send(response);
-};
-
-// getSubCategory
+// getSubCategoryById
 module.exports.getSubCategoryById = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await subCategoryService.getSubCategoryById(
       req.params
     );
-    response.body = serviceResponse;
-    response.status = 200;
-    response.message = constants.subCategoryMessage.SUB_CATEGORY_FETCHED;
+    if (serviceResponse.status === 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
+      response.body = serviceResponse.body;
+      response.status = 200;
+      response.message = constants.subCategoryMessage.SUB_CATEGORY_FETCHED;
+    }
   } catch (error) {
     console.log(`Something went wrong:controller:SubCategoryController: getSubCategoryById
     Error:${error.message}`);
@@ -107,12 +89,13 @@ module.exports.updateSubCategory = async (req, res) => {
       body: req.body,
     });
 
-    if (serviceResponse) {
-      response.body = serviceResponse;
+    if (serviceResponse.status === 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
+      response.body = serviceResponse.body;
       response.status = 200;
       response.message = constants.subCategoryMessage.SUB_CATEGORY_UPDATED;
-    } else {
-      response.message = constants.subCategoryMessage.SUB_CATEGORY_NOT_UPDATED;
     }
   } catch (error) {
     console.log(
@@ -121,6 +104,34 @@ module.exports.updateSubCategory = async (req, res) => {
 
     response.errors = error;
     response.message = error.message;
+  }
+  res.status(response.status).send(response);
+};
+
+// deleteSubCategory
+module.exports.deleteSubCategory = async (req, res) => {
+  const response = { ...constants.defaultServerResponse };
+  try {
+    const serviceResponse = await subCategoryService.deleteSubCategory(
+      req.params
+    );
+    if (serviceResponse.status == 400) {
+      response.message = serviceResponse.message;
+      response.errors = serviceResponse.errors;
+    } else {
+      response.body = serviceResponse.body;
+      response.message = constants.subCategoryMessage.SUB_CATEGORY_DELETED;
+      response.status = 200;
+     
+    }
+  } catch (error) {
+    console.log(`Something went wrong:controller:SubCategoryController: getAllCategories
+      Error:${error.message}`);
+
+    response.message = error.message;
+    response.errors = {
+      error: error.message,
+    };
   }
   res.status(response.status).send(response);
 };

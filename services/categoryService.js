@@ -12,39 +12,40 @@ module.exports.createCategory = async (serviceData) => {
 
     if (categoryResponse) {
       response.errors = {
-        name: "Category already exists",
+        name: constants.categoryMessage.CATEGORY_ALREADY_EXISTS,
       };
+      response.message = constants.categoryMessage.CATEGORY_ALREADY_EXISTS;
       return response;
     }
-    const newData = new categoryModel(serviceData);
 
-    const serviceResponse = await newData.save();
-    return formatMongoData(serviceResponse);
+    const newData = new categoryModel(serviceData);
+    const dbResponse = await newData.save();
+    if (dbResponse) {
+      response.body = formatMongoData(dbResponse);
+      response.status = 200;
+    } else {
+      response.errors = {
+        error: constants.categoryMessage.CATEGORY_NOT_CREATED,
+      };
+      response.message = constants.categoryMessage.CATEGORY_NOT_CREATED;
+    }
+
+    return response;
   } catch (error) {
     console.log(
       `Something went wrong service : categoryService : createCategory\nError: ${error.message}`
     );
-    const keyValue = {};
-    for (const key of Object.keys(error.keyValue)) {
-      keyValue[key] = error.keyValue[key];
-    }
-    const errorMessage = JSON.stringify(keyValue);
-    throw new Error(errorMessage + " is duplicate");
+
+    throw new Error(error);
   }
 };
 
 // getAllCategories
 module.exports.getAllCategories = async (serviceData) => {
+  const response = { ...constants.defaultServerResponse };
   try {
-    const {
-      limit = 10,
-      page = 1,
-      status = "true",
-      searchQuery,
-      subCategory,
-    } = serviceData;
+    const { limit = 10, page = 1, status = "true", searchQuery } = serviceData;
     let conditions = {};
-    // Set the condition for active users (where isDeleted is false)
     conditions.isDeleted = false;
 
     // status condition
@@ -61,7 +62,7 @@ module.exports.getAllCategories = async (serviceData) => {
         { description: regex },
       ];
     }
-    
+
     // count document
     const totalRecords = await categoryModel.countDocuments(conditions);
     const totalPages = Math.ceil(totalRecords / parseInt(limit));
@@ -71,6 +72,14 @@ module.exports.getAllCategories = async (serviceData) => {
       .skip((parseInt(page) - 1) * parseInt(limit))
       .limit(parseInt(limit));
 
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.categoryMessage.CATEGORY_NOT_FOUND,
+      };
+      response.message = constants.categoryMessage.CATEGORY_NOT_FOUND;
+      response.status = 200;
+      return response;
+    }
     const formatData = formatMongoData(dbResponse);
 
     return {
@@ -87,11 +96,76 @@ module.exports.getAllCategories = async (serviceData) => {
   }
 };
 
+// getCategoryById
+module.exports.getCategoryById = async (serviceData) => {
+  const response = { ...constants.defaultServerResponse };
+  try {
+    const dbResponse = await categoryModel.findOne({
+      _id: serviceData.id,
+      isDeleted: false,
+    });
+
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.categoryMessage.CATEGORY_NOT_FOUND,
+      };
+      response.message = constants.categoryMessage.CATEGORY_NOT_FOUND;
+      return response;
+    }
+    response.body = formatMongoData(dbResponse);
+    response.status = 200;
+    return response;
+  } catch (error) {
+    console.log(
+      `Something went wrong: service : categoryService : getCategoryById`
+    );
+    throw new Error(error);
+  }
+};
+
+// updateCategory
+module.exports.updateCategory = async (serviceData) => {
+  try {
+    const response = { ...constants.defaultServerResponse };
+    const { id, body } = serviceData;
+    const dbResponse = await categoryModel.findOneAndUpdate({ _id: id }, body, {
+      new: true,
+    });
+
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.categoryMessage.CATEGORY_NOT_UPDATED,
+      };
+      response.message = constants.categoryMessage.CATEGORY_NOT_UPDATED;
+      return response;
+    }
+    response.body = formatMongoData(dbResponse);
+    response.status = 200;
+    return response;
+  } catch (error) {
+    console.log(
+      `Somthing Went Wrong Service: categoryService: updateCategory`,
+      error.message
+    );
+    throw new Error(error);
+  }
+};
+
 // deleteCategory
 module.exports.deleteCategory = async (serviceData) => {
   try {
     const response = { ...constants.defaultServerResponse };
 
+    const isCategoryExist = await categoryModel.findOne({
+      _id: serviceData.id,
+      isDeleted: true,
+    });
+    if (isCategoryExist) {
+      response.errors = {
+        name: constants.categoryMessage.CATEGORY_NOT_EXISTS,
+      };
+      return response;
+    }
     const dbResponse = await categoryModel.findOneAndUpdate(
       { _id: serviceData.id }, // Condition to find the document
       { isDeleted: true }, // Update to set isDeleted field to true
@@ -102,55 +176,16 @@ module.exports.deleteCategory = async (serviceData) => {
       response.errors = {
         error: constants.categoryMessage.CATEGORY_NOT_DELETED,
       };
+      response.message = constants.categoryMessage.CATEGORY_NOT_DELETED;
       return response;
     }
 
-    response.body = dbResponse;
+    response.body = formatMongoData(dbResponse);
     response.status = 200;
-
     return response;
   } catch (error) {
     console.log(
       `Something went wrong: service : categoryService : deletecategory`
-    );
-    throw new Error(error);
-  }
-};
-
-// getCategoryById
-module.exports.getCategoryById = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
-  try {
-    const dbResponse = await categoryModel.findOne({
-      _id: serviceData.id,
-      isDeleted: false,
-    });
-    const formatData = formatMongoData(dbResponse);
-    return formatData;
-  } catch (error) {
-    console.log(
-      `Something went wrong: service : categoryService : deleteCategory`
-    );
-    throw new Error(error);
-  }
-};
-
-// updateCategory
-
-module.exports.updateCategory = async (serviceData) => {
-  try {
-    const { id, body } = serviceData;
-    const dbResponse = await categoryModel.findOneAndUpdate(
-      { _id: id, isDeleted: false },
-      body,
-      { new: true }
-    );
-
-    return formatMongoData(dbResponse);
-  } catch (error) {
-    console.log(
-      `Somthing Went Wrong Service: categoryService: updateCategory`,
-      error.message
     );
     throw new Error(error);
   }

@@ -35,14 +35,15 @@ module.exports.loginAdmin = Joi.object({
 
 // updateProfile
 module.exports.updateProfile = Joi.object({
-  name: Joi.string().trim(),
-  email: Joi.string().email().trim(),
+  name: Joi.string().trim().label("Name"),
+  email: Joi.string().email().trim().label("Email"),
   mobile: Joi.string()
     .regex(/^[6-9]\d{9}$/)
     .messages({
       "string.empty": `"Mobile" must contain value`,
       "string.pattern.base": `"Mobile" must be a valid Number`,
-    }),
+    })
+    .label("Mobile"),
 
   password: Joi.string()
     .regex(
@@ -52,7 +53,8 @@ module.exports.updateProfile = Joi.object({
     .messages({
       "string.empty": `"Password" must not be empty`,
       "string.pattern.base": `"Password" must be a mix of number, char, and special char`,
-    }),
+    })
+    .label("Password"),
   oldPassword: Joi.string()
     .regex(
       /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[a-zA-Z!#$%&@? "])[a-zA-Z0-9!#$%&@?]{6,20}$/
@@ -61,7 +63,8 @@ module.exports.updateProfile = Joi.object({
     .messages({
       "string.empty": `"oldPassword" must not be empty`,
       "string.pattern.base": `"oldPassword" must be a mix of number, char, and special char`,
-    }),
+    })
+    .label("Old Password"),
 });
 
 // findAccount
@@ -91,6 +94,6 @@ module.exports.createNewPassword = Joi.object({
   cPassword: Joi.any()
     .equal(Joi.ref("password"))
     .required()
-    .label("Confirm password")
+    .label("Confirm Password")
     .options({ messages: { "any.only": "{{#label}} does not match" } }),
 });

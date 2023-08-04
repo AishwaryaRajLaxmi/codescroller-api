@@ -31,11 +31,11 @@ module.exports.loginUser = Joi.object({
 
 // getAllUsers
 module.exports.getAllUsers = Joi.object({
-  page: Joi.number(),
-  limit: Joi.number(),
-  status: Joi.string().valid("true", "false", "All"),
-  isVerified: Joi.string().valid("true", "false", "All"),
-  searchQuery: Joi.string().allow(""),
+  page: Joi.number().label("Page"),
+  limit: Joi.number().label("Limit"),
+  status: Joi.string().valid("true", "false", "All").label("Status"),
+  isVerified: Joi.string().valid("true", "false", "All").label("Is Verified"),
+  searchQuery: Joi.string().allow("").label("Search query"),
 });
 
 // updateUser
@@ -43,21 +43,22 @@ module.exports.updateUser = Joi.object({
   name: Joi.string().trim().required().label("Name"),
   email: Joi.string().email().trim().required().label("Email"),
   mobile: Joi.string()
-    .label("Mobile")
     .regex(/^[6-9]\d{9}$/)
     .required()
     .messages({
       "string.empty": `"Mobile Number" should be 10 digit`,
       "string.pattern.base": `"Mobile Number" must be a valid number`,
       "any.required": `"Mobile Number" is a required field`,
-    }),
-  status: Joi.boolean(),
-  isVerified: Joi.boolean(),
+    })
+    .label("Mobile"),
+  status: Joi.boolean().label("Status"),
+  isVerified: Joi.boolean().label("Is Verified"),
+  isDeleted: Joi.boolean().label("Is Deleted"),
 });
 
 //getUserById
 module.exports.getUserById = Joi.object({
-  id: Joi.string().custom(customCallback),
+  id: Joi.string().custom(customCallback).label("Id"),
 });
 
 //isMobileExists

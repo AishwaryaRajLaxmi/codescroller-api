@@ -6,32 +6,33 @@ const topicSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      trim: true,
     },
-
     slug: {
       type: String,
       required: true,
-      unique: true,
+      trim: true,
     },
-
     description: {
       type: String,
+      trim: true,
+      default: "",
     },
-
     seoTitle: {
       type: String,
+      trim: true,
+      default: "",
     },
-
     seoDescription: {
       type: String,
+      trim: true,
+      default: "",
     },
-
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "category",
       required: true,
     },
-
     subCategories: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -39,13 +40,11 @@ const topicSchema = new mongoose.Schema(
         required: true,
       },
     ],
-
     status: {
       type: Boolean,
       required: true,
       default: true,
     },
-
     isDeleted: {
       type: Boolean,
       default: false,

@@ -14,9 +14,11 @@ module.exports.registerUser = async (req, res) => {
 
     if (serviceResponse.status === 400) {
       response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
     } else {
       response.body = serviceResponse;
       response.message = constants.userMessage.USER_REGISTERED;
+      response.status = 200;
     }
   } catch (error) {
     console.log(
@@ -100,12 +102,17 @@ module.exports.getAllUsers = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await userService.getAllUsers(req.query);
-    response.body = serviceResponse.body;
-    response.totalPages = serviceResponse.totalPages;
-    response.totalRecords = serviceResponse.totalRecords;
-    response.page = serviceResponse.page;
-    response.status = 200;
-    response.message = constants.userMessage.USER_FETCHED;
+    if (serviceResponse.status === 400) {
+      response.body = serviceResponse.body;
+      response.totalPages = serviceResponse.totalPages;
+      response.totalRecords = serviceResponse.totalRecords;
+      response.page = serviceResponse.page;
+      response.status = 200;
+      response.message = constants.userMessage.USER_FETCHED;
+    } else {
+      response.message = serviceResponse.message;
+      response.errors = serviceResponse.errors;
+    }
   } catch (error) {
     console.log(`Something went wrong:controller:userController: getAllUsers 
     Error:${error.message}`);
@@ -121,14 +128,14 @@ module.exports.deleteUser = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await userService.deleteUser(req.params);
-    if (serviceResponse.status == 200) {
-      response.body = serviceResponse.body;
-      response.message = constants.userMessage.USER_DELETED;
-      response.status = 200;
-    } else {
+    if (serviceResponse.status == 400) {
       response.message = constants.userMessage.USER_NOT_DELETED;
       response.status = 400;
       response.errors = serviceResponse.errors;
+    } else {
+      response.body = serviceResponse.body;
+      response.message = constants.userMessage.USER_DELETED;
+      response.status = 200;
     }
   } catch (error) {
     console.log(`Something went wrong:controller:userController: getAllUsers 
@@ -147,9 +154,14 @@ module.exports.getUserById = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await userService.getUserById(req.params);
-    response.body = serviceResponse;
-    response.status = 200;
-    response.message = constants.userMessage.USER_FETCHED;
+    if (serviceResponse.status === 400) {
+      response.message = serviceResponse.message;
+      response.errors = serviceResponse.errors;
+    } else {
+      response.body = serviceResponse.body;
+      response.status = 200;
+      response.message = constants.userMessage.USER_FETCHED;
+    }
   } catch (error) {
     console.log(`Something went wrong:controller:userController: getUserById
     Error:${error.message}`);
@@ -168,12 +180,13 @@ module.exports.updateUser = async (req, res) => {
       body: req.body,
     });
 
-    if (serviceResponse) {
-      response.body = serviceResponse;
+    if (serviceResponse.status === 400) {
+      response.message = serviceResponse.message;
+      response.errors = serviceResponse.errors;
+    } else {
+      response.body = serviceResponse.body;
       response.status = 200;
       response.message = constants.userMessage.USER_UPDATED;
-    } else {
-      response.message = constants.userMessage.USER_NOT_UPDATED;
     }
   } catch (error) {
     console.log(

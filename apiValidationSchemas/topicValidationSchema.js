@@ -9,29 +9,30 @@ module.exports.createTopic = Joi.object({
   subCategories: Joi.array()
     .items(Joi.string().custom(customCallback).required())
     .label("Sub Categories"),
-  description: Joi.string().label("Description").allow(""),
-  seoTitle: Joi.string().label("SEO Title").allow(""),
-  seoDescription: Joi.string().label("SEO Description").allow(""),
+  description: Joi.string().allow("").label("Description"),
+  seoTitle: Joi.string().allow("").label("SEO Title"),
+  seoDescription: Joi.string().allow("").label("SEO Description"),
 });
 
 // getAllTopics
 module.exports.getAllTopics = Joi.object({
-  page: Joi.string(),
-  limit: Joi.string(),
-  status: Joi.string().valid("true", "false", "All"),
-  searchQuery: Joi.string().allow(""),
-  category: Joi.string().custom(customCallback),
-  subCategory:Joi.string().custom(customCallback),
-  subCategories:Joi.array(),
-
+  page: Joi.string().label("Page"),
+  limit: Joi.string().label("Limit"),
+  status: Joi.string().valid("true", "false", "All").label("Status"),
+  searchQuery: Joi.string().allow("").label("Search Query"),
+  category: Joi.string().custom(customCallback).label("Category"),
+  subCategory: Joi.string().custom(customCallback).label("Sub Category"),
+  subCategories: Joi.array()
+    .items(Joi.string().custom(customCallback).required())
+    .label("Sub Categories"), // Need proper validation
 });
 
-//getTopicById
+// getTopicById
 module.exports.getTopicById = Joi.object({
-  id: Joi.string().custom(customCallback),
+  id: Joi.string().custom(customCallback).label("Id"),
 });
 
-// Update Topic Validation Schema
+// updateTopic
 module.exports.updateTopic = Joi.object({
   name: Joi.string().trim().required().label("Name"),
   slug: Joi.string().trim().required().label("Slug"),
@@ -39,8 +40,9 @@ module.exports.updateTopic = Joi.object({
   subCategories: Joi.array()
     .items(Joi.string().custom(customCallback).required())
     .label("Sub Categories"),
-  description: Joi.string().label("Description").allow(""),
-  seoTitle: Joi.string().label("SEO Title").allow(""),
-  seoDescription: Joi.string().label("SEO Description").allow(""),
+  description: Joi.string().allow("").label("Description"),
+  seoTitle: Joi.string().allow("").label("SEO Title"),
+  seoDescription: Joi.string().allow("").label("SEO Description"),
   status: Joi.boolean().label("Status"),
+  isDeleted: Joi.boolean().label("Is Deleted"),
 });

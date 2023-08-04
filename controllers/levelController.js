@@ -9,9 +9,9 @@ module.exports.createLevel = async (req, res) => {
 
     if (serviceResponse.status === 400) {
       response.errors = serviceResponse.errors;
-      response.status = 400; // Set the response status to 400
+      response.message = serviceResponse.message;
     } else {
-      response.body = serviceResponse;
+      response.body = serviceResponse.body;
       response.message = constants.levelMessage.LEVEL_CREATED;
       response.status = 200;
     }
@@ -32,12 +32,17 @@ module.exports.getAllLevels = async (req, res) => {
   try {
     const serviceResponse = await levelService.getAllLevels(req.query);
 
-    response.body = serviceResponse.body;
-    response.totalPages = serviceResponse.totalPages;
-    response.totalRecords = serviceResponse.totalRecords;
-    response.page = serviceResponse.page;
-    response.status = 200;
-    response.message = constants.levelMessage.LEVEL_FETCHED;
+    if (serviceResponse.status === 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
+      response.body = serviceResponse.body;
+      response.totalPages = serviceResponse.totalPages;
+      response.totalRecords = serviceResponse.totalRecords;
+      response.page = serviceResponse.page;
+      response.status = 200;
+      response.message = constants.levelMessage.LEVEL_FETCHED;
+    }
   } catch (error) {
     console.log(
       `Something went wrong in service: levelService: getAllLevels\nError:${error.message}`
@@ -52,19 +57,17 @@ module.exports.getAllLevels = async (req, res) => {
 // deleteLevel
 module.exports.deleteLevel = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
-  
 
   try {
     const serviceResponse = await levelService.deleteLevel(req.params);
 
-    if (serviceResponse.status == 200) {
+    if (serviceResponse.status == 400) {
+      response.message = serviceResponse.message;
+      response.errors = serviceResponse.errors;
+    } else {
       response.body = serviceResponse.body;
       response.message = constants.levelMessage.LEVEL_DELETED;
       response.status = 200;
-    } else {
-      response.message = constants.levelMessage.LEVEL_NOT_DELETED;
-      response.status = 400;
-      response.errors = serviceResponse.errors;
     }
   } catch (error) {
     console.log(
@@ -85,9 +88,14 @@ module.exports.getLevelById = async (req, res) => {
   try {
     const serviceResponse = await levelService.getLevelById(req.params);
 
-    response.body = serviceResponse;
-    response.status = 200;
-    response.message = constants.levelMessage.LEVEL_FETCHED;
+    if (serviceResponse.status == 400) {
+      response.message = serviceResponse.message;
+      response.errors = serviceResponse.errors;
+    } else {
+      response.body = serviceResponse.body;
+      response.message = constants.levelMessage.LEVEL_FETCHED;
+      response.status = 200;
+    }
   } catch (error) {
     console.log(
       `Something went wrong in service: levelService: getLevelById\nError:${error.message}`
@@ -106,12 +114,13 @@ module.exports.updateLevel = async (req, res) => {
       id: req.params.id,
       body: req.body,
     });
-    if (serviceResponse) {
+    if (serviceResponse.status === 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
       response.body = serviceResponse;
       response.status = 200;
       response.message = constants.levelMessage.LEVEL_UPDATED;
-    } else {
-      response.message = constants.levelMessage.LEVEL_NOT_UPDATED;
     }
   } catch (error) {
     console.log(

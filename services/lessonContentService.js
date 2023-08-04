@@ -13,14 +13,16 @@ module.exports.createLessonContent = async (lessonId, body) => {
 
     if (lessonResponse) {
       lessonResponse.contents.push(body);
-      const serviceResponse = await lessonResponse.save();
+      await lessonResponse.save();
+      response.body = {
+        message: constants.contentMessage.CONTENT_CREATED,
+      };
+      response.status = 200;
     } else {
-      throw new Error("Lesson not found");
+      response.message = constants.lessonMessage.LESSON_NOT_FOUND;
     }
 
-    return (response.body = {
-      message: "Content Created successfully",
-    });
+    return response;
   } catch (error) {
     console.log(
       `Something went wrong service : lessonContentService : createlessonContent\nError: ${error.message}`
@@ -28,8 +30,10 @@ module.exports.createLessonContent = async (lessonId, body) => {
     throw new Error(error.message);
   }
 };
+
 // updateContent
 module.exports.updateLessonContent = async (serviceData) => {
+  const response = { ...constants.defaultServerResponse };
   try {
     const { id, body } = serviceData;
 
@@ -38,14 +42,22 @@ module.exports.updateLessonContent = async (serviceData) => {
       updateObject[`contents.$.${key}`] = body[key];
     }
 
-    const serviceResponse = await lessonModel.findOneAndUpdate(
+    const dbResponse = await lessonModel.findOneAndUpdate(
       { "contents._id": id },
       { $set: updateObject },
       { new: true }
     );
 
-    const formatData = formatMongoData(serviceResponse);
-    return formatData;
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.contentMessage.CONTENT_NOT_UPDATED,
+      };
+      response.message = constants.contentMessage.CONTENT_NOT_UPDATED;
+      return response;
+    }
+    response.body = formatMongoData(dbResponse);
+    response.status = 200;
+    return response;
   } catch (error) {
     console.log(
       `Something went wrong: Service : contentService : updatecontent ${error.message}`
@@ -57,7 +69,8 @@ module.exports.updateLessonContent = async (serviceData) => {
 // getLessonContentById
 module.exports.getLessonContentById = async (serviceData) => {
   try {
-    const serviceResponse = await lessonModel.findOne(
+    const response = { ...constants.defaultServerResponse };
+    const dbResponse = await lessonModel.findOne(
       {
         "contents._id": serviceData.contentId,
         "contents.isDeleted": false,
@@ -68,15 +81,19 @@ module.exports.getLessonContentById = async (serviceData) => {
     );
 
     if (
-      !serviceResponse ||
-      !serviceResponse.contents ||
-      serviceResponse.contents.length === 0
+      !dbResponse ||
+      !dbResponse.contents ||
+      dbResponse.contents.length === 0
     ) {
-      console.log(`Content with ID ${serviceData.contentId} not found.`);
-      return null;
+      response.errors = {
+        error: constants.contentMessage.CONTENT_NOT_FOUND,
+      };
+      response.message = constants.contentMessage.CONTENT_NOT_FOUND;
+      return response;
     }
-    const formatData = formatMongoData(serviceResponse.contents[0]);
-    return formatData;
+    response.body = formatMongoData(dbResponse.contents[0]);
+    response.status = 200;
+    return response;
   } catch (error) {
     console.log(
       `Something went wrong: service : lessonContentService : getLessonContentById`
@@ -85,60 +102,6 @@ module.exports.getLessonContentById = async (serviceData) => {
   }
 };
 
-// // getAllcontent
-// module.exports.getAllLessonsContents = async (serviceData) => {
-//   try {
-//     const {
-//       limit = 10,
-//       page = 1,
-//       status = "true",
-//       searchQuery,
-
-//     } = serviceData;
-//     let conditions = {};
-//     conditions.isDeleted = false;
-
-//     if (status == "true" || status == "false") {
-//       conditions.status = status;
-//     }
-
-//     // search query
-//     if (searchQuery) {
-//       const regex = new RegExp(searchQuery, "i");
-//       conditions.$or = [
-//         { name: regex },
-//         { description: regex },
-//         { slug: regex },
-//       ];
-//     }
-
-//     // count document
-//     const totalRecords = await lessonModel.countDocuments(conditions);
-//     const totalPages = Math.ceil(totalRecords / parseInt(limit));
-
-//     const serviceResponse = await lessonModel
-//       .find(conditions)
-//       .skip((parseInt(page) - 1) * parseInt(limit))
-//       .limit(parseInt(limit))
-//       .populate({ path: "course", select: "name _id" });
-
-//     const formatData = formatMongoData(serviceResponse);
-
-//     return {
-//       body: formatData,
-//       totalPages,
-//       totalRecords,
-//       page,
-//     };
-//   } catch (error) {
-//     console.log(
-//       `Something went wrong: Service: contentService: getAllLessonsContents\nError: ${error.message}`
-//     );
-//     throw new Error(error);
-//   }
-// };
-
-// deleteService
 module.exports.deleteLessonContent = async (serviceData) => {
   try {
     const response = { ...constants.defaultServerResponse };
@@ -148,14 +111,14 @@ module.exports.deleteLessonContent = async (serviceData) => {
       throw new Error("Invalid serviceData. Missing contentId.");
     }
 
-    let filter = { _id: serviceData.contentId }; // Corrected filter using _id
-    const serviceResponse = await lessonModel.findOneAndUpdate(
+    let filter = {"contents._id": serviceData.contentId }; // Corrected filter using _id
+    const dbResponse = await lessonModel.findOneAndUpdate(
       filter,
       { $pull: { contents: { _id: serviceData.contentId } } },
       { new: true }
     );
 
-    if (serviceResponse) {
+    if (!dbResponse) {
       response.errors = {
         error: constants.contentMessage.CONTENT_NOT_DELETED,
       };
@@ -168,6 +131,6 @@ module.exports.deleteLessonContent = async (serviceData) => {
     return response;
   } catch (error) {
     console.error("Something went wrong:", error.message);
-    throw new Error(error)
+    throw new Error(error);
   }
 };

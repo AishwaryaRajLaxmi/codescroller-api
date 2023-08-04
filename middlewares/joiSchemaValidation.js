@@ -1,6 +1,6 @@
 const constants = require("../helpers/constants");
 
-// Validate Body
+// validateBody
 module.exports.validateBody = (schema) => {
   return (req, res, next) => {
     const response = { ...constants.defaultServerResponse };
@@ -42,7 +42,7 @@ module.exports.validateParams = (schema) => {
   };
 };
 
-// Validate Body
+// validateQuery
 module.exports.validateQuery = (schema) => {
   return (req, res, next) => {
     const response = { ...constants.defaultServerResponse };

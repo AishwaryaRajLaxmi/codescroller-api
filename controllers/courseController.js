@@ -9,9 +9,9 @@ module.exports.createCourse = async (req, res) => {
 
     if (serviceResponse.status === 400) {
       response.errors = serviceResponse.errors;
-      response.message = constants.courseMessage.COURSE_NOT_CREATED;
+      response.message = serviceResponse.message;
     } else {
-      response.body = serviceResponse;
+      response.body = serviceResponse.body;
       response.message = constants.courseMessage.COURSE_CREATED;
       response.status = 200;
     }
@@ -29,10 +29,19 @@ module.exports.createCourse = async (req, res) => {
 module.exports.getCourseById = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const serviceResponse = await courseService.getCourseById(req.params,req.query);
-    response.body = serviceResponse;
-    response.status = 200;
-    response.message = constants.courseMessage.COURSE_FETCHED;
+    const serviceResponse = await courseService.getCourseById(
+      req.params,
+      req.query
+    );
+
+    if (serviceResponse.status === 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
+      response.body = serviceResponse.body;
+      response.status = 200;
+      response.message = constants.courseMessage.COURSE_FETCHED;
+    }
   } catch (error) {
     console.log(`Something went wrong:controller:courseController: getCourseById
     Error:${error.message}`);
@@ -48,12 +57,18 @@ module.exports.getAllCourses = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await courseService.getAllCourses(req.query);
-    response.body = serviceResponse.body;
-    response.totalPages = serviceResponse.totalPages;
-    response.totalRecords = serviceResponse.totalRecords;
-    response.page = serviceResponse.page;
-    response.status = 200;
-    response.message = constants.courseMessage.COURSE_FETCHED;
+
+    if (serviceResponse == 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
+      response.body = serviceResponse.body;
+      response.totalPages = serviceResponse.totalPages;
+      response.totalRecords = serviceResponse.totalRecords;
+      response.page = serviceResponse.page;
+      response.status = 200;
+      response.message = constants.courseMessage.COURSE_FETCHED;
+    }
   } catch (error) {
     console.log(`Something went wrong:controller:courseController: getAllCourses
     Error:${error.message}`);
@@ -69,17 +84,17 @@ module.exports.deleteCourse = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await courseService.deleteCourse(req.params);
-    if (serviceResponse.status == 200) {
+    if (serviceResponse.status == 400) {
+      response.message = serviceResponse.message;
+      response.status = 400;
+      response.errors = serviceResponse.errors;
+    } else {
       response.body = serviceResponse.body;
       response.message = constants.courseMessage.COURSE_DELETED;
       response.status = 200;
-    } else {
-      response.message = constants.courseMessage.COURSE_NOT_DELETED;
-      response.status = 400;
-      response.errors = serviceResponse.errors;
     }
   } catch (error) {
-    console.log(`Something went wrong:controller:courseController: getAllCourses
+    console.log(`Scomething went wrong:controller:courseController: getAllCourses
       Error:${error.message}`);
 
     response.message = error.message;
@@ -99,22 +114,22 @@ module.exports.updateCourse = async (req, res) => {
       body: req.body,
     });
 
-    if (serviceResponse) {
-      response.body = serviceResponse;
+    if (serviceResponse.status == 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
+      response.body = serviceResponse.body;
       response.status = 200;
       response.message = constants.courseMessage.COURSE_UPDATED;
-    } else {
-      response.message = constants.courseMessage.COURSE_NOT_UPDATED;
     }
   } catch (error) {
     console.log(
-      `Somthing Went Wrong Controller: courseController: updateCourse`,
+      `Something Went Wrong Controller: courseController: updateCourse`,
       error.message
     );
 
     response.errors = error;
     response.message = error.message;
-    throw new Error(error);
   }
   res.status(response.status).send(response);
 };

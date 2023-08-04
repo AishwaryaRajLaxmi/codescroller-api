@@ -9,7 +9,7 @@ module.exports.createTopic = async (req, res) => {
 
     if (serviceResponse.status === 400) {
       response.errors = serviceResponse.errors;
-      response.status = 400; // Set the response status to 400
+      response.message = serviceResponse.message;
     } else {
       response.body = serviceResponse;
       response.message = constants.topicMessage.TOPIC_CREATED;
@@ -31,12 +31,17 @@ module.exports.getAllTopics = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await topicService.getAllTopics(req.query);
-    response.body = serviceResponse.body;
-    response.totalPages = serviceResponse.totalPages;
-    response.totalRecords = serviceResponse.totalRecords;
-    response.page = serviceResponse.page;
-    response.status = 200;
-    response.message = constants.topicMessage.TOPIC_FETCHED;
+    if (serviceResponse.status === 400) {
+      response.message = serviceResponse.message;
+      response.errors = serviceResponse.errors;
+    } else {
+      response.body = serviceResponse.body;
+      response.totalPages = serviceResponse.totalPages;
+      response.totalRecords = serviceResponse.totalRecords;
+      response.page = serviceResponse.page;
+      response.status = 200;
+      response.message = constants.topicMessage.TOPIC_FETCHED;
+    }
   } catch (error) {
     console.log(`Something went wrong:controller:TopicController: getAllTopics
     Error:${error.message}`);
@@ -52,14 +57,13 @@ module.exports.deleteTopic = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await topicService.deleteTopic(req.params);
-    if (serviceResponse.status == 200) {
+    if (serviceResponse.status == 400) {
+      response.message = serviceResponse.message;
+      response.errors = serviceResponse.errors;
+    } else {
       response.body = serviceResponse.body;
       response.message = constants.topicMessage.TOPIC_DELETED;
       response.status = 200;
-    } else {
-      response.message = constants.topicMessage.TOPIC_DELETED;
-      response.status = 400;
-      response.errors = serviceResponse.errors;
     }
   } catch (error) {
     console.log(`Something went wrong:controller:TopicController: getAllTopics
@@ -78,9 +82,14 @@ module.exports.getTopicById = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await topicService.getTopicById(req.params);
-    response.body = serviceResponse;
-    response.status = 200;
-    response.message = constants.topicMessage.TOPIC_FETCHED;
+    if (serviceResponse.status === 400) {
+      response.message = serviceResponse.message;
+      response.errors = serviceResponse.errors;
+    } else {
+      response.body = serviceResponse.body;
+      response.status = 200;
+      response.message = constants.topicMessage.TOPIC_FETCHED;
+    }
   } catch (error) {
     console.log(`Something went wrong:controller:TopicController: getTopicById
     Error:${error.message}`);
@@ -99,12 +108,13 @@ module.exports.updateTopic = async (req, res) => {
       body: req.body,
     });
 
-    if (serviceResponse) {
+    if (serviceResponse.status === 400) {
+      response.message = serviceResponse.message;
+      response.errors = serviceResponse.errors
+    } else {
       response.body = serviceResponse;
       response.status = 200;
       response.message = constants.topicMessage.TOPIC_UPDATED;
-    } else {
-      response.message = constants.topicMessage.TOPIC_NOT_UPDATED;
     }
   } catch (error) {
     console.log(

@@ -5,41 +5,41 @@ const subCategorySchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      trim: true,
     },
-
     slug: {
       type: String,
       required: true,
-      unique: true,
+      trim: true,
     },
-
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "category",
+      required: true,
+    },
     description: {
       type: String,
+      trim: true,
+      default: "",
     },
-
     seoTitle: {
       type: String,
+      trim: true,
+      default: "",
     },
-
     seoDescription: {
       type: String,
+      trim: true,
+      default: "",
     },
-
     status: {
       type: Boolean,
       required: true,
       default: true,
     },
-
     isDeleted: {
       type: Boolean,
       default: false,
-      required: true,
-    },
-
-    category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "category",
       required: true,
     },
   },

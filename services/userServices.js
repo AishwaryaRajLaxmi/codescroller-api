@@ -131,6 +131,7 @@ module.exports.isEmailExists = async (serviceData) => {
 
 // getAllUsers
 module.exports.getAllUsers = async (serviceData) => {
+  const response = { ...constants.defaultServerResponse };
   try {
     const {
       limit = 10,
@@ -168,7 +169,16 @@ module.exports.getAllUsers = async (serviceData) => {
       .skip((parseInt(page) - 1) * parseInt(limit))
       .limit(parseInt(limit));
 
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.userMessage.USER_NOT_FOUND,
+      };
+      response.message = constants.userMessage.USER_NOT_FOUND;
+      return response;
+    }
+
     const formatData = formatMongoData(dbResponse);
+    response.status = 200;
     return {
       body: formatData,
       totalPages,
@@ -188,6 +198,17 @@ module.exports.deleteUser = async (serviceData) => {
   try {
     const response = { ...constants.defaultServerResponse };
 
+    const isUserExist = await userModel.findOne({
+      _id: serviceData.id,
+      isDeleted: true,
+    });
+    if (isUserExist) {
+      response.errors = {
+        name: constants.userMessage.USER_NOT_EXISTS,
+      };
+      return response;
+    }
+
     const dbResponse = await userModel.findOneAndUpdate(
       { _id: serviceData.id }, // Condition to find the document
       { isDeleted: true }, // Update to set isDeleted field to true
@@ -198,10 +219,11 @@ module.exports.deleteUser = async (serviceData) => {
       response.errors = {
         error: constants.userMessage.USER_NOT_DELETED,
       };
+      response.message = constants.userMessage.USER_NOT_DELETED;
       return response;
     }
 
-    response.body = dbResponse;
+    response.body = formatMongoData(dbResponse);
     response.status = 200;
 
     return response;
@@ -216,8 +238,17 @@ module.exports.getUserById = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const dbResponse = await userModel.findById(serviceData.id);
-    const formatData = formatMongoData(dbResponse);
-    return formatData;
+
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.userMessage.USER_NOT_FOUND,
+      };
+      response.message = constants.userMessage.USER_NOT_FOUND;
+      return response;
+    }
+
+    response.body = formatMongoData(dbResponse);
+    return response;
   } catch (error) {
     console.log(`Something went wrong: service : userService : deleteUser`);
     throw new Error(error);
@@ -227,12 +258,23 @@ module.exports.getUserById = async (serviceData) => {
 // UpdateUser
 
 module.exports.updateUser = async (serviceData) => {
+  const response = { ...constants.defaultServerResponse };
   try {
     const { id, body } = serviceData;
     const dbResponse = await userModel.findByIdAndUpdate(id, body, {
       new: true,
     });
-    return formatMongoData(dbResponse);
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.userMessage.USER_NOT_UPDATED,
+      };
+      response.message = constants.userMessage.USER_NOT_UPDATED;
+      return response;
+    }
+
+    response.body = formatMongoData(dbResponse);
+    response.status = 200;
+    return response;
   } catch (error) {
     console.log(
       `Somthing Went Wrong Service: updateService: updateUser`,

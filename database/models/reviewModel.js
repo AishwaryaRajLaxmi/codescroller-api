@@ -1,30 +1,29 @@
 const mongoose = require("mongoose");
-const reveiwSchema = new mongoose.Schema(
+const reviewSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
     },
-
     course: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "course",
       required: true,
     },
-
     ratings: {
       type: Number,
     },
-
     comment: {
       type: String,
+      trim: true,
+      default: "",
     },
-
     reviewStatus: {
       type: String,
       default: "pending",
+      trim: true,
+      enum: ["pending", "approved"],
     },
-
     status: {
       type: Boolean,
       default: true,
@@ -48,4 +47,4 @@ const reveiwSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("reveiw", reveiwSchema);
+module.exports = mongoose.model("review", reviewSchema);

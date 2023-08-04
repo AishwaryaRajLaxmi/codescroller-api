@@ -23,9 +23,10 @@ app.use("/api/v1/languages", require("./routers/languageRouter"));
 app.use("/api/v1/topics", require("./routers/topicRouter"));
 app.use("/api/v1/subcategories", require("./routers/subCategoryRouer"));
 app.use("/api/v1/courses", require("./routers/courseRouter"));
-app.use("/api/v1/reviews", require("./routers/reveiwRouter"));
+app.use("/api/v1/reviews", require("./routers/reviewRouter"));
 app.use("/api/v1/lessons", require("./routers/lessonRouter"));
 app.use("/api/v1/lessonContents", require("./routers/lessonContentRouter"));
+app.use("/api/v1/purchasedCourses", require("./routers/purchasedCourseRouter"));
 
 const port = process.env.PORT || 5300;
 app.listen(port, () => {
