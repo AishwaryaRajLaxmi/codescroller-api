@@ -19,7 +19,7 @@ module.exports.createLessonContent = async (lessonId, body) => {
       };
       response.status = 200;
     } else {
-      response.message = constants.lessonMessage.LESSON_NOT_CREATED;
+      response.message = constants.lessonMessage.LESSON_NOT_FOUND;
     }
 
     return response;
@@ -111,7 +111,7 @@ module.exports.deleteLessonContent = async (serviceData) => {
       throw new Error("Invalid serviceData. Missing contentId.");
     }
 
-    let filter = { "contents._id": serviceData.contentId }; // Corrected filter using _id
+    let filter = {"contents._id": serviceData.contentId }; // Corrected filter using _id
     const dbResponse = await lessonModel.findOneAndUpdate(
       filter,
       { $pull: { contents: { _id: serviceData.contentId } } },

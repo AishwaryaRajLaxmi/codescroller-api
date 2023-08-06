@@ -5,10 +5,11 @@ const {
   authMessage,
   userMessage,
 } = require("../helpers/constants");
+const _ = require("lodash");
 
 // registerUser
 module.exports.registerUser = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await userService.registerUser(req.body);
 
@@ -17,7 +18,7 @@ module.exports.registerUser = async (req, res) => {
       response.message = serviceResponse.message;
     } else {
       response.body = serviceResponse.body;
-      response.message = constants.userMessage.USER_REGISTERED;
+      response.message = serviceResponse.message;
       response.status = 200;
     }
   } catch (error) {
@@ -31,9 +32,59 @@ module.exports.registerUser = async (req, res) => {
   res.status(response.status).send(response);
 };
 
+// verifyAccount
+module.exports.verifyAccount = async (req, res) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
+  try {
+    const serviceResponse = await userService.verifyAccount(req.body);
+
+    if (serviceResponse.status === 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
+      response.body = serviceResponse.body;
+      response.message = serviceResponse.message;
+      response.status = 200;
+    }
+  } catch (error) {
+    console.log(
+      `Something went wrong controller : userController :verifyAccount \nError: ${error.message}`
+    );
+
+    response.message = error.message;
+    response.errors = error;
+  }
+  res.status(response.status).send(response);
+};
+
+// findAccountAndSendOTP
+module.exports.findAccountAndSendOTP = async (req, res) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
+  try {
+    const serviceResponse = await userService.findAccountAndSendOTP(req.body);
+
+    if (serviceResponse.status === 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
+      response.body = serviceResponse.body;
+      response.message = serviceResponse.message;
+      response.status = 200;
+    }
+  } catch (error) {
+    console.log(
+      `Something went wrong controller : userController :findAccountAndSendOTP \nError: ${error.message}`
+    );
+
+    response.message = error.message;
+    response.errors = error;
+  }
+  res.status(response.status).send(response);
+};
+
 // loginUser
 module.exports.loginUser = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
 
   try {
     const serviceResponse = await userService.loginUser(req.body);
@@ -55,7 +106,7 @@ module.exports.loginUser = async (req, res) => {
 
 // isEmailExists
 module.exports.isEmailExists = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await userService.isEmailExists(req.params);
     response.status = 200;
@@ -77,7 +128,7 @@ module.exports.isEmailExists = async (req, res) => {
 
 // isMobileExists
 module.exports.isMobileExists = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await userService.isMobileExists(req.params);
     response.status = 200;
@@ -99,7 +150,7 @@ module.exports.isMobileExists = async (req, res) => {
 
 // getAllUsers
 module.exports.getAllUsers = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await userService.getAllUsers(req.query);
     response.body = serviceResponse.body;
@@ -120,7 +171,7 @@ module.exports.getAllUsers = async (req, res) => {
 
 // deleteUser
 module.exports.deleteUser = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await userService.deleteUser(req.params);
     if (serviceResponse.status == 400) {
@@ -146,7 +197,7 @@ module.exports.deleteUser = async (req, res) => {
 
 // getUser
 module.exports.getUserById = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await userService.getUserById(req.params);
     if (serviceResponse.status === 400) {
@@ -168,7 +219,7 @@ module.exports.getUserById = async (req, res) => {
 
 // updateUser
 module.exports.updateUser = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await userService.updateUser({
       id: req.params.id,

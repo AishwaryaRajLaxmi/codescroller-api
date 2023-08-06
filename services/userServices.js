@@ -4,10 +4,11 @@ const userModel = require("../database/models/userModel");
 const constants = require("../helpers/constants");
 const { formatMongoData } = require("../helpers/dbHelper");
 const jwt = require("jsonwebtoken");
-
+const smsHelper = require("../helpers/smsHelper");
+const _ = require("lodash");
 // registerUser
 module.exports.registerUser = async (serviceData) => {
-  const response = {...constants.defaultServerResponse};
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     // Check Email is already exist or not
     const userResponse = await userModel.findOne({
@@ -15,29 +16,64 @@ module.exports.registerUser = async (serviceData) => {
     });
 
     if (userResponse) {
-      response.errors = {
-        email: constants.authMessage.EMAIL_EXISTS,
-      };
-      response.message=constants.userMessage.USER_ALREADY_EXISTS
+      // disabled account
+      if (userResponse.status === false) {
+        response.errors = {
+          email: "Your account has been disabled",
+        };
+        response.message = "Your account has been disabled";
+        return response;
+      }
+
+      // for deleted account
+      if (userResponse.isDeleted === true) {
+        response.errors = {
+          email: "Your account has been deleted",
+        };
+        response.message = "Your account has been deleted";
+        return response;
+      }
+
+      // if all the above conditions false it meand account is already exists
+      response.status == 400;
+      response.message = "You Email is already registered";
+      response.errors.email = "You Email is already registered";
       return response;
     }
+
+    // generate otp
+    const currentDate = new Date();
+    const otp = optGenerator.createOTP();
+    const otpExpires = currentDate.setMinutes(currentDate.getMinutes() + 3);
+
     // encrypt password
+    const hashPassword = await bcryptjs.hash(serviceData.password, 10);
     const newData = new userModel(serviceData);
-    const hashPassword = await bcryptjs.hash(newData.password, 10);
     newData.password = hashPassword;
+    newData.otp = otp;
+    newData.otpExpiredAt = otpExpires;
+
     const dbResponse = await newData.save();
 
     if (dbResponse) {
       // send otp
-      const currentDate = new Date();
-      const otp = optGenerator.createOTP();
-      const otpExpires = currentDate.setMinutes(currentDate.getMinutes() + 3);
+      const smsResponse = await smsHelper.sendOTPEmail({
+        emailTo: dbResponse.email,
+        subject: "OTP Verification",
+        name: dbResponse.name,
+        otp,
+      });
 
-      // getTimeandDate
-      newData.otp = otp;
-      newData.otpExpiredAt = otpExpires;
-      response.body = formatMongoData(dbResponse);
-      response.status = 200;
+      if (smsResponse.status == true) {
+        response.body = formatMongoData(dbResponse);
+        response.message = "An OTP has been sent on your Email";
+        response.status = 200;
+      } else {
+        response.message = smsResponse.message;
+        response.errors.error = smsResponse.message;
+      }
+
+      return response;
     } else {
       response.errors = {
         error: constants.userMessage.USER_NOT_REGISTERED,
@@ -54,14 +90,147 @@ module.exports.registerUser = async (serviceData) => {
   }
 };
 
+// verifyAccount
+module.exports.verifyAccount = async (serviceData) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
+  try {
+    const userResponse = await userModel.findOne({
+      email: serviceData.email,
+    });
+
+    if (userResponse) {
+      if (userResponse.otp == serviceData.otp) {
+        const otpExpiry = new Date(userResponse.otpExpiredAt);
+        const currentDate = new Date();
+        const timeDistance = otpExpiry - currentDate;
+        if (timeDistance < 0) {
+          response.errors.otp = "Your otp has expired, please resend your otp";
+          response.message = "Your otp has expired, please resend your otp";
+          return response;
+        }
+
+        // update data to database
+        const dbResponse = await userModel.findOneAndUpdate(
+          { _id: userResponse._id },
+          { isVerified: true },
+          { new: true }
+        );
+
+        if (dbResponse) {
+          // generate token
+          const token = jwt.sign(
+            { id: userResponse._id },
+            process.env.JWT_USER_SECRET_KEY
+          );
+          const formatData = dbResponse.toObject();
+          response.status = 200;
+          response.message = "Congratulations! You account is verified";
+          response.body = { ...formatData, token };
+        } else {
+          response.message = "Oops, something went wrong While updating data";
+          response.errors.error =
+            "Oops, something went wrong While updating data";
+        }
+      } else {
+        response.errors.otp = "You entered an invalid OTP";
+        response.message = "You entered an invalid OTP";
+      }
+    } else {
+      response.errors.error = "Invalid Credentials, Please try again";
+      response.message = "Invalid Credentials, Please try again";
+    }
+    return response;
+  } catch (error) {
+    console.log(
+      `Something went wrong : service :userService:verifyAccount\nError:${error}`
+    );
+    throw new Error(error);
+  }
+};
+
+// findAccountAndSendOTP
+module.exports.findAccountAndSendOTP = async (serviceData) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
+  try {
+    // Check Email is already exist or not
+    const userResponse = await userModel.findOne({
+      email: serviceData.email,
+    });
+
+    if (userResponse) {
+      // disabled account
+      if (userResponse.status === false) {
+        response.errors = {
+          email: "Your account has been disabled",
+        };
+        response.message = "Your account has been disabled";
+        return response;
+      }
+
+      // for deleted account
+      if (userResponse.isDeleted === true) {
+        response.errors = {
+          email: "Your account has been deleted",
+        };
+        response.message = "Your account has been deleted";
+        return response;
+      }
+
+      // generate otp
+      const currentDate = new Date();
+      const otp = optGenerator.createOTP();
+      const otpExpires = currentDate.setMinutes(currentDate.getMinutes() + 3);
+
+      // update otp and expires
+      const dbResponse = await userModel.findOneAndUpdate(
+        {
+          _id: userResponse._id,
+        },
+        { otp, otpExpiredAt: otpExpires }
+      );
+
+      if (dbResponse) {
+        // send otp
+        const smsResponse = await smsHelper.sendOTPEmail({
+          emailTo: userResponse.email,
+          subject: "OTP Verification",
+          name: userResponse.name,
+          otp,
+        });
+
+        if (smsResponse.status == true) {
+          response.body = serviceData;
+          response.message = "An OTP has been sent on your Email";
+          response.status = 200;
+        } else {
+          response.message = smsResponse.message;
+          response.errors.error = smsResponse.message;
+        }
+      } else {
+        response.message = "Oops! Something went wrong, While update OTP";
+        response.errors.error = "Oops! Something went wrong, While update OTP";
+      }
+    } else {
+      response.status == 400;
+      response.message = "Sorry, your email is not registered";
+      response.errors.email = "Sorry, your email is not registered";
+    }
+
+    console.log(response);
+
+    return response;
+  } catch (error) {
+    console.log(
+      `Something went wrong service : userService : findAccountAndSendOTP\nError: ${error.message}`
+    );
+    throw new Error(error.message);
+  }
+};
+
 // loginUser
 module.exports.loginUser = async (serviceData) => {
-  const response = {
-    errors: {},
-  };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
-    // Find user
-
     const userData = await userModel.findOne({
       email: serviceData.email,
       isDeleted: false,
@@ -78,8 +247,7 @@ module.exports.loginUser = async (serviceData) => {
         // Sign jwt token
         const token = jwt.sign(
           { id: userData._id },
-          process.env.JWT_USER_SECRET_KEY,
-          { expiresIn: "2 days" }
+          process.env.JWT_USER_SECRET_KEY
         );
         const formatData = userData.toObject();
         response.body = { ...formatData, token };
@@ -99,7 +267,7 @@ module.exports.loginUser = async (serviceData) => {
 };
 
 module.exports.isMobileExists = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const userResponse = await userModel.findOne({
       mobile: serviceData.mobile,
@@ -120,7 +288,7 @@ module.exports.isMobileExists = async (serviceData) => {
 
 // isEmailExists
 module.exports.isEmailExists = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const userResponse = await userModel.findOne({
       email: serviceData.email,
@@ -141,7 +309,7 @@ module.exports.isEmailExists = async (serviceData) => {
 
 // getAllUsers
 module.exports.getAllUsers = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const {
       limit = 10,
@@ -198,7 +366,7 @@ module.exports.getAllUsers = async (serviceData) => {
 // deleteUser
 module.exports.deleteUser = async (serviceData) => {
   try {
-    const response = { ...constants.defaultServerResponse };
+    const response = _.cloneDeep(constants.defaultServerResponse);
 
     const isUserExist = await userModel.findOne({
       _id: serviceData.id,
@@ -237,11 +405,11 @@ module.exports.deleteUser = async (serviceData) => {
 
 // getUserById
 module.exports.getUserById = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const dbResponse = await userModel.findOne({
-      _id:serviceData.id,
-      isDeleted:false,
+      _id: serviceData.id,
+      isDeleted: false,
     });
 
     if (!dbResponse) {
@@ -253,7 +421,7 @@ module.exports.getUserById = async (serviceData) => {
     }
 
     response.body = formatMongoData(dbResponse);
-    response.status=200;
+    response.status = 200;
     return response;
   } catch (error) {
     console.log(`Something went wrong: service : userService : deleteUser`);
@@ -264,7 +432,7 @@ module.exports.getUserById = async (serviceData) => {
 // UpdateUser
 
 module.exports.updateUser = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const { id, body } = serviceData;
     const dbResponse = await userModel.findByIdAndUpdate(id, body, {

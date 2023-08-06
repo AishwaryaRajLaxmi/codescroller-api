@@ -16,6 +16,20 @@ userRouter.post(
   userController.registerUser
 );
 
+// verifyAccount
+userRouter.post(
+  "/verifyAccount",
+  validateBody(userValidationSchema.verifyAccount),
+  userController.verifyAccount
+);
+
+// findAccountAndSendOTP
+userRouter.post(
+  "/findAccountAndSendOTP",
+  validateBody(userValidationSchema.findAccountAndSendOTP),
+  userController.findAccountAndSendOTP
+);
+
 // loginUser
 userRouter.post(
   "/login",

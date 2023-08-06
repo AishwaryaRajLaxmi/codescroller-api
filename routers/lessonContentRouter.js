@@ -18,7 +18,6 @@ const {
 } = require("../middlewares/joiSchemaValidation");
 const jsonwebtoken = require("../middlewares/jwtValidation");
 
-
 // createLessonContent
 lessonContentRouter.post(
   "/:lessonId",

@@ -231,7 +231,6 @@ module.exports.updateLesson = async (serviceData) => {
     }
     response.body = formatMongoData(dbResponse);
     response.status = 200;
-    return response;
   } catch (error) {
     console.log(
       `Something went wrong: Service : lessonService : updateLesson ${error.message}`
