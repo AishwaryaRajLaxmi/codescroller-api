@@ -2,10 +2,11 @@ const purchasedCourseModel = require("../database/models/purchasedCourseModel");
 const purchasedCourseHistoryModel = require("../database/models/purchasedCourseHistoryModel");
 const constants = require("../helpers/constants");
 const { formatMongoData } = require("../helpers/dbHelper");
+const _ = require("lodash");
 
 // createPurchasedCourse
 module.exports.createPurchasedCourse = async (...serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const [userId, body] = serviceData;
     const purchasedCourseResponse = await purchasedCourseModel.findOne({
@@ -56,8 +57,7 @@ module.exports.createPurchasedCourse = async (...serviceData) => {
 
 // getPurchasedCourseById
 module.exports.getPurchasedCourseByID = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
-  // console.log(serviceData.userId);
+  const response = _.cloneDeep(constants.defaultServerResponse); // console.log(serviceData.userId);
   try {
     let dbResponse = await purchasedCourseModel
       .findOne({
@@ -89,8 +89,7 @@ module.exports.getPurchasedCourseByID = async (serviceData) => {
 
 // getMyPurchasedCourse
 module.exports.getMyPurchasedCourse = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
-  // console.log(serviceData.userId);
+  const response = _.cloneDeep(constants.defaultServerResponse); // console.log(serviceData.userId);
   try {
     let dbResponse = await purchasedCourseModel
       .findOne({
@@ -122,7 +121,7 @@ module.exports.getMyPurchasedCourse = async (serviceData) => {
 
 // getAllPurchasedCourses
 module.exports.getAllPurchasedCourses = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const {
       limit = 10,
@@ -251,7 +250,7 @@ module.exports.deletePurchasedCourse = async (serviceData) => {
 
 // updatePurchasedCourse
 module.exports.updatePurchasedCourse = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const { id, body } = serviceData;
     const dbResponse = await purchasedCourseModel.findByIdAndUpdate(id, body, {

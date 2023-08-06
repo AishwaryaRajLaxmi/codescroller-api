@@ -1,9 +1,10 @@
 const LanguageService = require("../services/languageService");
 const constants = require("../helpers/constants");
+const _ = require("lodash");
 
 // createLanguage
 module.exports.createLanguage = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await LanguageService.createLanguage(req.body);
 
@@ -28,7 +29,7 @@ module.exports.createLanguage = async (req, res) => {
 
 // getAllLanguages
 module.exports.getAllLanguages = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await LanguageService.getAllLanguages(req.query);
 
@@ -55,7 +56,7 @@ module.exports.getAllLanguages = async (req, res) => {
 
 // deleteLanguage
 module.exports.deleteLanguage = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await LanguageService.deleteLanguage(req.params);
 
@@ -80,7 +81,7 @@ module.exports.deleteLanguage = async (req, res) => {
 
 // getLanguageById
 module.exports.getLanguageById = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await LanguageService.getLanguageById(req.params);
 
@@ -103,7 +104,7 @@ module.exports.getLanguageById = async (req, res) => {
 
 // updateLanguage
 module.exports.updateLanguage = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await LanguageService.updateLanguage({
       id: req.params.id,

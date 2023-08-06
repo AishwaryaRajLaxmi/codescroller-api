@@ -1,10 +1,11 @@
 const lessonModel = require("../database/models/lessonModel");
 const constants = require("../helpers/constants");
+const _ = require("lodash");
 const lessonContentService = require("../services/lessonContentService");
 
 // createContent
 module.exports.createLessonContent = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await lessonContentService.createLessonContent(
       req.params.lessonId,
@@ -31,7 +32,7 @@ module.exports.createLessonContent = async (req, res) => {
 // getLessonContent ByID
 
 module.exports.getLessonContentById = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await lessonContentService.getLessonContentById(
       req.params
@@ -104,7 +105,7 @@ module.exports.getLessonContentById = async (req, res) => {
 
 // updateContent
 module.exports.updateLessonContent = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await lessonContentService.updateLessonContent({
       id: req.params.contentId,
@@ -133,7 +134,7 @@ module.exports.updateLessonContent = async (req, res) => {
 
 // deleteLessonContent
 module.exports.deleteLessonContent = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await lessonContentService.deleteLessonContent(
       req.params

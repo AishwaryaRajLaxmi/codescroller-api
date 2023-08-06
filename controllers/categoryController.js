@@ -1,9 +1,9 @@
 const categoryService = require("../services/categoryService");
 const constants = require("../helpers/constants");
-
+const _ = require("lodash");
 // createCategory
 module.exports.createCategory = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await categoryService.createCategory(req.body);
     if (serviceResponse.status === 400) {
@@ -26,7 +26,7 @@ module.exports.createCategory = async (req, res) => {
 
 // getAllCategories
 module.exports.getAllCategories = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await categoryService.getAllCategories(req.query);
     if (serviceResponse.status == 400) {
@@ -52,7 +52,7 @@ module.exports.getAllCategories = async (req, res) => {
 
 // deleteCategory
 module.exports.deleteCategory = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await categoryService.deleteCategory(req.params);
     if (serviceResponse.status == 200) {
@@ -77,7 +77,7 @@ module.exports.deleteCategory = async (req, res) => {
 
 // getCategoryById
 module.exports.getCategoryById = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await categoryService.getCategoryById(req.params);
 
@@ -100,7 +100,7 @@ module.exports.getCategoryById = async (req, res) => {
 
 // updateCategory
 module.exports.updateCategory = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await categoryService.updateCategory({
       id: req.params.id,

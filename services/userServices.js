@@ -34,11 +34,57 @@ module.exports.registerUser = async (serviceData) => {
         return response;
       }
 
-      // if all the above conditions false it meand account is already exists
-      response.status == 400;
-      response.message = "You Email is already registered";
-      response.errors.email = "You Email is already registered";
-      return response;
+      // if account is not verified
+      if (userResponse.isVerified == false) {
+        // generate otp
+        const currentDate = new Date();
+        const otp = optGenerator.createOTP();
+        const otpExpires = currentDate.setMinutes(currentDate.getMinutes() + 3);
+
+        const updateResponse = await userModel.findOneAndUpdate(
+          { _id: userResponse._id },
+          {
+            otp: otp,
+            otpExpiredAt: otpExpires,
+          },
+          { new: true }
+        );
+
+        if (updateResponse) {
+          // send otp
+          const smsResponse = await smsHelper.sendOTPEmail({
+            emailTo: userResponse.email,
+            subject: "OTP Verification",
+            name: userResponse.name,
+            otp,
+          });
+
+          if (smsResponse.status == true) {
+            response.body = formatMongoData(userResponse);
+            response.message = "An OTP has been sent on your Email";
+            response.status = 200;
+          } else {
+            response.message = smsResponse.message;
+            response.errors.error = smsResponse.message;
+          }
+
+          return response;
+        } else {
+          response.errors = {
+            error: constants.userMessage.USER_NOT_REGISTERED,
+          };
+          response.message = constants.userMessage.USER_NOT_REGISTERED;
+          return response;
+        }
+      }
+
+      // if account is verified
+      if (userResponse.isVerified == true) {
+        response.message = "You have already registered";
+        response.errors.error = "Your Email is already registered";
+        response.status = 400;
+        return response;
+      }
     }
 
     // generate otp
@@ -231,28 +277,91 @@ module.exports.findAccountAndSendOTP = async (serviceData) => {
 module.exports.loginUser = async (serviceData) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
   try {
-    const userData = await userModel.findOne({
+    const userResponse = await userModel.findOne({
       email: serviceData.email,
-      isDeleted: false,
-      status: true,
     });
 
-    if (userData) {
+    if (userResponse) {
+      // disabled account
+      if (userResponse.status === false) {
+        response.errors = {
+          email: "Your account has been disabled",
+        };
+        response.message = "Your account has been disabled";
+        return response;
+      }
+
+      // for deleted account
+      if (userResponse.isDeleted === true) {
+        response.errors = {
+          email: "Your account has been deleted",
+        };
+        response.message = "Your account has been deleted";
+        return response;
+      }
+
+      // if account is not verified
+      if (userResponse.isVerified == false) {
+        // generate otp
+        const currentDate = new Date();
+        const otp = optGenerator.createOTP();
+        const otpExpires = currentDate.setMinutes(currentDate.getMinutes() + 3);
+
+        const updateResponse = await userModel.findOneAndUpdate(
+          { _id: userResponse._id },
+          {
+            otp: otp,
+            otpExpiredAt: otpExpires,
+          },
+          { new: true }
+        );
+
+        if (updateResponse) {
+          // send otp
+          const smsResponse = await smsHelper.sendOTPEmail({
+            emailTo: userResponse.email,
+            subject: "OTP Verification",
+            name: userResponse.name,
+            otp,
+          });
+
+          if (smsResponse.status == true) {
+            response.body = formatMongoData(userResponse);
+            response.message = "An OTP has been sent on your Email";
+            response.status = 301;
+          } else {
+            response.message = smsResponse.message;
+            response.errors.error = smsResponse.message;
+          }
+
+          return response;
+        } else {
+          response.errors = {
+            error: "Something went wrong while login your account",
+          };
+          response.message = "Something went wrong while login your account";
+          return response;
+        }
+      }
+
       // Check password is matched or not
       const isCorrect = await bcryptjs.compare(
         serviceData.password,
-        userData.password
+        userResponse.password
       );
       if (isCorrect) {
         // Sign jwt token
         const token = jwt.sign(
-          { id: userData._id },
+          { id: userResponse._id },
           process.env.JWT_USER_SECRET_KEY
         );
-        const formatData = userData.toObject();
+        const formatData = userResponse.toObject();
+        response.status = 200;
+        response.message = "You have successfully logged in";
         response.body = { ...formatData, token };
       } else {
         response.errors.password = constants.authMessage.INVALID_PASSWORD;
+        response.message = "Validation failed";
       }
     } else {
       response.errors.email = constants.authMessage.INVALID_EMAIL;

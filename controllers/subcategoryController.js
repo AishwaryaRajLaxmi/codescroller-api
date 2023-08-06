@@ -1,9 +1,10 @@
 const subCategoryService = require("../services/subCategoryService");
 const constants = require("../helpers/constants");
+const _ = require("lodash");
 
 // createSubCategory
 module.exports.createSubCategory = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await subCategoryService.createSubCategory(
       req.body
@@ -29,7 +30,7 @@ module.exports.createSubCategory = async (req, res) => {
 
 // getAllSubCategories
 module.exports.getAllSubCategories = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await subCategoryService.getAllSubCategories(
       req.query
@@ -58,7 +59,7 @@ module.exports.getAllSubCategories = async (req, res) => {
 
 // getSubCategoryById
 module.exports.getSubCategoryById = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await subCategoryService.getSubCategoryById(
       req.params
@@ -82,7 +83,7 @@ module.exports.getSubCategoryById = async (req, res) => {
 
 // updateSubCategory
 module.exports.updateSubCategory = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await subCategoryService.updateSubCategory({
       id: req.params.id,
@@ -110,7 +111,7 @@ module.exports.updateSubCategory = async (req, res) => {
 
 // deleteSubCategory
 module.exports.deleteSubCategory = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await subCategoryService.deleteSubCategory(
       req.params
@@ -122,7 +123,6 @@ module.exports.deleteSubCategory = async (req, res) => {
       response.body = serviceResponse.body;
       response.message = constants.subCategoryMessage.SUB_CATEGORY_DELETED;
       response.status = 200;
-     
     }
   } catch (error) {
     console.log(`Something went wrong:controller:SubCategoryController: getAllCategories

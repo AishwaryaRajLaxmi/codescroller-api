@@ -1,11 +1,11 @@
 const lessonModel = require("../database/models/lessonModel");
 const constants = require("../helpers/constants");
 const { formatMongoData } = require("../helpers/dbHelper");
+const _ = require("lodash");
 
 // createContent
 module.exports.createLessonContent = async (lessonId, body) => {
-  const response = { ...constants.defaultServerResponse };
-
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const lessonResponse = await lessonModel.findOne({
       _id: lessonId,
@@ -33,7 +33,7 @@ module.exports.createLessonContent = async (lessonId, body) => {
 
 // updateContent
 module.exports.updateLessonContent = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const { id, body } = serviceData;
 
@@ -69,7 +69,7 @@ module.exports.updateLessonContent = async (serviceData) => {
 // getLessonContentById
 module.exports.getLessonContentById = async (serviceData) => {
   try {
-    const response = { ...constants.defaultServerResponse };
+    const response = _.cloneDeep(constants.defaultServerResponse);
     const dbResponse = await lessonModel.findOne(
       {
         "contents._id": serviceData.contentId,
@@ -104,14 +104,13 @@ module.exports.getLessonContentById = async (serviceData) => {
 
 module.exports.deleteLessonContent = async (serviceData) => {
   try {
-    const response = { ...constants.defaultServerResponse };
-
+    const response = _.cloneDeep(constants.defaultServerResponse);
     // Ensure serviceData has the required properties
     if (!serviceData || !serviceData.contentId) {
       throw new Error("Invalid serviceData. Missing contentId.");
     }
 
-    let filter = {"contents._id": serviceData.contentId }; // Corrected filter using _id
+    let filter = { "contents._id": serviceData.contentId }; // Corrected filter using _id
     const dbResponse = await lessonModel.findOneAndUpdate(
       filter,
       { $pull: { contents: { _id: serviceData.contentId } } },

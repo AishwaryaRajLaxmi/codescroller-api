@@ -1,10 +1,11 @@
 const constants = require("../helpers/constants");
 const { formatMongoData } = require("../helpers/dbHelper");
 const levelModel = require("../database/models/levelModel");
+const _ = require("lodash");
 
 // createLevel
 module.exports.createLevel = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const levelResponse = await levelModel.findOne({
       name: serviceData.name,
@@ -43,7 +44,7 @@ module.exports.createLevel = async (serviceData) => {
 // getAllLevels
 module.exports.getAllLevels = async (serviceData) => {
   try {
-    const response = { ...constants.defaultServerResponse };
+    const response = _.cloneDeep(constants.defaultServerResponse);
     const { limit = 10, page = 1, status = "true", searchQuery } = serviceData;
     let conditions = {};
     // Set the condition for active levels (where isDeleted is false)
@@ -99,8 +100,7 @@ module.exports.getAllLevels = async (serviceData) => {
 // deleteLevel
 module.exports.deleteLevel = async (serviceData) => {
   try {
-    const response = { ...constants.defaultServerResponse };
-
+    const response = _.cloneDeep(constants.defaultServerResponse);
     const isLevelExist = await levelModel.findOne({
       _id: serviceData.id,
       isDeleted: true,
@@ -139,7 +139,7 @@ module.exports.deleteLevel = async (serviceData) => {
 
 // getLevelById
 module.exports.getLevelById = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const dbResponse = await levelModel.findOne({
       _id: serviceData.id,
@@ -166,7 +166,7 @@ module.exports.getLevelById = async (serviceData) => {
 // updateLevel
 module.exports.updateLevel = async (serviceData) => {
   try {
-    const response = { ...constants.defaultServerResponse };
+    const response = _.cloneDeep(constants.defaultServerResponse);
     const { id, body } = serviceData;
     const dbResponse = await levelModel.findByIdAndUpdate(id, body, {
       new: true,

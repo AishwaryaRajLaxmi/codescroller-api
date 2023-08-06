@@ -1,10 +1,10 @@
 const purchasedCourseModel = require("../database/models/purchasedCourseModel");
 const constants = require("../helpers/constants");
 const purchasedCourseService = require("../services/purchasedCourseService");
-
+const _ = require("lodash");
 // createPurchasedCourse
 module.exports.createPurchasedCourse = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await purchasedCourseService.createPurchasedCourse(
       req.params,
@@ -30,8 +30,8 @@ module.exports.createPurchasedCourse = async (req, res) => {
 
 // getMyPurchasedCourse
 
-module.exports.getMyPurchasedCourse= async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+module.exports.getMyPurchasedCourse = async (req, res) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await purchasedCourseService.getMyPurchasedCourse(
       req.params
@@ -55,8 +55,8 @@ module.exports.getMyPurchasedCourse= async (req, res) => {
   res.status(response.status).send(response);
 };
 
-module.exports.getPurchasedCourseByID= async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+module.exports.getPurchasedCourseByID = async (req, res) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await purchasedCourseService.getPurchasedCourseByID(
       req.params
@@ -83,7 +83,7 @@ module.exports.getPurchasedCourseByID= async (req, res) => {
 // getAllCourses
 
 module.exports.getAllPurchasedCourses = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await purchasedCourseService.getAllPurchasedCourses(
       req.query
@@ -113,7 +113,7 @@ module.exports.getAllPurchasedCourses = async (req, res) => {
 
 // deleteCourse
 module.exports.deletePurchasedCourse = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await purchasedCourseService.deletePurchasedCourse(
       req.params
@@ -140,7 +140,7 @@ module.exports.deletePurchasedCourse = async (req, res) => {
 
 // updatePurchasedCourse
 module.exports.updatePurchasedCourse = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await purchasedCourseService.updatePurchasedCourse({
       id: req.params.id,

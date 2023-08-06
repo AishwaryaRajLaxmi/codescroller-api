@@ -1,10 +1,11 @@
 const constants = require("../helpers/constants");
 const { formatMongoData } = require("../helpers/dbHelper");
 const topicModel = require("../database/models/topicModel");
+const _ = require("lodash");
 
 // createTopic
 module.exports.createTopic = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const topicResponse = await topicModel.findOne({
       name: serviceData.name,
@@ -40,7 +41,7 @@ module.exports.createTopic = async (serviceData) => {
 
 // getAllTopics
 module.exports.getAllTopics = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const {
       limit = 10,
@@ -115,8 +116,7 @@ module.exports.getAllTopics = async (serviceData) => {
 // deleteTopic
 module.exports.deleteTopic = async (serviceData) => {
   try {
-    const response = { ...constants.defaultServerResponse };
-
+    const response = _.cloneDeep(constants.defaultServerResponse);
     const isTopicExist = await topicModel.findOne({
       _id: serviceData.id,
       isDeleted: true,
@@ -153,7 +153,7 @@ module.exports.deleteTopic = async (serviceData) => {
 
 // getTopicById
 module.exports.getTopicById = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const dbResponse = await topicModel
       .findOne({
@@ -181,13 +181,23 @@ module.exports.getTopicById = async (serviceData) => {
 
 // updateTopic
 module.exports.updateTopic = async (serviceData) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const { id, body } = serviceData;
     const dbResponse = await topicModel.findByIdAndUpdate(id, body, {
       new: true,
     });
 
-    return formatMongoData(dbResponse);
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.topicMessage.TOPIC_NOT_UPDATED,
+      };
+      response.message = constants.topicMessage.TOPIC_NOT_UPDATED;
+      return response;
+    }
+    response.body = formatMongoData(dbResponse);
+    response.status = 200;
+    return response;
   } catch (error) {
     console.log(
       `Somthing Went Wrong Service: TopicService: updateTopic`,
