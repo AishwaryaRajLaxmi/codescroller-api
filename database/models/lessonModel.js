@@ -9,6 +9,8 @@ const lessonSchema = new mongoose.Schema(
     slug: {
       type: String,
       trim: true,
+      required: true,
+      unique: true,
     },
     description: {
       type: String,
@@ -41,8 +43,9 @@ const lessonSchema = new mongoose.Schema(
         },
         slug: {
           type: String,
+          trim: true,
+          unique: true,
           required: true,
-          trim: "",
         },
         description: {
           type: String,

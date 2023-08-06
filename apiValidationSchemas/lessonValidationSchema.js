@@ -4,7 +4,7 @@ const { customCallback } = require("../helpers/joiHelper");
 // createLesson
 module.exports.createLesson = Joi.object({
   name: Joi.string().required().label("Name"),
-  slug: Joi.string().label("Slug"),
+  slug: Joi.string().label("Slug").required(),
   description: Joi.string().allow("").label("Description"),
   course: Joi.string().custom(customCallback).required().label("Course"),
   serialNo: Joi.number().label("Serial Number"),

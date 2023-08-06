@@ -55,7 +55,40 @@ module.exports.createPurchasedCourse = async (...serviceData) => {
 };
 
 // getPurchasedCourseById
-module.exports.getPurchasedCourseById = async (serviceData) => {
+module.exports.getPurchasedCourseByID = async (serviceData) => {
+  const response = { ...constants.defaultServerResponse };
+  // console.log(serviceData.userId);
+  try {
+    let dbResponse = await purchasedCourseModel
+      .findOne({
+        id: serviceData._id,
+        isDeleted: false,
+      })
+      .populate({ path: "user", select: "name _id" })
+      .populate({ path: "course", select: "name _id" });
+
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.purchasedCourseMessage.PURCHASED_COURSE_NOT_FOUND,
+      };
+      response.message =
+        constants.purchasedCourseMessage.PURCHASED_COURSE_NOT_FOUND;
+      return response;
+    }
+
+    response.body = formatMongoData(dbResponse);
+    response.status = 200;
+    return response;
+  } catch (error) {
+    console.log(
+      `Something went wrong: service : purchasedCourseService : getPurchasedCourseByID`
+    );
+    throw new Error(error);
+  }
+};
+
+// getMyPurchasedCourse
+module.exports.getMyPurchasedCourse = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
   // console.log(serviceData.userId);
   try {
@@ -81,7 +114,7 @@ module.exports.getPurchasedCourseById = async (serviceData) => {
     return response;
   } catch (error) {
     console.log(
-      `Something went wrong: service : purchasedCourseService : getPurchasedCourseById`
+      `Something went wrong: service : purchasedCourseService : getMyPurchasedCourse`
     );
     throw new Error(error);
   }

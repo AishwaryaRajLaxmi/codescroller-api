@@ -9,8 +9,9 @@ const subCategorySchema = new mongoose.Schema(
     },
     slug: {
       type: String,
-      required: true,
       trim: true,
+      unique: true,
+      required: true,
     },
     category: {
       type: mongoose.Schema.Types.ObjectId,

@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 
 // registerUser
 module.exports.registerUser = async (serviceData) => {
-  const response = {};
+  const response = {...constants.defaultServerResponse};
   try {
     // Check Email is already exist or not
     const userResponse = await userModel.findOne({
@@ -18,24 +18,34 @@ module.exports.registerUser = async (serviceData) => {
       response.errors = {
         email: constants.authMessage.EMAIL_EXISTS,
       };
+      response.message=constants.userMessage.USER_ALREADY_EXISTS
       return response;
     }
     // encrypt password
-    const hashPassword = await bcrypt.hash(newData.password, 10);
-    newData.password = hashPassword;
-    const serviceResponse = await newData.save();
-
-    // send otp
-    const currentDate = new Date();
-    const otp = optGenerator.createOTP();
-    const otpExpires = currentDate.setMinutes(currentDate.getMinutes() + 3);
     const newData = new userModel(serviceData);
+    const hashPassword = await bcryptjs.hash(newData.password, 10);
+    newData.password = hashPassword;
+    const dbResponse = await newData.save();
 
-    // getTimeandDate
-    newData.otp = otp;
-    newData.otpExpiredAt = otpExpires;
+    if (dbResponse) {
+      // send otp
+      const currentDate = new Date();
+      const otp = optGenerator.createOTP();
+      const otpExpires = currentDate.setMinutes(currentDate.getMinutes() + 3);
 
-    return serviceResponse;
+      // getTimeandDate
+      newData.otp = otp;
+      newData.otpExpiredAt = otpExpires;
+      response.body = formatMongoData(dbResponse);
+      response.status = 200;
+    } else {
+      response.errors = {
+        error: constants.userMessage.USER_NOT_REGISTERED,
+      };
+      response.message = constants.userMessage.USER_NOT_REGISTERED;
+    }
+
+    return response;
   } catch (error) {
     console.log(
       `Something went wrong service : userService : registerUser\nError: ${error.message}`
@@ -169,14 +179,6 @@ module.exports.getAllUsers = async (serviceData) => {
       .skip((parseInt(page) - 1) * parseInt(limit))
       .limit(parseInt(limit));
 
-    if (!dbResponse) {
-      response.errors = {
-        error: constants.userMessage.USER_NOT_FOUND,
-      };
-      response.message = constants.userMessage.USER_NOT_FOUND;
-      return response;
-    }
-
     const formatData = formatMongoData(dbResponse);
     response.status = 200;
     return {
@@ -237,7 +239,10 @@ module.exports.deleteUser = async (serviceData) => {
 module.exports.getUserById = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const dbResponse = await userModel.findById(serviceData.id);
+    const dbResponse = await userModel.findOne({
+      _id:serviceData.id,
+      isDeleted:false,
+    });
 
     if (!dbResponse) {
       response.errors = {
@@ -248,6 +253,7 @@ module.exports.getUserById = async (serviceData) => {
     }
 
     response.body = formatMongoData(dbResponse);
+    response.status=200;
     return response;
   } catch (error) {
     console.log(`Something went wrong: service : userService : deleteUser`);

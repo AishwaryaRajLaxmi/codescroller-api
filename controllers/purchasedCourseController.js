@@ -28,12 +28,12 @@ module.exports.createPurchasedCourse = async (req, res) => {
   res.status(response.status).send(response);
 };
 
-// getPurchasedCourseByID
+// getMyPurchasedCourse
 
-module.exports.getPurchasedCourseById = async (req, res) => {
+module.exports.getMyPurchasedCourse= async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
-    const serviceResponse = await purchasedCourseService.getPurchasedCourseById(
+    const serviceResponse = await purchasedCourseService.getMyPurchasedCourse(
       req.params
     );
 
@@ -47,7 +47,32 @@ module.exports.getPurchasedCourseById = async (req, res) => {
         constants.purchasedCourseMessage.PURCHASED_COURSE_FETCHED;
     }
   } catch (error) {
-    console.log(`Something went wrong:controller:purchasedCourseController: getPurchasedCourseById
+    console.log(`Something went wrong:controller:purchasedCourseController: getMyPurchasedCourse
+    Error:${error.message}`);
+    response.message = error.message;
+    response.errors = error;
+  }
+  res.status(response.status).send(response);
+};
+
+module.exports.getPurchasedCourseByID= async (req, res) => {
+  const response = { ...constants.defaultServerResponse };
+  try {
+    const serviceResponse = await purchasedCourseService.getPurchasedCourseByID(
+      req.params
+    );
+
+    if (serviceResponse.status === 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
+      response.body = serviceResponse.body;
+      response.status = 200;
+      response.message =
+        constants.purchasedCourseMessage.PURCHASED_COURSE_FETCHED;
+    }
+  } catch (error) {
+    console.log(`Something went wrong:controller:purchasedCourseController: getPurchasedCourseByID
     Error:${error.message}`);
     response.message = error.message;
     response.errors = error;

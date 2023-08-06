@@ -27,7 +27,7 @@ purchasedCourseRouter.post(
 purchasedCourseRouter.get(
   "/",
   validateQuery(getAllPurchasedCourses),
- 
+  jsonwebtoken.validateAdminToken,
   purchasedCourseController.getAllPurchasedCourses
 );
 
@@ -35,6 +35,7 @@ purchasedCourseRouter.get(
 purchasedCourseRouter.delete(
   "/:id",
   validateParams(getPurchasedCourseById),
+  jsonwebtoken.validateAdminToken,
   purchasedCourseController.deletePurchasedCourse
 );
 
@@ -42,7 +43,14 @@ purchasedCourseRouter.delete(
 purchasedCourseRouter.get(
   "/myCourses",
   jsonwebtoken.validateUserToken,
-  purchasedCourseController.getPurchasedCourseById
+  purchasedCourseController.getMyPurchasedCourse
+);
+
+// getPurchasedCourseById;
+purchasedCourseRouter.get(
+  "/:id",
+  validateParams(getPurchasedCourseById),
+  purchasedCourseController.getPurchasedCourseByID
 );
 
 // updatePurchasedCourse

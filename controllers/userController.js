@@ -16,7 +16,7 @@ module.exports.registerUser = async (req, res) => {
       response.errors = serviceResponse.errors;
       response.message = serviceResponse.message;
     } else {
-      response.body = serviceResponse;
+      response.body = serviceResponse.body;
       response.message = constants.userMessage.USER_REGISTERED;
       response.status = 200;
     }
@@ -102,17 +102,12 @@ module.exports.getAllUsers = async (req, res) => {
   const response = { ...constants.defaultServerResponse };
   try {
     const serviceResponse = await userService.getAllUsers(req.query);
-    if (serviceResponse.status === 400) {
-      response.body = serviceResponse.body;
-      response.totalPages = serviceResponse.totalPages;
-      response.totalRecords = serviceResponse.totalRecords;
-      response.page = serviceResponse.page;
-      response.status = 200;
-      response.message = constants.userMessage.USER_FETCHED;
-    } else {
-      response.message = serviceResponse.message;
-      response.errors = serviceResponse.errors;
-    }
+    response.body = serviceResponse.body;
+    response.totalPages = serviceResponse.totalPages;
+    response.totalRecords = serviceResponse.totalRecords;
+    response.page = serviceResponse.page;
+    response.status = 200;
+    response.message = constants.userMessage.USER_FETCHED;
   } catch (error) {
     console.log(`Something went wrong:controller:userController: getAllUsers 
     Error:${error.message}`);

@@ -65,6 +65,7 @@ module.exports.createLesson = async (serviceData) => {
       };
       response.message = constants.lessonMessage.LESSON_NOT_CREATED;
     }
+    return response;
   } catch (error) {
     console.log(
       `Something went wrong service : lessonService : createLesson\nError: ${error.message}`
@@ -76,6 +77,7 @@ module.exports.createLesson = async (serviceData) => {
 // getlessonById
 module.exports.getLessonById = async (serviceData) => {
   const response = { ...constants.defaultServerResponse };
+  console.log(serviceData)
   try {
     const dbResponse = await lessonModel
       .findOne({
@@ -84,6 +86,7 @@ module.exports.getLessonById = async (serviceData) => {
       })
       .populate({ path: "course", select: "name _id" });
 
+      console.log(dbResponse)
     if (!dbResponse) {
       response.errors = {
         error: constants.lessonMessage.LESSON_NOT_FOUND,
@@ -115,6 +118,7 @@ module.exports.getAllLessons = async (serviceData) => {
       serialNo,
     } = serviceData;
     let conditions = {};
+    conditions.isDeleted = false;
 
     if (status == "true" || status == "false") {
       conditions.status = status;
