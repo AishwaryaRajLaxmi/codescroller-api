@@ -35,7 +35,7 @@ module.exports.getLessonById = async (req, res) => {
       response.errors = serviceResponse.errors;
       response.message = serviceResponse.message;
     } else {
-      response.body = serviceResponse;
+      response.body = serviceResponse.body;
       response.message = constants.lessonMessage.LESSON_FETCHED;
       response.status = 200;
     }
@@ -113,7 +113,7 @@ module.exports.updateLesson = async (req, res) => {
       response.errors = serviceResponse.errors;
       response.message = serviceResponse.message;
     } else {
-      response.body = serviceResponse;
+      response.body = serviceResponse.body;
       response.status = 200;
       response.message = constants.lessonMessage.LESSON_UPDATED;
     }
