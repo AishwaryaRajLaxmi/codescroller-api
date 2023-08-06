@@ -78,7 +78,6 @@ module.exports.createLesson = async (serviceData) => {
 // getlessonById
 module.exports.getLessonById = async (serviceData) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
-  console.log(serviceData);
   try {
     const dbResponse = await lessonModel
       .findOne({
