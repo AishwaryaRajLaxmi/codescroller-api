@@ -46,12 +46,14 @@ purchasedCourseRouter.get(
   purchasedCourseController.getMyPurchasedCourse
 );
 
-// getPurchasedCourseById;
+// getPurchasedCourseById  For Admin
 purchasedCourseRouter.get(
   "/:id",
   validateParams(getPurchasedCourseById),
+  jsonwebtoken.validateAdminToken,
   purchasedCourseController.getPurchasedCourseByID
 );
+
 
 // updatePurchasedCourse
 purchasedCourseRouter.put(
