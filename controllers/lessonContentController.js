@@ -1,7 +1,8 @@
 const lessonModel = require("../database/models/lessonModel");
 const constants = require("../helpers/constants");
-const _ = require("lodash");
+
 const lessonContentService = require("../services/lessonContentService");
+const _ = require("lodash");
 
 // createContent
 module.exports.createLessonContent = async (req, res) => {
@@ -54,54 +55,6 @@ module.exports.getLessonContentById = async (req, res) => {
   }
   res.status(response.status).send(response);
 };
-
-//getAllLessonsContents
-
-// module.exports.getAllLessonsContents = async (req, res) => {
-//   const response = { ...constants.defaultServerResponse };
-//   try {
-//     const serviceResponse = await lessonContentService.getAllLessonsContents(req.query);
-//     response.body = serviceResponse.body;
-//     response.totalPages = serviceResponse.totalPages;
-//     response.totalRecords = serviceResponse.totalRecords;
-//     response.page = serviceResponse.page;
-//     response.status = 200;
-//     response.message = constants.contentMessage.CONTENT_FETCHED;
-//   } catch (error) {
-//     console.log(`Something went wrong:controller:contentController: getAllLessonsContents
-//     Error:${error.message}`);
-
-//     response.message = error.message;
-//     response.errors = error;
-//   }
-//   res.status(response.status).send(response);
-// };
-
-// // deleteContent
-// module.exports.deleteContent = async (req, res) => {
-//   const response = { ...constants.defaultServerResponse };
-//   try {
-//     const serviceResponse = await lessonContentService.deleteContent(req.params);
-//     if (serviceResponse.status == 200) {
-//       response.body = serviceResponse.body;
-//       response.message = constants.contentMessage.CONTENT_DELETED;
-//       response.status = 200;
-//     } else {
-//       response.message = constants.contentMessage.CONTENT_DELETED;
-//       response.status = 400;
-//       response.errors = serviceResponse.errors;
-//     }
-//   } catch (error) {
-//     console.log(`Something went wrong:controller:contentController:deleteContent
-//       Error:${error.message}`);
-
-//     response.message = error.message;
-//     response.errors = {
-//       error: error.message,
-//     };
-//   }
-//   res.status(response.status).send(response);
-// };
 
 // updateContent
 module.exports.updateLessonContent = async (req, res) => {

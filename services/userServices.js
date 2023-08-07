@@ -262,7 +262,7 @@ module.exports.findAccountAndSendOTP = async (serviceData) => {
       response.errors.email = "Sorry, your email is not registered";
     }
 
-    console.log(response);
+   
 
     return response;
   } catch (error) {

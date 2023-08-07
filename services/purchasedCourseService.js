@@ -77,27 +77,24 @@ module.exports.getPurchasedCourseByID = async (serviceData) => {
       return response;
     }
 
-    console.log(dbResponse);
 
     // find lesson and add
     let lessonResponse = await lessonModel.findOne({
-      "course._id": dbResponse.course._id,
+      course: dbResponse.course,
       isDeleted: false,
     });
     
-
     if (lessonResponse) {
-      dbResponse.lessons = lessonResponse; // Directly add lessonResponse to dbResponse
+      dbResponse.lessons = lessonResponse._id; // Directly add lessonResponse to dbResponse
     }
-
-    console.log(lessonResponse);
-
+   
     response.body = formatMongoData(dbResponse);
     response.status = 200;
     return response;
   } catch (error) {
     console.log(
-      `Something went wrong: service : purchasedCourseService : getPurchasedCourseByID`
+      `Something went wrong: service : purchasedCourseService : getPurchasedCourseByID`,
+      error
     );
     throw new Error(error);
   }
@@ -192,8 +189,7 @@ module.exports.getAllPurchasedCourses = async (serviceData) => {
       conditions.couponName = couponName;
     }
 
-    // console.log(conditions)
-    // count document
+    
     const totalRecords = await purchasedCourseModel.countDocuments(conditions);
     const totalPages = Math.ceil(totalRecords / parseInt(limit));
 
@@ -204,7 +200,6 @@ module.exports.getAllPurchasedCourses = async (serviceData) => {
       .populate({ path: "user", select: "name _id" })
       .populate({ path: "course", select: "name _id" });
 
-    // console.log(dbResponse)
 
     if (!dbResponse) {
       response.errors = {

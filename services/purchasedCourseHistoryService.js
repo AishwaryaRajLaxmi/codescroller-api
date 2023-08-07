@@ -50,7 +50,6 @@ module.exports.getAllPurchasedCoursesHistory = async (serviceData) => {
       conditions.couponName = couponName;
     }
 
-    // console.log(conditions)
     // count document
     const totalRecords = await purchasedCourseHistoryModel.countDocuments(
       conditions
@@ -63,8 +62,6 @@ module.exports.getAllPurchasedCoursesHistory = async (serviceData) => {
       .limit(parseInt(limit))
       .populate({ path: "user", select: "name _id" })
       .populate({ path: "course", select: "name _id" });
-
-    // console.log(dbResponse)
 
     if (!dbResponse) {
       response.errors = {
@@ -104,11 +101,11 @@ module.exports.getPurchasedCourseHistoryById = async (serviceData) => {
       .populate({ path: "user", select: "name _id" })
       .populate({ path: "course", select: "name _id" });
 
-
     if (!dbResponse) {
       response.errors = {
         error:
-          constants.purchasedCourseHistoryMessage.PURCHASED_COURSE_HISTORY_FETCHED
+          constants.purchasedCourseHistoryMessage
+            .PURCHASED_COURSE_HISTORY_FETCHED,
       };
       response.message =
         constants.purchasedCourseHistoryMessage.PURCHASED_COURSE_HISTORY_NOT_FOUND;

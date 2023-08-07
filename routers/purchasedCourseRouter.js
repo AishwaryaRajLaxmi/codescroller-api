@@ -15,7 +15,6 @@ const {
   validateQuery,
 } = require("../middlewares/joiSchemaValidation");
 const jsonwebtoken = require("../middlewares/jwtValidation");
-const { getUserByCourse } = require("../services/purchasedCourseService");
 
 // createPurchasedCourse
 purchasedCourseRouter.post(
@@ -66,7 +65,7 @@ purchasedCourseRouter.put(
   purchasedCourseController.updatePurchasedCourse
 );
 
-// course purchasedCourse by student
+// purchasedCourse by student
 purchasedCourseRouter.get(
   "/getUsers/:courseId",
   validateParams(getUsersByCourse),

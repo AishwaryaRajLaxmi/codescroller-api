@@ -2,16 +2,11 @@ const express = require("express");
 const purchasedCourseHistoryRouter = express.Router();
 const purchasedCourseHistoryController = require("../controllers/purchasedCourseHistoryController");
 const {
-  createPurchasedCourse,
   getAllPurchasedCourses,
   getPurchasedCourseById,
-  updatePurchasedCourse,
-  getMySingleCourse,
-  getUsersByCourse,
 } = require("../apiValidationSchemas/purchasedCourseValidationSchema");
 
 const {
-  validateBody,
   validateParams,
   validateQuery,
 } = require("../middlewares/joiSchemaValidation");
@@ -32,8 +27,9 @@ purchasedCourseHistoryRouter.get(
 // getPurchasedCourseHistory By Id
 purchasedCourseHistoryRouter.get(
   "/:id",
-  
+  validateParams(getPurchasedCourseById),
+  validateUserToken,
   purchasedCourseHistoryController.getPurchasedCourseHistoryByID
 );
 
-module.exports=purchasedCourseHistoryRouter
+module.exports = purchasedCourseHistoryRouter;

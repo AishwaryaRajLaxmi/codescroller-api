@@ -86,7 +86,6 @@ module.exports.getLessonById = async (serviceData) => {
       })
       .populate({ path: "course", select: "name _id" });
 
-    console.log(dbResponse);
     if (!dbResponse) {
       response.errors = {
         error: constants.lessonMessage.LESSON_NOT_FOUND,

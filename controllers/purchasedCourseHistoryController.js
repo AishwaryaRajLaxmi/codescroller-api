@@ -32,6 +32,7 @@ module.exports.getAllPurchasedCoursesHistory = async (req, res) => {
 };
 
 
+// getPurchasedCourseHistoryById
 module.exports.getPurchasedCourseHistoryByID = async (req, res) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
   try {

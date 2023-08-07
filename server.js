@@ -27,7 +27,10 @@ app.use("/api/v1/reviews", require("./routers/reviewRouter"));
 app.use("/api/v1/lessons", require("./routers/lessonRouter"));
 app.use("/api/v1/lessonContents", require("./routers/lessonContentRouter"));
 app.use("/api/v1/purchasedCourses", require("./routers/purchasedCourseRouter"));
-app.use("/api/v1/purchasedCoursesHistory", require("./routers/purchasedCourseHistoryRouter"));
+app.use(
+  "/api/v1/purchasedCoursesHistory",
+  require("./routers/purchasedCourseHistoryRouter")
+);
 
 const port = process.env.PORT || 5300;
 app.listen(port, () => {
