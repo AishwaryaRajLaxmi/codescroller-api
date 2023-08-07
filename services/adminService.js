@@ -6,14 +6,13 @@ const dbHelper = require("../helpers/dbHelper");
 const smsHelper = require("../helpers/smsHelper");
 const moment = require("moment");
 
-
 // registerAdmin
 module.exports.registerAdmin = async (serviceData) => {
   const response = {};
   try {
     // Check Email is already exist or not
     const adminData = await adminModel.findOne({ email: serviceData.email });
-    
+
     if (adminData) {
       response.errors = {
         email: constant.authMessage.EMAIL_EXISTS,
@@ -48,7 +47,6 @@ module.exports.registerAdmin = async (serviceData) => {
   }
   return response;
 };
-
 
 // loginAdmin
 module.exports.loginAdmin = async (serviceData) => {
