@@ -41,7 +41,6 @@ subcategoryRouter.delete(
 subcategoryRouter.get(
   "/:id",
   validateParams(getSubCategoryById),
-  validateAdminToken,
   subcategoryController.getSubCategoryById
 );
 

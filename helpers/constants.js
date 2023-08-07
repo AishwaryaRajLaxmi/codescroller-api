@@ -219,4 +219,19 @@ module.exports = {
     REVIEWS_ALREADY_EXISTS: "Reviews Already Exists",
     REVIEWS_NOT_EXISTS: "Reviews Not Exists",
   },
+  mainSliderMessage: {
+    MAIN_SLIDER_CREATED: "Main Slider Created Successfully",
+    MAIN_SLIDER_NOT_CREATED: "Main Slider Not Created",
+    MAIN_SLIDER_FETCHED: "Main Slider Fetched Successfully",
+    MAIN_SLIDER_NOT_FETCHED: "Main Slider Not Fetched",
+    MAIN_SLIDER_UPDATED: "Main Slider Updated Successfully",
+    MAIN_SLIDER_NOT_UPDATED: "Main Slider Not Updated",
+    MAIN_SLIDER_DELETED: "Main Slider Deleted Successfully",
+    MAIN_SLIDER_NOT_DELETED: "Main Slider Not Deleted",
+    MAIN_SLIDER_NOT_FOUND: "Main Slider Not Found",
+    MAIN_SLIDER_FOUND: "Main Slider Found",
+    MAIN_SLIDER_ALREADY_EXISTS: "Main Slider Already Exists",
+    MAIN_SLIDER_NOT_EXISTS: "Main Slider Not Exists",
+  }
+  
 };

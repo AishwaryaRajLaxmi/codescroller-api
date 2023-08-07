@@ -31,6 +31,11 @@ app.use(
   "/api/v1/purchasedCoursesHistory",
   require("./routers/purchasedCourseHistoryRouter")
 );
+app.use(
+  "/api/v1/mainSliders",
+  require("./routers/mainSliderRouter")
+);
+
 
 const port = process.env.PORT || 5300;
 app.listen(port, () => {

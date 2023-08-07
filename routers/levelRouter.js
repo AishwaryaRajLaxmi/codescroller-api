@@ -26,7 +26,6 @@ levelRouter.post(
 levelRouter.get(
   "/",
   validateQuery(getAllLevels),
-  jsonwebtoken.validateAdminToken,
   levelController.getAllLevels
 );
 
@@ -34,7 +33,6 @@ levelRouter.get(
 levelRouter.get(
   "/:id",
   validateParams(getLevelById),
-  jsonwebtoken.validateAdminToken,
   levelController.getLevelById
 );
 

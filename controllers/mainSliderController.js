@@ -1,23 +1,23 @@
 const constants = require("../helpers/constants");
-const courseService = require("../services/courseService");
+const mainSliderService = require("../services/mainSliderService");
 const _ = require("lodash");
 
-// createCourse
-module.exports.createCourse = async (req, res) => {
+// createMainSlider
+module.exports.createMainSlider = async (req, res) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
   try {
-    const serviceResponse = await courseService.createCourse(req.body);
+    const serviceResponse = await mainSliderService.createMainSlider(req.body);
 
     if (serviceResponse.status === 400) {
       response.errors = serviceResponse.errors;
       response.message = serviceResponse.message;
     } else {
       response.body = serviceResponse.body;
-      response.message = constants.courseMessage.COURSE_CREATED;
+      response.message = constants.mainSliderMessage.MAIN_SLIDER_CREATED;
       response.status = 200;
     }
   } catch (error) {
-    console.log(`Something went wrong:controller:courseController: createCourse
+    console.log(`Something went wrong:controller:mainSliderController: createMainSlider
     Error:${error.message}`);
     response.message = error.message;
     response.errors = error;
@@ -25,12 +25,12 @@ module.exports.createCourse = async (req, res) => {
   res.status(response.status).send(response);
 };
 
-// getCourseByID
+// getMainSliderById
 
-module.exports.getCourseById = async (req, res) => {
+module.exports.getMainSliderById = async (req, res) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
   try {
-    const serviceResponse = await courseService.getCourseById(
+    const serviceResponse = await mainSliderService.getMainSliderById(
       req.params,
       req.query
     );
@@ -41,10 +41,10 @@ module.exports.getCourseById = async (req, res) => {
     } else {
       response.body = serviceResponse.body;
       response.status = 200;
-      response.message = constants.courseMessage.COURSE_FETCHED;
+      response.message = constants.mainSliderMessage.MAIN_SLIDER_FOUND;
     }
   } catch (error) {
-    console.log(`Something went wrong:controller:courseController: getCourseById
+    console.log(`Something went wrong:controller:mainSliderController: getMainSliderById
     Error:${error.message}`);
     response.message = error.message;
     response.errors = error;
@@ -52,12 +52,14 @@ module.exports.getCourseById = async (req, res) => {
   res.status(response.status).send(response);
 };
 
-// getAllCourses
+// getAllMainSliders
 
-module.exports.getAllCourses = async (req, res) => {
+module.exports.getAllMainSliders = async (req, res) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
   try {
-    const serviceResponse = await courseService.getAllCourses(req.query);
+    const serviceResponse = await mainSliderService.getAllMainSliders(
+      req.query
+    );
 
     if (serviceResponse == 400) {
       response.errors = serviceResponse.errors;
@@ -68,10 +70,10 @@ module.exports.getAllCourses = async (req, res) => {
       response.totalRecords = serviceResponse.totalRecords;
       response.page = serviceResponse.page;
       response.status = 200;
-      response.message = constants.courseMessage.COURSE_FETCHED;
+      response.message = constants.mainSliderMessage.MAIN_SLIDER_FETCHED;
     }
   } catch (error) {
-    console.log(`Something went wrong:controller:courseController: getAllCourses
+    console.log(`Something went wrong:controller:mainSliderController: getAllMainSliders
     Error:${error.message}`);
 
     response.message = error.message;
@@ -81,21 +83,23 @@ module.exports.getAllCourses = async (req, res) => {
 };
 
 // deleteCourse
-module.exports.deleteCourse = async (req, res) => {
+module.exports.deleteMainSlider = async (req, res) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
   try {
-    const serviceResponse = await courseService.deleteCourse(req.params);
+    const serviceResponse = await mainSliderService.deleteMainSlider(
+      req.params
+    );
     if (serviceResponse.status == 400) {
       response.message = serviceResponse.message;
       response.status = 400;
       response.errors = serviceResponse.errors;
     } else {
       response.body = serviceResponse.body;
-      response.message = constants.courseMessage.COURSE_DELETED;
+      response.message = constants.mainSliderMessage.MAIN_SLIDER_DELETED;
       response.status = 200;
     }
   } catch (error) {
-    console.log(`Scomething went wrong:controller:courseController: deleteCourse
+    console.log(`Scomething went wrong:controller:mainSliderController: deleteMainSlider
       Error:${error.message}`);
 
     response.message = error.message;
@@ -106,11 +110,11 @@ module.exports.deleteCourse = async (req, res) => {
   res.status(response.status).send(response);
 };
 
-// updateCourse
-module.exports.updateCourse = async (req, res) => {
+// updateMainSlider
+module.exports.updateMainSlider = async (req, res) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
   try {
-    const serviceResponse = await courseService.updateCourse({
+    const serviceResponse = await mainSliderService.updateMainSlider({
       id: req.params.id,
       body: req.body,
     });
@@ -121,11 +125,11 @@ module.exports.updateCourse = async (req, res) => {
     } else {
       response.body = serviceResponse.body;
       response.status = 200;
-      response.message = constants.courseMessage.COURSE_UPDATED;
+      response.message = constants.mainSliderMessage.MAIN_SLIDER_DELETED;
     }
   } catch (error) {
     console.log(
-      `Something Went Wrong Controller: courseController: updateCourse`,
+      `Something Went Wrong Controller: courseController: updateMainSlider`,
       error.message
     );
 

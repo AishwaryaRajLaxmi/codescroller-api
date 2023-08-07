@@ -41,7 +41,6 @@ lessonRouter.delete(
 lessonRouter.get(
   "/:id",
   validateParams(getLessonById),
-  validateAdminToken,
   lessonController.getLessonById
 );
 

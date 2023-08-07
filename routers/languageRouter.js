@@ -41,7 +41,6 @@ languageRouter.delete(
 languageRouter.get(
   "/:id",
   validateParams(getLanguageById),
-  validateAdminToken,
   languageController.getLanguageById
 );
 
