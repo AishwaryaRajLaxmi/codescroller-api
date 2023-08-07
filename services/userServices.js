@@ -81,7 +81,7 @@ module.exports.registerUser = async (serviceData) => {
       // if account is verified
       if (userResponse.isVerified == true) {
         response.message = "You have already registered";
-        response.errors.error = "Your Email is already registered";
+        response.errors.email = "Your Email is already registered";
         response.status = 400;
         return response;
       }
@@ -262,7 +262,7 @@ module.exports.findAccountAndSendOTP = async (serviceData) => {
       response.errors.email = "Sorry, your email is not registered";
     }
 
-   
+    console.log(response);
 
     return response;
   } catch (error) {
