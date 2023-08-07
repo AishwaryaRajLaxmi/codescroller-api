@@ -1,10 +1,11 @@
 const constants = require("../helpers/constants");
 const { formatMongoData } = require("../helpers/dbHelper");
 const subCategoryModel = require("../database/models/subCategoryModel");
+const _ = require("lodash");
 
 // createSubCategory
 module.exports.createSubCategory = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const categoryResponse = await subCategoryModel.findOne({
       name: serviceData.name,
@@ -41,7 +42,7 @@ module.exports.createSubCategory = async (serviceData) => {
 
 // getAllSubCategories
 module.exports.getAllSubCategories = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const {
       limit = 10,
@@ -106,7 +107,7 @@ module.exports.getAllSubCategories = async (serviceData) => {
 
 // getSubCategoryById
 module.exports.getSubCategoryById = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const dbResponse = await subCategoryModel
       .findOne({ _id: serviceData.id, isDeleted: false })
@@ -133,7 +134,7 @@ module.exports.getSubCategoryById = async (serviceData) => {
 // updateSubCategory
 module.exports.updateSubCategory = async (serviceData) => {
   try {
-    const response = { ...constants.defaultServerResponse };
+    const response = _.cloneDeep(constants.defaultServerResponse);
     const { id, body } = serviceData;
     const dbResponse = await subCategoryModel.findOneAndUpdate(
       { _id: id },
@@ -165,8 +166,7 @@ module.exports.updateSubCategory = async (serviceData) => {
 // deleteSubCategory
 module.exports.deleteSubCategory = async (serviceData) => {
   try {
-    const response = { ...constants.defaultServerResponse };
-
+    const response = _.cloneDeep(constants.defaultServerResponse);
     const isSubCategoryExist = await subCategoryModel.findOne({
       _id: serviceData.id,
       isDeleted: true,

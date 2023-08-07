@@ -1,4 +1,5 @@
 const adminService = require("../services/adminService");
+const _ = require("lodash");
 const {
   defaultServerResponse,
   authMessage,
@@ -7,7 +8,7 @@ const {
 
 // registerAdmin
 module.exports.registerAdmin = async (req, res) => {
-  const response = { ...defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await adminService.registerAdmin(req.body);
     if (serviceResponse.body) {
@@ -30,7 +31,7 @@ module.exports.registerAdmin = async (req, res) => {
 
 // loginAdmin
 module.exports.loginAdmin = async (req, res) => {
-  const response = { ...defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await adminService.loginAdmin(req.body);
     if (serviceResponse.body) {
@@ -53,7 +54,7 @@ module.exports.loginAdmin = async (req, res) => {
 
 // getProfile
 module.exports.getProfile = async (req, res) => {
-  const response = { ...defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await adminService.getProfile(req.params);
     if (serviceResponse) {
@@ -75,7 +76,7 @@ module.exports.getProfile = async (req, res) => {
 
 // updateProfile
 module.exports.updateProfile = async (req, res) => {
-  const response = { ...defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await adminService.updateProfile({
       adminId: req.params.adminId,
@@ -101,7 +102,7 @@ module.exports.updateProfile = async (req, res) => {
 
 // findAccount
 module.exports.findAccount = async (req, res) => {
-  const response = { ...defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await adminService.findAccount(req.body);
     if (serviceResponse.body) {
@@ -124,7 +125,7 @@ module.exports.findAccount = async (req, res) => {
 
 // verifyOTP
 module.exports.verifyOTP = async (req, res) => {
-  const response = { ...defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await adminService.verifyOTP(req.body);
     if (serviceResponse.body) {
@@ -147,7 +148,7 @@ module.exports.verifyOTP = async (req, res) => {
 
 // createNewPassword
 module.exports.createNewPassword = async (req, res) => {
-  const response = { ...defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await adminService.createNewPassword({
       ...req.body,

@@ -2,9 +2,10 @@ const lessonModel = require("../database/models/lessonModel");
 const constants = require("../helpers/constants");
 const { formatMongoData } = require("../helpers/dbHelper");
 
+const _ = require("lodash");
 // createLesson
 module.exports.createLesson = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const lessonResponse = await lessonModel.findOne({
       name: serviceData.name,
@@ -76,8 +77,7 @@ module.exports.createLesson = async (serviceData) => {
 
 // getlessonById
 module.exports.getLessonById = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
-  console.log(serviceData)
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const dbResponse = await lessonModel
       .findOne({
@@ -86,7 +86,6 @@ module.exports.getLessonById = async (serviceData) => {
       })
       .populate({ path: "course", select: "name _id" });
 
-      console.log(dbResponse)
     if (!dbResponse) {
       response.errors = {
         error: constants.lessonMessage.LESSON_NOT_FOUND,
@@ -107,7 +106,7 @@ module.exports.getLessonById = async (serviceData) => {
 
 // getAlllesson
 module.exports.getAllLessons = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const {
       limit = 10,
@@ -177,8 +176,7 @@ module.exports.getAllLessons = async (serviceData) => {
 // deleteService
 module.exports.deleteLesson = async (serviceData) => {
   try {
-    const response = { ...constants.defaultServerResponse };
-
+    const response = _.cloneDeep(constants.defaultServerResponse);
     const isLessonExist = await lessonModel.findOne({
       _id: serviceData.id,
       isDeleted: true,
@@ -216,7 +214,7 @@ module.exports.deleteLesson = async (serviceData) => {
 
 // updateLesson
 module.exports.updateLesson = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const { id, body } = serviceData;
     const dbResponse = await lessonModel.findByIdAndUpdate(id, body, {

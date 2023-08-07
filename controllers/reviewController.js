@@ -1,9 +1,10 @@
 const constants = require("../helpers/constants");
 const reviewService = require("../services/reviewService");
+const _ = require("lodash");
 
 // createReview
 module.exports.createReview = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const reveiwResponse = await reviewService.createReview(
       req.params.userId,
@@ -29,7 +30,7 @@ module.exports.createReview = async (req, res) => {
 
 // getAllReviews
 module.exports.getAllReviews = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await reviewService.getAllReviews(req.query);
 
@@ -55,7 +56,7 @@ module.exports.getAllReviews = async (req, res) => {
 
 // deleteReview
 module.exports.deleteReview = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await reviewService.deleteReview(req.params);
     if (serviceResponse.status == 400) {
@@ -80,7 +81,7 @@ module.exports.deleteReview = async (req, res) => {
 
 // getReviewById
 module.exports.getReviewById = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await reviewService.getReviewById(req.params);
 
@@ -103,7 +104,7 @@ module.exports.getReviewById = async (req, res) => {
 
 // updateReview
 module.exports.updateReview = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await reviewService.updateReview({
       id: req.params.id,
@@ -131,7 +132,7 @@ module.exports.updateReview = async (req, res) => {
 
 // updateReviewByUser
 module.exports.updateReviewByUser = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await reviewService.updateReviewByUser({
       id: req.params.id,

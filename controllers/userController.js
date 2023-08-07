@@ -1,5 +1,6 @@
 const userService = require("../services/userServices");
 const constants = require("../helpers/constants");
+const _ = require("lodash");
 const {
   defaultServerResponse,
   authMessage,
@@ -9,8 +10,12 @@ const _ = require("lodash");
 
 // registerUser
 module.exports.registerUser = async (req, res) => {
+<<<<<<< HEAD
   const response = _.cloneDeep(constants.defaultServerResponse);
   try {
+=======
+  const response = _.cloneDeep(constants.defaultServerResponse);  try {
+>>>>>>> f26d798d9aa49d0c0bf17bd2955554d6542b927f
     const serviceResponse = await userService.registerUser(req.body);
 
     if (serviceResponse.status === 400) {
@@ -88,13 +93,18 @@ module.exports.loginUser = async (req, res) => {
 
   try {
     const serviceResponse = await userService.loginUser(req.body);
-    if (serviceResponse.body) {
+    if (serviceResponse.status == 200) {
       response.body = serviceResponse.body;
-      response.message = constants.userMessage.USER_LOGEDIN;
+      response.message = serviceResponse.message;
       response.status = 200;
+    } else if (serviceResponse.status == 301) {
+      response.message = serviceResponse.message;
+      response.errors = serviceResponse.errors;
+      response.body = serviceResponse.body;
+      response.status = 301;
     } else {
       response.errors = serviceResponse.errors;
-      response.message = authMessage.LOGIN_FAILED;
+      response.message = serviceResponse.message;
     }
   } catch (error) {
     console.log(`Something went wrong: controlelr :loginController:loginUser`);

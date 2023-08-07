@@ -1,11 +1,11 @@
 const reviewModel = require("../database/models/reviewModel");
 const { formatMongoData } = require("../helpers/dbHelper");
 const constants = require("../helpers/constants");
+const _ = require("lodash");
 
 // createReview
 module.exports.createReview = async (userId, body) => {
-  const response = { ...constants.defaultServerResponse };
-
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const reveiwResponse = await reviewModel.findOne({
       user: userId,
@@ -44,7 +44,7 @@ module.exports.createReview = async (userId, body) => {
 
 // getAllReviews
 module.exports.getAllReviews = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const { limit = 10, page = 1, status = "true", searchQuery } = serviceData;
     let conditions = {};
@@ -99,7 +99,7 @@ module.exports.getAllReviews = async (serviceData) => {
 
 // getReviewById
 module.exports.getReviewById = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const dbResponse = await reviewModel
       .findOne({
@@ -129,7 +129,7 @@ module.exports.getReviewById = async (serviceData) => {
 
 // updateReview By Admin
 module.exports.updateReview = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const { id, body } = serviceData;
     const dbResponse = await reviewModel.findByIdAndUpdate(id, body, {
@@ -154,7 +154,7 @@ module.exports.updateReview = async (serviceData) => {
 
 // updateReview By User
 module.exports.updateReviewByUser = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const { id, body } = serviceData;
     const dbResponse = await reviewModel.findByIdAndUpdate(id, body, {
@@ -181,8 +181,7 @@ module.exports.updateReviewByUser = async (serviceData) => {
 // deleteReview
 module.exports.deleteReview = async (serviceData) => {
   try {
-    const response = { ...constants.defaultServerResponse };
-
+    const response = _.cloneDeep(constants.defaultServerResponse);
     const isReviewExist = await reviewModel.findOne({
       _id: serviceData.id,
       isDeleted: true,

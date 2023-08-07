@@ -1,9 +1,10 @@
 const constants = require("../helpers/constants");
 const levelService = require("../services/levelService");
+const _ = require("lodash");
 
 // createLevel
 module.exports.createLevel = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await levelService.createLevel(req.body);
 
@@ -28,7 +29,7 @@ module.exports.createLevel = async (req, res) => {
 
 // getAllLevels
 module.exports.getAllLevels = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await levelService.getAllLevels(req.query);
 
@@ -56,8 +57,7 @@ module.exports.getAllLevels = async (req, res) => {
 
 // deleteLevel
 module.exports.deleteLevel = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
-
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await levelService.deleteLevel(req.params);
 
@@ -84,7 +84,7 @@ module.exports.deleteLevel = async (req, res) => {
 
 // getLevelById
 module.exports.getLevelById = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await levelService.getLevelById(req.params);
 
@@ -108,7 +108,7 @@ module.exports.getLevelById = async (req, res) => {
 
 // updateLevel
 module.exports.updateLevel = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await levelService.updateLevel({
       id: req.params.id,

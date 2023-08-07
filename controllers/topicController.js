@@ -1,9 +1,10 @@
 const topicService = require("../services/topicService");
 const constants = require("../helpers/constants");
+const _ = require("lodash");
 
 // createTopic
 module.exports.createTopic = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await topicService.createTopic(req.body);
 
@@ -28,7 +29,7 @@ module.exports.createTopic = async (req, res) => {
 
 // getAllTopics
 module.exports.getAllTopics = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await topicService.getAllTopics(req.query);
     if (serviceResponse.status === 400) {
@@ -54,7 +55,7 @@ module.exports.getAllTopics = async (req, res) => {
 
 // deleteTopic
 module.exports.deleteTopic = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await topicService.deleteTopic(req.params);
     if (serviceResponse.status == 400) {
@@ -79,7 +80,7 @@ module.exports.deleteTopic = async (req, res) => {
 
 // getTopic
 module.exports.getTopicById = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await topicService.getTopicById(req.params);
     if (serviceResponse.status === 400) {
@@ -101,7 +102,7 @@ module.exports.getTopicById = async (req, res) => {
 
 // updateTopic
 module.exports.updateTopic = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await topicService.updateTopic({
       id: req.params.id,
@@ -110,7 +111,7 @@ module.exports.updateTopic = async (req, res) => {
 
     if (serviceResponse.status === 400) {
       response.message = serviceResponse.message;
-      response.errors = serviceResponse.errors
+      response.errors = serviceResponse.errors;
     } else {
       response.body = serviceResponse;
       response.status = 200;

@@ -1,9 +1,10 @@
 const constants = require("../helpers/constants");
 const lessonService = require("../services/lessonService");
+const _ = require("lodash");
 
 // createlesson
 module.exports.createLesson = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await lessonService.createLesson(req.body);
 
@@ -27,7 +28,7 @@ module.exports.createLesson = async (req, res) => {
 // getlessonByID
 
 module.exports.getLessonById = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await lessonService.getLessonById(req.params);
 
@@ -51,7 +52,7 @@ module.exports.getLessonById = async (req, res) => {
 // getAllLessons
 
 module.exports.getAllLessons = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await lessonService.getAllLessons(req.query);
     if (serviceResponse === 400) {
@@ -77,7 +78,7 @@ module.exports.getAllLessons = async (req, res) => {
 
 // deletelesson
 module.exports.deleteLesson = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await lessonService.deleteLesson(req.params);
     if (serviceResponse.status == 400) {
@@ -102,7 +103,7 @@ module.exports.deleteLesson = async (req, res) => {
 
 // updatelesson
 module.exports.updateLesson = async (req, res) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const serviceResponse = await lessonService.updateLesson({
       id: req.params.id,

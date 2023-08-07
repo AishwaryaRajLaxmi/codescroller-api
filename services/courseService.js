@@ -2,10 +2,10 @@ const courseModel = require("../database/models/courseModel");
 const lessonModel = require("../database/models/lessonModel");
 const constants = require("../helpers/constants");
 const { formatMongoData } = require("../helpers/dbHelper");
-
+const _ = require("lodash");
 // createCourse
 module.exports.createCourse = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const courseResponse = await courseModel.findOne({
       name: serviceData.name,
@@ -41,7 +41,7 @@ module.exports.createCourse = async (serviceData) => {
 
 // getCourseById
 module.exports.getCourseById = async (serviceData, lessonData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     let dbResponse = await courseModel
       .findOne({
@@ -87,7 +87,7 @@ module.exports.getCourseById = async (serviceData, lessonData) => {
 
 // getAllCourse
 module.exports.getAllCourses = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const {
       limit = 10,
@@ -178,8 +178,7 @@ module.exports.getAllCourses = async (serviceData) => {
 // deleteService
 module.exports.deleteCourse = async (serviceData) => {
   try {
-    const response = { ...constants.defaultServerResponse };
-
+    const response = _.cloneDeep(constants.defaultServerResponse);
     const isCourseExist = await courseModel.findOne({
       _id: serviceData.id,
       isDeleted: true,
@@ -216,7 +215,7 @@ module.exports.deleteCourse = async (serviceData) => {
 
 // updateCourse
 module.exports.updateCourse = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const { id, body } = serviceData;
     const dbResponse = await courseModel.findByIdAndUpdate(id, body, {

@@ -6,7 +6,8 @@ const {
   getAllPurchasedCourses,
   getPurchasedCourseById,
   updatePurchasedCourse,
-  getPurchasedCourseByUserId,
+  getMySingleCourse,
+  getUsersByCourse,
 } = require("../apiValidationSchemas/purchasedCourseValidationSchema");
 const {
   validateBody,
@@ -39,9 +40,10 @@ purchasedCourseRouter.delete(
   purchasedCourseController.deletePurchasedCourse
 );
 
-// getPurchasedCourse
+// getllPurchasedCourse For User
 purchasedCourseRouter.get(
   "/myCourses",
+  validateQuery(getMySingleCourse),
   jsonwebtoken.validateUserToken,
   purchasedCourseController.getMyPurchasedCourse
 );
@@ -50,6 +52,7 @@ purchasedCourseRouter.get(
 purchasedCourseRouter.get(
   "/:id",
   validateParams(getPurchasedCourseById),
+  jsonwebtoken.validateAdminToken,
   purchasedCourseController.getPurchasedCourseByID
 );
 
@@ -60,6 +63,14 @@ purchasedCourseRouter.put(
   jsonwebtoken.validateAdminToken,
   validateBody(updatePurchasedCourse),
   purchasedCourseController.updatePurchasedCourse
+);
+
+// purchasedCourse by student
+purchasedCourseRouter.get(
+  "/getUsers/:courseId",
+  validateParams(getUsersByCourse),
+  jsonwebtoken.validateAdminToken,
+  purchasedCourseController.getUserByCourse
 );
 
 module.exports = purchasedCourseRouter;

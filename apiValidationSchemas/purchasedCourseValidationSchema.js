@@ -35,6 +35,10 @@ module.exports.getPurchasedCourseById = Joi.object({
   id: Joi.string().custom(customCallback).required().label("ID"),
 });
 
+// getUsersByCourse
+module.exports.getUsersByCourse = Joi.object({
+  courseId: Joi.string().custom(customCallback).required().label("ID"),
+});
 
 // Get All Purchased Courses Validation Schema
 
@@ -56,4 +60,8 @@ module.exports.getAllPurchasedCourses = Joi.object({
 // Update Purchased Course Validation Schema
 module.exports.updatePurchasedCourse = Joi.object({
   status: Joi.boolean().label("Status").required(),
+});
+
+module.exports.getMySingleCourse = Joi.object({
+  course: Joi.string().custom(customCallback).label("Course"),
 });

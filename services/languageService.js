@@ -1,10 +1,11 @@
 const constants = require("../helpers/constants");
 const { formatMongoData } = require("../helpers/dbHelper");
 const languageModel = require("../database/models/languageModel");
+const _ = require("lodash");
 
 // createLanguage
 module.exports.createLanguage = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const languageResponse = await languageModel.findOne({
       name: serviceData.name,
@@ -40,7 +41,7 @@ module.exports.createLanguage = async (serviceData) => {
 
 // getAllLanguages
 module.exports.getAllLanguages = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const { limit = 10, page = 1, status = "true", searchQuery } = serviceData;
     let conditions = {};
@@ -98,8 +99,7 @@ module.exports.getAllLanguages = async (serviceData) => {
 // deleteLanguage
 module.exports.deleteLanguage = async (serviceData) => {
   try {
-    const response = { ...constants.defaultServerResponse };
-
+    const response = _.cloneDeep(constants.defaultServerResponse);
     const isLanguageExist = await languageModel.findOne({
       _id: serviceData.id,
       isDeleted: true,
@@ -138,7 +138,7 @@ module.exports.deleteLanguage = async (serviceData) => {
 
 // getLanguageById
 module.exports.getLanguageById = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const dbResponse = await languageModel.findOne({
       _id: serviceData.id,
@@ -165,7 +165,7 @@ module.exports.getLanguageById = async (serviceData) => {
 
 // updateLanguage
 module.exports.updateLanguage = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const { id, body } = serviceData;
     const dbResponse = await languageModel.findByIdAndUpdate(id, body, {

@@ -2,10 +2,12 @@ const purchasedCourseModel = require("../database/models/purchasedCourseModel");
 const purchasedCourseHistoryModel = require("../database/models/purchasedCourseHistoryModel");
 const constants = require("../helpers/constants");
 const { formatMongoData } = require("../helpers/dbHelper");
+const _ = require("lodash");
+const lessonModel = require("../database/models/lessonModel");
 
 // createPurchasedCourse
 module.exports.createPurchasedCourse = async (...serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const [userId, body] = serviceData;
     const purchasedCourseResponse = await purchasedCourseModel.findOne({
@@ -56,8 +58,7 @@ module.exports.createPurchasedCourse = async (...serviceData) => {
 
 // getPurchasedCourseById
 module.exports.getPurchasedCourseByID = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
-  // console.log(serviceData.userId);
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     let dbResponse = await purchasedCourseModel
       .findOne({
@@ -76,29 +77,49 @@ module.exports.getPurchasedCourseByID = async (serviceData) => {
       return response;
     }
 
+
+    // find lesson and add
+    let lessonResponse = await lessonModel.findOne({
+      course: dbResponse.course,
+      isDeleted: false,
+    });
+    
+    if (lessonResponse) {
+      dbResponse.lessons = lessonResponse._id; // Directly add lessonResponse to dbResponse
+    }
+   
     response.body = formatMongoData(dbResponse);
     response.status = 200;
     return response;
   } catch (error) {
     console.log(
-      `Something went wrong: service : purchasedCourseService : getPurchasedCourseByID`
+      `Something went wrong: service : purchasedCourseService : getPurchasedCourseByID`,
+      error
     );
     throw new Error(error);
   }
 };
 
+
 // getMyPurchasedCourse
-module.exports.getMyPurchasedCourse = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
-  // console.log(serviceData.userId);
+module.exports.getMyPurchasedCourse = async (serviceData, singleCourse) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
+  const { course } = singleCourse;
+  let conditions = {};
+  conditions.isDeleted = false;
+
   try {
+    if (course) {
+      conditions.course = course; //
+    }
+
     let dbResponse = await purchasedCourseModel
-      .findOne({
+      .find({
         user: serviceData.userId,
-        isDeleted: false,
+        ...conditions, // Merge the conditions object
       })
-      .populate({ path: "user", select: "name _id" })
-      .populate({ path: "course", select: "name _id" });
+      .populate({ path: "course", select: "name _id" })
+      .populate({ path: "user", select: "name _id" });
 
     if (!dbResponse) {
       response.errors = {
@@ -122,7 +143,7 @@ module.exports.getMyPurchasedCourse = async (serviceData) => {
 
 // getAllPurchasedCourses
 module.exports.getAllPurchasedCourses = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const {
       limit = 10,
@@ -168,8 +189,7 @@ module.exports.getAllPurchasedCourses = async (serviceData) => {
       conditions.couponName = couponName;
     }
 
-    // console.log(conditions)
-    // count document
+    
     const totalRecords = await purchasedCourseModel.countDocuments(conditions);
     const totalPages = Math.ceil(totalRecords / parseInt(limit));
 
@@ -180,7 +200,6 @@ module.exports.getAllPurchasedCourses = async (serviceData) => {
       .populate({ path: "user", select: "name _id" })
       .populate({ path: "course", select: "name _id" });
 
-    // console.log(dbResponse)
 
     if (!dbResponse) {
       response.errors = {
@@ -251,7 +270,7 @@ module.exports.deletePurchasedCourse = async (serviceData) => {
 
 // updatePurchasedCourse
 module.exports.updatePurchasedCourse = async (serviceData) => {
-  const response = { ...constants.defaultServerResponse };
+  const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const { id, body } = serviceData;
     const dbResponse = await purchasedCourseModel.findByIdAndUpdate(id, body, {
@@ -271,6 +290,37 @@ module.exports.updatePurchasedCourse = async (serviceData) => {
   } catch (error) {
     console.log(
       `Something went wrong: Service : purchasedCourseService : updatePurchasedCourse ${error.message}`
+    );
+    throw new Error(error);
+  }
+};
+
+// getUserByCoure
+module.exports.getUserByCourse = async (serviceData) => {
+  const response = _.cloneDeep(constants.defaultServerResponse); // console.log(serviceData.userId);
+  try {
+    let dbResponse = await purchasedCourseModel
+      .find({
+        course: serviceData.courseId,
+        isDeleted: false,
+      })
+      .populate({ path: "user", select: "name _id" })
+      .populate({ path: "course", select: "name _id" });
+
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.userMessage.USER_NOT_FOUND,
+      };
+      response.message = constants.userMessage.USER_NOT_FOUND;
+      return response;
+    }
+
+    response.body = formatMongoData(dbResponse);
+    response.status = 200;
+    return response;
+  } catch (error) {
+    console.log(
+      `Something went wrong: service : purchasedCourseService : getUserByCourse`
     );
     throw new Error(error);
   }
