@@ -668,3 +668,62 @@ module.exports.updateMyPassword = async (serviceData) => {
     throw new Error(error);
   }
 };
+
+module.exports.forgetPassword = async (serviceData) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
+  try {
+    // Check if Email already exists
+    const userResponse = await userModel.findOne({
+      email: serviceData.email,
+    });
+
+    if (userResponse) {
+      // Generate OTP
+      const currentDate = new Date();
+      const otp = optGenerator.createOTP();
+      const otpExpires = currentDate.setMinutes(currentDate.getMinutes() + 3);
+
+      // Send OTP
+      const smsResponse = await smsHelper.sendOTPEmail({
+        emailTo: userResponse.email,
+        subject: "OTP Verification",
+        name: userResponse.name,
+        otp,
+      });
+
+      if (smsResponse.status == true) {
+        // Update user data in the database
+        await userModel.updateOne(
+          { _id: userResponse._id }, // Assuming _id is the user's unique identifier
+          {
+            $set: {
+              otp: otp,
+              otpExpiredAt: otpExpires,
+            },
+          }
+        );
+
+        response.body = formatMongoData(userResponse);
+        response.message = "An OTP has been sent to your email";
+        response.status = 200;
+      } else {
+        response.message = smsResponse.message;
+        response.errors.error = smsResponse.message;
+      }
+
+      return response;
+    } else {
+      response.errors = {
+        email: constants.userMessage.USER_NOT_FOUND,
+      };
+      response.message = constants.userMessage.USER_NOT_FOUND;
+    }
+
+    return response;
+  } catch (error) {
+    console.log(
+      `Something went wrong in service: userService: forgetPassword\nError: ${error.message}`
+    );
+    throw new Error(error.message);
+  }
+};

@@ -125,7 +125,7 @@ module.exports.updateMainSlider = async (req, res) => {
     } else {
       response.body = serviceResponse.body;
       response.status = 200;
-      response.message = constants.mainSliderMessage.MAIN_SLIDER_DELETED;
+      response.message = constants.mainSliderMessage.MAIN_SLIDER_UPDATED;
     }
   } catch (error) {
     console.log(

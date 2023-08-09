@@ -5,7 +5,7 @@ const {
   createMainSlider,
   updateMainSlider,
   getAllMainSliders,
-  getMainSliderById
+  getSliderById
 } = require("../apiValidationSchemas/mainSliderValidation");
 const {
   validateBody,
@@ -32,7 +32,7 @@ mainSliderRouter.get(
 // deleteMainSlider
 mainSliderRouter.delete(
   "/:id",
-  validateParams(getMainSliderById),
+  validateParams(getSliderById),
   jsonwebtoken.validateAdminToken,
   mainSliderController.deleteMainSlider
 );
@@ -40,14 +40,14 @@ mainSliderRouter.delete(
 // getMainSlider
 mainSliderRouter.get(
   "/:id",
-  validateParams(getMainSliderById),
+  validateParams(getSliderById),
   mainSliderController.getMainSliderById
 );
 
 // updateMainSlider
 mainSliderRouter.put(
   "/:id",
-  validateParams(getMainSliderById),
+  validateParams(getSliderById),
   jsonwebtoken.validateAdminToken,
   validateBody(updateMainSlider),
   mainSliderController.updateMainSlider

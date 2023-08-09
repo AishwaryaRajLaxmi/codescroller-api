@@ -94,6 +94,7 @@ userRouter.put(
 );
 
 
+
 // This is for User
 // updateMyProfile
 userRouter.put(
@@ -103,6 +104,10 @@ userRouter.put(
   userController.updateMyProfile
 );
 
+// forget password
+userRouter.put("/forgetPassword",validateBody(userValidationSchema.forgetPassword),
+jwtValidation.validateUserToken,
+userController.forgetPassword)
 
 // updateUser
 userRouter.put(

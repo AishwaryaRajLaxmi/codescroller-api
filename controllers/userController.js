@@ -328,3 +328,29 @@ module.exports.updateMyPassword = async (req, res) => {
   }
   res.status(response.status).send(response);
 };
+
+
+// forgetPassword
+module.exports.forgetPassword = async (req, res) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
+  try {
+    const serviceResponse = await userService.forgetPassword(req.body);
+
+    if (serviceResponse.status === 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
+      response.body = serviceResponse.body;
+      response.message = serviceResponse.message;
+      response.status = 200;
+    }
+  } catch (error) {
+    console.log(
+      `Something went wrong controller : userController :forgetPassword \nError: ${error.message}`
+    );
+
+    response.message = error.message;
+    response.errors = error;
+  }
+  res.status(response.status).send(response);
+};

@@ -6,14 +6,16 @@ const _ = require("lodash");
 // createMainSlider
 module.exports.createMainSlider = async (serviceData) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
+  console.log(serviceData.name);
   try {
     const mainSliderResponse = await mainSliderModel.findOne({
-      name: serviceData.name,
+      title: serviceData.title,
     });
 
+    console.log(mainSliderResponse);
     if (mainSliderResponse) {
       response.errors = {
-        name: constants.mainSliderMessage.MAIN_SLIDER_ALREADY_EXISTS
+        name: constants.mainSliderMessage.MAIN_SLIDER_ALREADY_EXISTS,
       };
       response.message = constants.mainSliderMessage.MAIN_SLIDER_ALREADY_EXISTS;
       return response;
