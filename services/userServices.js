@@ -512,7 +512,8 @@ module.exports.deleteUser = async (serviceData) => {
   }
 };
 
-// getUserById
+
+
 module.exports.getUserById = async (serviceData) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
   try {
@@ -533,10 +534,43 @@ module.exports.getUserById = async (serviceData) => {
     response.status = 200;
     return response;
   } catch (error) {
-    console.log(`Something went wrong: service : userService : deleteUser`);
+    console.log(`Something went wrong: service : userService : getUserById`);
     throw new Error(error);
   }
 };
+
+// getMyProfile By User
+module.exports.getMyProfile = async (serviceData) => {
+  console.log(serviceData)
+  const response = _.cloneDeep(constants.defaultServerResponse);
+  try {
+    const dbResponse = await userModel.findOne({
+      _id: serviceData.userId,
+      isDeleted: false,
+    });
+
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.userMessage.USER_NOT_FOUND,
+      };
+      response.message = constants.userMessage.USER_NOT_FOUND;
+      return response;
+    }
+
+    response.body = formatMongoData(dbResponse);
+    response.status = 200;
+    return response;
+  } catch (error) {
+    console.log(`Something went wrong: service : userService : getUserById`);
+    throw new Error(error);
+  }
+};
+
+
+
+
+
+
 
 // UpdateUser
 
@@ -561,6 +595,36 @@ module.exports.updateUser = async (serviceData) => {
   } catch (error) {
     console.log(
       `Somthing Went Wrong Service: updateService: updateUser`,
+      error.message
+    );
+    throw new Error(error);
+  }
+};
+
+
+// updateMyProfile
+
+module.exports.updateMyProfile = async (serviceData) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
+    try {
+    const { id, body } = serviceData;
+    const dbResponse = await userModel.findByIdAndUpdate(id, body, {
+      new: true,
+    });
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.userMessage.USER_NOT_UPDATED,
+      };
+      response.message = constants.userMessage.USER_NOT_UPDATED;
+      return response;
+    }
+
+    response.body = formatMongoData(dbResponse);
+    response.status = 200;
+    return response;
+  } catch (error) {
+    console.log(
+      `Somthing Went Wrong Service: updateService: updateMyProfile`,
       error.message
     );
     throw new Error(error);

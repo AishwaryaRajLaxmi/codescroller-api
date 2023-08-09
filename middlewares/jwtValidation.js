@@ -46,6 +46,7 @@ module.exports.validateUserToken = (req, res, next) => {
   } catch (error) {
     response.status = 403;
     response.message = error.message;
+    console.log("here is the error")
     return res.status(response.status).send(response);
   }
 };

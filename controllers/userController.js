@@ -221,6 +221,27 @@ module.exports.getUserById = async (req, res) => {
   }
   res.status(response.status).send(response);
 };
+// getMyProfile
+module.exports.getMyProfile = async (req, res) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
+  try {
+    const serviceResponse = await userService.getMyProfile(req.params);
+    if (serviceResponse.status === 400) {
+      response.message = serviceResponse.message;
+      response.errors = serviceResponse.errors;
+    } else {
+      response.body = serviceResponse.body;
+      response.status = 200;
+      response.message = constants.userMessage.USER_FETCHED;
+    }
+  } catch (error) {
+    console.log(`Something went wrong:controller:userController: getMyProfile
+    Error:${error.message}`);
+    response.message = error.message;
+    response.errors = error;
+  }
+  res.status(response.status).send(response);
+};
 
 // updateUser
 module.exports.updateUser = async (req, res) => {
@@ -242,6 +263,35 @@ module.exports.updateUser = async (req, res) => {
   } catch (error) {
     console.log(
       `Something went wrong: Controller : userController : updateController ${error.message}`
+    );
+
+    response.errors = error;
+    response.message = error.message;
+  }
+  res.status(response.status).send(response);
+};
+
+
+// updateMyProfile
+module.exports.updateMyProfile = async (req, res) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
+  try {
+    const serviceResponse = await userService.updateMyProfile({
+      id: req.params.userId,
+      body: req.body,
+    });
+
+    if (serviceResponse.status === 400) {
+      response.message = serviceResponse.message;
+      response.errors = serviceResponse.errors;
+    } else {
+      response.body = serviceResponse.body;
+      response.status = 200;
+      response.message = constants.userMessage.USER_UPDATED;
+    }
+  } catch (error) {
+    console.log(
+      `Something went wrong: Controller : userController : updateMyProfileController ${error.message}`
     );
 
     response.errors = error;

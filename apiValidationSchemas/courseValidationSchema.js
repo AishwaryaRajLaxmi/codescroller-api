@@ -33,6 +33,7 @@ module.exports.createCourse = Joi.object({
   sellingPrice: Joi.number().required().label("Selling Price"),
   mrp: Joi.number().required().label("MRP"),
   validity: Joi.string().required().label("Validity"),
+  defaultVideo:Joi.string().allow("").label("Default Video"),
   isReturnable: Joi.boolean().required().label("Is Returnable"),
   returnDays: Joi.number().required().label("Return Days"),
 });
@@ -88,6 +89,7 @@ module.exports.updateCourse = Joi.object({
   sellingPrice: Joi.number().required().label("Selling Price"),
   mrp: Joi.number().required().label("MRP"),
   validity: Joi.string().required().label("Validity"),
+  defaultVideo:Joi.string().allow("").label("Default Video"),
   isReturnable: Joi.boolean().required().label("Is Returnable"),
   returnDays: Joi.number().required().label("Return Days"),
   status: Joi.boolean().label("Status"),

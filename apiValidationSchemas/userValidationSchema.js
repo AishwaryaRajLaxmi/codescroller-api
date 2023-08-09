@@ -67,6 +67,25 @@ module.exports.updateUser = Joi.object({
   isDeleted: Joi.boolean().label("Is Deleted"),
 });
 
+// updateMyProfile  for user
+module.exports.updateMyProfile = Joi.object({
+  name: Joi.string().trim().label("Name"),
+  email: Joi.string().email().trim().label("Email"),
+  mobile: Joi.string()
+    .regex(/^[6-9]\d{9}$/)
+    .messages({
+      "string.empty": `"Mobile Number" should be 10 digit`,
+      "string.pattern.base": `"Mobile Number" must be a valid number`,
+      "any.required": `"Mobile Number" is a required field`,
+    })
+    .label("Mobile"),
+  address: Joi.string().label("Address"),
+  city: Joi.string().label("City"),
+  landmark: Joi.string().label("Landmark"),
+  pincode: Joi.string().label("Pincode"),
+  state: Joi.string().label("State"),
+});
+
 //getUserById
 module.exports.getUserById = Joi.object({
   id: Joi.string().custom(customCallback).label("Id"),

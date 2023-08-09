@@ -5,6 +5,7 @@ const {
   authMessage,
   adminMessage,
 } = require("../helpers/constants");
+const constants=require('../helpers/constants')
 
 // registerAdmin
 module.exports.registerAdmin = async (req, res) => {

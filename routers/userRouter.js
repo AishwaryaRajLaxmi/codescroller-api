@@ -8,7 +8,18 @@ const {
   validateQuery,
 } = require("../middlewares/joiSchemaValidation");
 const jwtValidation = require("../middlewares/jwtValidation");
+const {
+  validateAdminToken,
+  validateUserToken,
+} = require("../middlewares/jwtValidation");
 
+// getMyProfile for user
+
+userRouter.get(
+  "/myProfile",
+  jwtValidation.validateUserToken,
+  userController.getMyProfile
+);
 // registerUser
 userRouter.post(
   "/register",
@@ -37,7 +48,7 @@ userRouter.post(
   userController.loginUser
 );
 
-//getAllUser
+// getAllUser
 userRouter.get(
   "/",
   jwtValidation.validateAdminToken,
@@ -61,16 +72,6 @@ userRouter.get(
   userController.getUserById
 );
 
-// updateUser
-
-userRouter.put(
-  "/:id",
-  validateParams(userValidationSchema.getUserById),
-  jwtValidation.validateAdminToken,
-  validateBody(userValidationSchema.updateUser),
-  userController.updateUser
-);
-
 // isMobileExists
 userRouter.get(
   "/isMobileExists/:mobile",
@@ -82,6 +83,25 @@ userRouter.get(
   "/isEmailExists/:email",
   validateParams(userValidationSchema.isEmailExists),
   userController.isEmailExists
+);
+
+// This is for User
+// updateMyProfile
+userRouter.put(
+  "/update",
+  validateBody(userValidationSchema.updateMyProfile),
+  jwtValidation.validateUserToken,
+  userController.updateMyProfile
+);
+
+// updateUser
+
+userRouter.put(
+  "/:id",
+  validateParams(userValidationSchema.getUserById),
+  jwtValidation.validateAdminToken,
+  validateBody(userValidationSchema.updateUser),
+  userController.updateUser
 );
 
 module.exports = userRouter;

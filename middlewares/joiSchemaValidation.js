@@ -15,6 +15,7 @@ module.exports.validateBody = (schema) => {
       // console.log(modifyError);
       response.message = constants.validationMessage.VALIDATION_FAILED;
       response.errors = modifyError;
+      console.log("here is the error")
       res.status(response.status).send(response);
     } else {
       return next();
