@@ -85,6 +85,15 @@ userRouter.get(
   userController.isEmailExists
 );
 
+// update My Password
+userRouter.put(
+  "/updateMyPassword",
+  validateBody(userValidationSchema.updateMyPassword),
+  jwtValidation.validateUserToken,
+  userController.updateMyPassword
+);
+
+
 // This is for User
 // updateMyProfile
 userRouter.put(
@@ -94,8 +103,8 @@ userRouter.put(
   userController.updateMyProfile
 );
 
-// updateUser
 
+// updateUser
 userRouter.put(
   "/:id",
   validateParams(userValidationSchema.getUserById),
@@ -103,5 +112,4 @@ userRouter.put(
   validateBody(userValidationSchema.updateUser),
   userController.updateUser
 );
-
 module.exports = userRouter;

@@ -299,3 +299,32 @@ module.exports.updateMyProfile = async (req, res) => {
   }
   res.status(response.status).send(response);
 };
+
+
+// updateMyPassword
+module.exports.updateMyPassword = async (req, res) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
+  try {
+    const serviceResponse = await userService.updateMyPassword({
+      id: req.params.userId,
+      body: req.body,
+    });
+
+    if (serviceResponse.status === 400) {
+      response.message = serviceResponse.message;
+      response.errors = serviceResponse.errors;
+    } else {
+      response.body = serviceResponse.body;
+      response.status = 200;
+      response.message = constants.authMessage.PASSWORD_UPDATED;
+    }
+  } catch (error) {
+    console.log(
+      `Something went wrong: Controller : userController : updateMyPasswordController ${error.message}`
+    );
+
+    response.errors = error;
+    response.message = error.message;
+  }
+  res.status(response.status).send(response);
+};

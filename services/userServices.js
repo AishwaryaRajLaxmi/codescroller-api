@@ -512,8 +512,6 @@ module.exports.deleteUser = async (serviceData) => {
   }
 };
 
-
-
 module.exports.getUserById = async (serviceData) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
   try {
@@ -541,7 +539,7 @@ module.exports.getUserById = async (serviceData) => {
 
 // getMyProfile By User
 module.exports.getMyProfile = async (serviceData) => {
-  console.log(serviceData)
+  console.log(serviceData);
   const response = _.cloneDeep(constants.defaultServerResponse);
   try {
     const dbResponse = await userModel.findOne({
@@ -565,12 +563,6 @@ module.exports.getMyProfile = async (serviceData) => {
     throw new Error(error);
   }
 };
-
-
-
-
-
-
 
 // UpdateUser
 
@@ -601,12 +593,11 @@ module.exports.updateUser = async (serviceData) => {
   }
 };
 
-
 // updateMyProfile
 
 module.exports.updateMyProfile = async (serviceData) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
-    try {
+  try {
     const { id, body } = serviceData;
     const dbResponse = await userModel.findByIdAndUpdate(id, body, {
       new: true,
@@ -625,6 +616,53 @@ module.exports.updateMyProfile = async (serviceData) => {
   } catch (error) {
     console.log(
       `Somthing Went Wrong Service: updateService: updateMyProfile`,
+      error.message
+    );
+    throw new Error(error);
+  }
+};
+
+// updateMyPassword For User
+
+module.exports.updateMyPassword = async (serviceData) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
+  try {
+    const { id, body } = serviceData;
+    const dbResponse = await userModel.findById(id);
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.userMessage.USER_NOT_FOUND,
+      };
+      response.message = constants.userMessage.USER_NOT_FOUND;
+      return response;
+    }
+
+    // Match Old Password with New Password
+    const isMatched = await bcryptjs.compare(
+      body.oldPassword,
+      dbResponse.password
+    ); // Compare oldPassword with the hashed password
+
+    if (isMatched) {
+      const newPasswordHash = await bcryptjs.hash(body.newPassword, 10); // Hash the new password
+      const updatedDbResponse = await userModel.findByIdAndUpdate(id, {
+        password: newPasswordHash,
+      }); // Update the password in the database
+      response.body = updatedDbResponse;
+      response.status = 200;
+    } else {
+      response.errors = {
+        user: constants.authMessage.PASSWORD_MISMATCHED,
+      };
+      response.message = constants.authMessage.PASSWORD_MISMATCHED;
+    }
+
+    response.body = formatMongoData(dbResponse);
+    response.status = 200;
+    return response;
+  } catch (error) {
+    console.log(
+      `Something Went Wrong Service: updateService: updateMyPassword`,
       error.message
     );
     throw new Error(error);

@@ -25,6 +25,8 @@ module.exports = {
     REGISTRATION_SUCCESS: "Registration Successfully !",
     REGISTRATION_FAILED: "Registration Failed !",
     ACCOUNT_VALIDATED: "Account Validated Successfully !",
+    PASSWORD_UPDATED: "Password Updated Successfully !",
+    PASSWORD_MISMATCHED:"Password Mismatched With Old Password, Please Try Again!"
   },
 
   adminMessage: {
