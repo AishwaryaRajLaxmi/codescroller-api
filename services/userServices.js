@@ -15,6 +15,21 @@ module.exports.registerUser = async (serviceData) => {
       email: serviceData.email,
     });
 
+    const userMobileResponse = await userModel.findOne({
+      mobile: serviceData.mobile,
+    });
+
+    if (userResponse || userMobileResponse) {
+      response.errors = {
+        email: userResponse ? "Your email is already registered" : "",
+        mobile: userMobileResponse
+          ? "Your mobile number is already registered"
+          : "",
+      };
+      response.message = "User already registered";
+      return response;
+    }
+
     if (userResponse) {
       // disabled account
       if (userResponse.status === false) {

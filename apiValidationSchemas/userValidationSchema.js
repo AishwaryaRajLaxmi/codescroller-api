@@ -69,6 +69,7 @@ module.exports.getAllUsers = Joi.object({
 module.exports.updateUser = Joi.object({
   name: Joi.string().trim().required().label("Name"),
   email: Joi.string().email().trim().required().label("Email"),
+
   mobile: Joi.string()
     .regex(/^[6-9]\d{9}$/)
     .required()
@@ -100,6 +101,12 @@ module.exports.updateMyProfile = Joi.object({
   landmark: Joi.string().label("Landmark"),
   pincode: Joi.string().label("Pincode"),
   state: Joi.string().label("State"),
+  dob: Joi.date().required().label("Date Of Birth"),
+  gender: Joi.string()
+    .trim()
+    .required()
+    .label("Gender")
+    .valid("male", "female", "others"),
 });
 
 //getUserById

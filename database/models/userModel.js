@@ -23,6 +23,15 @@ const userSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
+    dob: {
+      type: Date,
+      trim: true,
+    },
+    gender: {
+      type: String,
+      trim: true,
+      enum: ["male", "female", "others"],
+    },
     address: {
       type: String,
       trim: true,

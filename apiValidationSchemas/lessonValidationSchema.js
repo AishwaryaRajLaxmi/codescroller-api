@@ -29,7 +29,7 @@ module.exports.getLessonById = Joi.object({
 const contentSchema = Joi.object({
   name: Joi.string().required().label("Content Name"),
   slug: Joi.string().required().label("Slug"),
-  description: Joi.string().label("Description"),
+  description: Joi.string().allow("").label("Description"),
   contentType: Joi.string().label("Content Type").valid("video", "pdf"),
   contentSource: Joi.string()
     .label("Content Source")

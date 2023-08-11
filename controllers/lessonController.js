@@ -110,11 +110,12 @@ module.exports.updateLesson = async (req, res) => {
       body: req.body,
     });
 
-    if (serviceResponse.status == 400) {
+    if (serviceResponse.status== 400) {
       response.errors = serviceResponse.errors;
       response.message = serviceResponse.message;
+      // console.log(response.status)
     } else {
-      response.body = serviceResponse;
+      response.body = serviceResponse.body;
       response.status = 200;
       response.message = constants.lessonMessage.LESSON_UPDATED;
     }
@@ -123,10 +124,8 @@ module.exports.updateLesson = async (req, res) => {
       `Somthing Went Wrong Controller: lessonController: updateLesson`,
       error.message
     );
-
     response.errors = error;
     response.message = error.message;
-    throw new Error(error);
   }
   res.status(response.status).send(response);
 };

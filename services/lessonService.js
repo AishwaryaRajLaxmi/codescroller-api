@@ -224,11 +224,13 @@ module.exports.updateLesson = async (serviceData) => {
       response.errors = {
         error: constants.lessonMessage.LESSON_NOT_UPDATED,
       };
+      response.status=400;
       response.message = constants.lessonMessage.LESSON_NOT_UPDATED;
       return response;
     }
     response.body = formatMongoData(dbResponse);
     response.status = 200;
+    return response;
   } catch (error) {
     console.log(
       `Something went wrong: Service : lessonService : updateLesson ${error.message}`
