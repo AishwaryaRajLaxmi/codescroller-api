@@ -81,28 +81,34 @@ module.exports.updateLessonContent = async (serviceData) => {
 module.exports.getLessonContentById = async (serviceData) => {
   try {
     const response = _.cloneDeep(constants.defaultServerResponse);
-    const dbResponse = await lessonModel.findOne(
-      {
-        "contents._id": serviceData.contentId,
-        "contents.isDeleted": false,
-      },
-      {
-        "contents.$": 1,
-      }
-    );
 
-    if (
-      !dbResponse ||
-      !dbResponse.contents ||
-      dbResponse.contents.length === 0
-    ) {
+    const contentId = serviceData.contentId;
+
+    // Find the lesson that contains the matching content by _id
+    const lesson = await lessonModel.findOne({
+      "contents._id": contentId
+    });
+
+    if (!lesson || !lesson.contents || lesson.contents.length === 0) {
       response.errors = {
         error: constants.contentMessage.CONTENT_NOT_FOUND,
       };
       response.message = constants.contentMessage.CONTENT_NOT_FOUND;
       return response;
     }
-    response.body = formatMongoData(dbResponse.contents[0]);
+
+    // Find the matching content within the contents array by comparing _id
+    const matchingContent = lesson.contents.find(content => content._id.toString() === contentId);
+
+    if (!matchingContent) {
+      response.errors = {
+        error: constants.contentMessage.CONTENT_NOT_FOUND,
+      };
+      response.message = constants.contentMessage.CONTENT_NOT_FOUND;
+      return response;
+    }
+
+    response.body = formatMongoData(matchingContent);
     response.status = 200;
     return response;
   } catch (error) {
@@ -112,6 +118,8 @@ module.exports.getLessonContentById = async (serviceData) => {
     throw new Error(error);
   }
 };
+
+
 
 module.exports.deleteLessonContent = async (serviceData) => {
   try {
