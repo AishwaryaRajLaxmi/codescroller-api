@@ -10,8 +10,19 @@ module.exports.createLessonContent = async (lessonId, body) => {
     const lessonResponse = await lessonModel.findOne({
       _id: lessonId,
     });
-
+    
     if (lessonResponse) {
+      const duplicateContent = lessonResponse.contents.find(
+        (content) => content.slug === body.slug
+      );
+
+      if (duplicateContent) {
+        response.errors = {
+          name: "Duplicate Slug Not Allowed",
+        };
+        response.status = 400;
+        return response;
+      }
       lessonResponse.contents.push(body);
       await lessonResponse.save();
       response.body = {
