@@ -9,7 +9,7 @@ const courseSchema = mongoose.Schema(
     slug: {
       type: String,
       trim: true,
-      unique:true,
+      unique: true,
       required: true,
     },
     description: {
@@ -32,6 +32,16 @@ const courseSchema = mongoose.Schema(
       trim: true,
       default: "",
     },
+    defaultVideoSource: {
+      type: String,
+      trim: true,
+      enum: ["youtube", "dailymotion", "others"],
+    },
+    courseDuration: {
+      type: String,
+      trim: true,
+    },
+
     instructorImage: {
       type: String,
       trim: true,

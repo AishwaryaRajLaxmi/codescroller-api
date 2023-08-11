@@ -28,12 +28,16 @@ module.exports.createCourse = Joi.object({
     .required()
     .label("Topics"),
   highlights: Joi.string().allow("").label("Highlights"),
+  defaultVideoSource: Joi.string()
+    .valid("youtube", "dailymotion", "others")
+    .label("Default Video Source"),
+  courseDuration: Joi.string().label("Course Duration"),
   requirements: Joi.string().allow("").label("Requirement"),
   prerequisite: Joi.string().allow("").label("Prerequisite"),
   sellingPrice: Joi.number().required().label("Selling Price"),
   mrp: Joi.number().required().label("MRP"),
   validity: Joi.string().required().label("Validity"),
-  defaultVideo:Joi.string().allow("").label("Default Video"),
+  defaultVideo: Joi.string().allow("").label("Default Video"),
   isReturnable: Joi.boolean().required().label("Is Returnable"),
   returnDays: Joi.number().required().label("Return Days"),
 });
@@ -74,6 +78,10 @@ module.exports.updateCourse = Joi.object({
   courseTag: Joi.string().allow("").label("Course Tag"),
   language: Joi.string().custom(customCallback).required().label("Language"),
   level: Joi.string().custom(customCallback).required().label("Level"),
+  defaultVideoSource: Joi.string()
+    .valid("youtube", "dailymotion", "others")
+    .label("Default Video Source"),
+  courseDuration: Joi.string().label("Course Duration"),
   category: Joi.string().custom(customCallback).required().label("Category"),
   subCategories: Joi.array()
     .items(Joi.string().custom(customCallback).required())
@@ -89,7 +97,7 @@ module.exports.updateCourse = Joi.object({
   sellingPrice: Joi.number().required().label("Selling Price"),
   mrp: Joi.number().required().label("MRP"),
   validity: Joi.string().required().label("Validity"),
-  defaultVideo:Joi.string().allow("").label("Default Video"),
+  defaultVideo: Joi.string().allow("").label("Default Video"),
   isReturnable: Joi.boolean().required().label("Is Returnable"),
   returnDays: Joi.number().required().label("Return Days"),
   status: Joi.boolean().label("Status"),
