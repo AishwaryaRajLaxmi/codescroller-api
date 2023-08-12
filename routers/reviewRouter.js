@@ -32,6 +32,13 @@ reviewRouter.get(
   validateQuery(getAllReviews),
   reviewController.getAllReviews
 );
+//getMyReview
+reviewRouter.get(
+  "/myReviews",
+  validateQuery(getAllReviews),
+  validateUserToken,
+  reviewController.getMyReview
+);
 
 //getReviewById
 reviewRouter.get(
@@ -40,12 +47,6 @@ reviewRouter.get(
   reviewController.getReviewById
 );
 
-//getMyReview
-reviewRouter.get(
-  "/:id",validateUserToken,
-  validateParams(getReviewById),
-  reviewController.getReviewById
-);
 
 // deleteReveiw
 reviewRouter.delete(

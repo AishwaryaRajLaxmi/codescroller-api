@@ -41,13 +41,42 @@ module.exports.getAllReviews = async (req, res) => {
       response.body = serviceResponse.body;
       response.totalPages = serviceResponse.totalPages;
       response.totalRecords = serviceResponse.totalRecords;
-      response.averageRating=serviceResponse.averageRating
+      response.averageRating = serviceResponse.averageRating;
       response.page = serviceResponse.page;
       response.status = 200;
       response.message = constants.reviewsMessage.REVIEWS_FETCHED;
     }
   } catch (error) {
     console.log(`Something went wrong:controller:reviewController: getAllReviews
+    Error:${error.message}`);
+    response.message = error.message;
+    response.errors = error;
+  }
+  res.status(response.status).send(response);
+};
+// getMyReview
+module.exports.getMyReview = async (req, res) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
+  try {
+    const serviceResponse = await reviewService.getMyReview(
+      req.params,
+      req.query
+    );
+
+    if (serviceResponse.status === 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
+      response.body = serviceResponse.body;
+      response.totalPages = serviceResponse.totalPages;
+      response.totalRecords = serviceResponse.totalRecords;
+      response.averageRating = serviceResponse.averageRating;
+      response.page = serviceResponse.page;
+      response.status = 200;
+      response.message = constants.reviewsMessage.REVIEWS_FETCHED;
+    }
+  } catch (error) {
+    console.log(`Something went wrong:controller:reviewController: getMyReview
     Error:${error.message}`);
     response.message = error.message;
     response.errors = error;

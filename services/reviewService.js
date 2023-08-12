@@ -20,8 +20,7 @@ module.exports.createReview = async (userId, body) => {
     //   return response;
     // }
 
-    // body.user = userId;
-
+    body.user = userId;
     const newData = new reviewModel(body);
     const dbResponse = await newData.save();
     if (dbResponse) {
@@ -125,6 +124,91 @@ module.exports.getAllReviews = async (serviceData) => {
     throw new Error(error);
   }
 };
+// getAllReviews
+module.exports.getMyReview = async (user, serviceData) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
+  try {
+    const {
+      limit = 10,
+      page = 1,
+      status = "true",
+      searchQuery,
+      reviewStatus = "pending",
+      course,
+      ratings,
+    } = serviceData;
+    
+    let conditions = {};
+    conditions.isDeleted = false;
+    conditions.user = user.userId; // Filter reviews for the specific user
+
+    if (status == "true" || status == "false") {
+      conditions.status = status;
+    }
+
+    if (reviewStatus == "pending" || reviewStatus == "approved") {
+      conditions.reviewStatus = reviewStatus;
+    }
+
+    if (course) {
+      conditions.course = course;
+    }
+
+    if (ratings) {
+      conditions.ratings = ratings;
+    }
+
+    // search query
+    if (searchQuery) {
+      const regex = new RegExp(searchQuery, "i");
+      conditions.$or = [{ comment: regex }];
+    }
+
+    // count document
+    const totalRecords = await reviewModel.countDocuments(conditions);
+    const totalPages = Math.ceil(totalRecords / parseInt(limit));
+
+    const aggregationPipeline = [
+      { $group: { _id: null, averageRating: { $avg: '$ratings' } } }
+    ];
+
+    const averageRatings = await reviewModel.aggregate(aggregationPipeline);
+
+    const averageRating = averageRatings.length > 0 ? averageRatings[0].averageRating : 0;
+
+    const dbResponse = await reviewModel
+      .find(conditions)
+      .skip(parseInt(page - 1) * parseInt(limit))
+      .limit(parseInt(limit))
+      .populate({ path: "course", select: "name _id" })
+      .populate({ path: "user", select: "name _id" });
+
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.reviewsMessage.REVIEWS_NOT_FOUND,
+      };
+      response.message = constants.reviewsMessage.REVIEWS_NOT_FOUND;
+      return response;
+    }
+
+    response.status = 200;
+    const formatData = formatMongoData(dbResponse);
+
+    return {
+      body: formatData,
+      totalPages,
+      totalRecords,
+      page,
+      averageRating,
+    };
+  } catch (error) {
+    console.log(
+      `Something went wrong: Service: reviewService: getMyReview\nError: ${error.message}`
+    );
+    throw new Error(error);
+  }
+};
+
 
 // getReviewById
 module.exports.getReviewById = async (serviceData) => {
