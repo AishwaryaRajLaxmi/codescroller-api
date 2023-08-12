@@ -14,7 +14,7 @@ module.exports.getAllReviews = Joi.object({
   limit: Joi.number().label("Limit"),
   status: Joi.string().valid("true", "false", "All").label("Status"),
   searchQuery: Joi.string().allow("").label("Search query"),
-  reviewStatus:Joi.string().allow("".label("Review Status"))
+  reviewStatus:Joi.string().allow("").label("Review Status")
 });
 
 //getReviewById
