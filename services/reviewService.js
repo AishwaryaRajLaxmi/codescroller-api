@@ -46,12 +46,16 @@ module.exports.createReview = async (userId, body) => {
 module.exports.getAllReviews = async (serviceData) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
   try {
-    const { limit = 10, page = 1, status = "true", searchQuery } = serviceData;
+    const { limit = 10, page = 1, status = "true", searchQuery,reviewStatus="pending" } = serviceData;
     let conditions = {};
     conditions.isDeleted = false;
 
     if (status == "true" || status == "false") {
       conditions.status = status;
+    }
+
+    if(reviewStatus=="pending" || reviewStatus=="approved"){
+      conditions.reviewStatus=reviewStatus;
     }
 
     // search query
