@@ -18,6 +18,9 @@ module.exports.getAllReviews = Joi.object({
     .allow("")
     .valid("pending", "approved")
     .label("Review Status"),
+    course:Joi.custom(customCallback).label("Course"),
+    ratings:Joi.string().label("Ratings"),
+  
 });
 
 //getReviewById

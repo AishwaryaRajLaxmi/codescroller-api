@@ -46,7 +46,15 @@ module.exports.createReview = async (userId, body) => {
 module.exports.getAllReviews = async (serviceData) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
   try {
-    const { limit = 10, page = 1, status = "true", searchQuery,reviewStatus="pending" } = serviceData;
+    const {
+      limit = 10,
+      page = 1,
+      status = "true",
+      searchQuery,
+      reviewStatus = "pending",
+      course,
+      ratings,
+    } = serviceData;
     let conditions = {};
     conditions.isDeleted = false;
 
@@ -54,8 +62,16 @@ module.exports.getAllReviews = async (serviceData) => {
       conditions.status = status;
     }
 
-    if(reviewStatus=="pending" || reviewStatus=="approved"){
-      conditions.reviewStatus=reviewStatus;
+    if (reviewStatus == "pending" || reviewStatus == "approved") {
+      conditions.reviewStatus = reviewStatus;
+    }
+
+    if (course) {
+      conditions.course = course;
+    }
+
+    if (ratings) {
+      conditions.ratings = ratings;
     }
 
     // search query
