@@ -7,20 +7,20 @@ const _ = require("lodash");
 module.exports.createReview = async (userId, body) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
   try {
-    const reveiwResponse = await reviewModel.findOne({
-      user: userId,
-      course: body.course,
-    });
+    // const reveiwResponse = await reviewModel.findOne({
+    //   user: userId,
+    //   course: body.course,
+    // });
 
-    if (reveiwResponse) {
-      response.errors = {
-        course: "Sorry, You Already reviewed this course",
-      };
-      response.message = "This course has already been reviewed";
-      return response;
-    }
+    // if (reveiwResponse) {
+    //   response.errors = {
+    //     course: "Sorry, You Already reviewed this course",
+    //   };
+    //   response.message = "This course has already been reviewed";
+    //   return response;
+    // }
 
-    body.user = userId;
+    // body.user = userId;
 
     const newData = new reviewModel(body);
     const dbResponse = await newData.save();
@@ -77,13 +77,21 @@ module.exports.getAllReviews = async (serviceData) => {
     // search query
     if (searchQuery) {
       const regex = new RegExp(searchQuery, "i");
-
       conditions.$or = [{ comment: regex }];
     }
 
     // count document
     const totalRecords = await reviewModel.countDocuments(conditions);
     const totalPages = Math.ceil(totalRecords / parseInt(limit));
+
+    const aggregationPipeline = [
+      { $group: { _id:null, averageRating: { $avg: '$ratings' } } }
+    ];
+
+    const averageRatings = await reviewModel.aggregate(aggregationPipeline);
+    
+    const averageRating = averageRatings.length > 0 ? averageRatings[0].averageRating : 0;
+
 
     const dbResponse = await reviewModel
       .find(conditions)
@@ -108,6 +116,7 @@ module.exports.getAllReviews = async (serviceData) => {
       totalPages,
       totalRecords,
       page,
+      averageRating
     };
   } catch (error) {
     console.log(
@@ -224,11 +233,10 @@ module.exports.deleteReview = async (serviceData) => {
         error: constants.reviewsMessage.REVIEWS_NOT_DELETED,
       };
       return response;
-    }
+        }
 
     response.body = formatMongoData(dbResponse);
     response.status = 200;
-
     return response;
   } catch (error) {
     console.log(`Something went wrong: service : reviewService : deleteReview`);

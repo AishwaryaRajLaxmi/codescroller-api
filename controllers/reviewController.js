@@ -41,6 +41,7 @@ module.exports.getAllReviews = async (req, res) => {
       response.body = serviceResponse.body;
       response.totalPages = serviceResponse.totalPages;
       response.totalRecords = serviceResponse.totalRecords;
+      response.averageRating=serviceResponse.averageRating
       response.page = serviceResponse.page;
       response.status = 200;
       response.message = constants.reviewsMessage.REVIEWS_FETCHED;

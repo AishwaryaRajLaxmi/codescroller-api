@@ -40,6 +40,13 @@ reviewRouter.get(
   reviewController.getReviewById
 );
 
+//getMyReview
+reviewRouter.get(
+  "/:id",validateUserToken,
+  validateParams(getReviewById),
+  reviewController.getReviewById
+);
+
 // deleteReveiw
 reviewRouter.delete(
   "/:id",
