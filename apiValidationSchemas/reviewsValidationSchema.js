@@ -14,7 +14,10 @@ module.exports.getAllReviews = Joi.object({
   limit: Joi.number().label("Limit"),
   status: Joi.string().valid("true", "false", "All").label("Status"),
   searchQuery: Joi.string().allow("").label("Search query"),
-  reviewStatus:Joi.string().allow("").label("Review Status")
+  reviewStatus: Joi.string()
+    .allow("")
+    .valid("pending", "approved")
+    .label("Review Status"),
 });
 
 //getReviewById
@@ -35,7 +38,7 @@ module.exports.updateReview = Joi.object({
   comment: Joi.string().allow("").label("Comment"),
   reviewStatus: Joi.string()
     .valid("pending", "approved")
-       .required()
+    .required()
     .label("Review Status"),
   status: Joi.boolean().label("Status"),
 });
