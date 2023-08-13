@@ -64,10 +64,10 @@ const purchasedCourseSchema = mongoose.Schema(
       required: true,
     },
     returnDays: {
-      type: String,
+      type: Number,
       required: true,
     },
-    isReturnable: {
+    isReturnable:{
       type: Boolean,
       required: true,
       default: true,

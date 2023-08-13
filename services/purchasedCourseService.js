@@ -112,6 +112,8 @@ module.exports.getMyPurchasedCourseById = async (serviceData) => {
       })
       .populate({ path: "user", select: "name _id" })
       .populate({ path: "course", select: "name _id" });
+      
+      console.log(dbResponse)
 
     if (!dbResponse) {
       response.errors = {
@@ -122,16 +124,15 @@ module.exports.getMyPurchasedCourseById = async (serviceData) => {
       return response;
     }
 
-
-    // find lesson and add
-    let lessonResponse = await lessonModel.findOne({
-      course: dbResponse.course,
-      isDeleted: false,
-    });
+    // // find lesson and add
+    // let lessonResponse = await lessonModel.findOne({
+    //   course: dbResponse.course,
+    //   isDeleted: false,
+    // });
     
-    if (lessonResponse) {
-      dbResponse.lessons = lessonResponse._id; // Directly add lessonResponse to dbResponse
-    }
+    // if (lessonResponse) {
+    //   dbResponse.lessons = lessonResponse._id; // Directly add lessonResponse to dbResponse
+    // }
    
     response.body = formatMongoData(dbResponse);
     response.status = 200;

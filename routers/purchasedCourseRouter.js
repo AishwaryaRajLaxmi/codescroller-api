@@ -46,6 +46,7 @@ purchasedCourseRouter.get(
   jsonwebtoken.validateUserToken,
   purchasedCourseController.getMyPurchasedCourse
 );
+
 // getPurchasedCourseById For User;
 purchasedCourseRouter.get(
   "/myCourse/:id",

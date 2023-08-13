@@ -21,6 +21,7 @@ module.exports.createPurchasedCourse = Joi.object({
   returnMessage: Joi.string().label("Return Message"),
   paymentId: Joi.string().label("Payment ID"),
   paymentRequestId: Joi.string().label("Payment Request ID"),
+  returnDays:Joi.number().label("Return Days")
 });
 
 // Get Purchased Course By ID Validation Schema
