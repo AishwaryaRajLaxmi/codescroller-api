@@ -104,16 +104,17 @@ module.exports.getPurchasedCourseByID = async (serviceData) => {
 module.exports.getMyPurchasedCourseById = async (serviceData) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
   try {
+    console.log(serviceData.userId)
     
     let dbResponse = await purchasedCourseModel
       .findOne({
         _id: serviceData.id,
         isDeleted: false,
+        user:serviceData.userId,
       })
       .populate({ path: "user", select: "name _id" })
       .populate({ path: "course", select: "name _id" });
       
-      console.log(dbResponse)
 
     if (!dbResponse) {
       response.errors = {
