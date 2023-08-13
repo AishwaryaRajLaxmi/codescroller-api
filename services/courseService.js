@@ -99,6 +99,7 @@ module.exports.getAllCourses = async (serviceData) => {
       subCategory,
       language,
       topic,
+      isPaid,
     } = serviceData;
     let conditions = {};
     conditions.isDeleted = false;
@@ -119,6 +120,10 @@ module.exports.getAllCourses = async (serviceData) => {
         { requirements: regex },
         { highlights: regex },
       ];
+    }
+
+    if (isPaid) {
+      conditions.isPaid = isPaid;
     }
 
     if (level) {

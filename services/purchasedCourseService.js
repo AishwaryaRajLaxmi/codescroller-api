@@ -18,7 +18,7 @@ module.exports.createPurchasedCourse = async (...serviceData) => {
     // if already purchased,just return
     if (purchasedCourseResponse) {
       response.errors = {
-        user: constants.purchasedCourseMessage.PURCHASED_COURSE_ALREADY_EXISTS,
+        course: constants.purchasedCourseMessage.PURCHASED_COURSE_ALREADY_EXISTS,
       };
       response.message =
         constants.purchasedCourseMessage.PURCHASED_COURSE_ALREADY_EXISTS;
@@ -100,23 +100,62 @@ module.exports.getPurchasedCourseByID = async (serviceData) => {
   }
 };
 
-
-// getMyPurchasedCourse
-module.exports.getMyPurchasedCourse = async (serviceData, singleCourse) => {
+// getMyPurchasedCourseById
+module.exports.getMyPurchasedCourseById = async (serviceData) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
-  const { course } = singleCourse;
-  let conditions = {};
-  conditions.isDeleted = false;
-
   try {
-    if (course) {
-      conditions.course = course; //
+    
+    let dbResponse = await purchasedCourseModel
+      .findOne({
+        _id: serviceData.id,
+        isDeleted: false,
+      })
+      .populate({ path: "user", select: "name _id" })
+      .populate({ path: "course", select: "name _id" });
+
+    if (!dbResponse) {
+      response.errors = {
+        error: constants.purchasedCourseMessage.PURCHASED_COURSE_NOT_FOUND,
+      };
+      response.message =
+        constants.purchasedCourseMessage.PURCHASED_COURSE_NOT_FOUND;
+      return response;
     }
 
+
+    // find lesson and add
+    let lessonResponse = await lessonModel.findOne({
+      course: dbResponse.course,
+      isDeleted: false,
+    });
+    
+    if (lessonResponse) {
+      dbResponse.lessons = lessonResponse._id; // Directly add lessonResponse to dbResponse
+    }
+   
+    response.body = formatMongoData(dbResponse);
+    response.status = 200;
+    return response;
+  } catch (error) {
+    console.log(
+      `Something went wrong: service : purchasedCourseService : getMyPurchasedCourseById`,
+      error
+    );
+    throw new Error(error);
+  }
+};
+
+
+// getMyPurchasedCourse
+module.exports.getMyPurchasedCourse = async (serviceData) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
+ 
+  try {
+  
     let dbResponse = await purchasedCourseModel
       .find({
         user: serviceData.userId,
-        ...conditions, // Merge the conditions object
+       
       })
       .populate({ path: "course", select: "name _id" })
       .populate({ path: "user", select: "name _id" });

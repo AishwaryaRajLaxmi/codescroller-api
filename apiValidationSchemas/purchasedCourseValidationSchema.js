@@ -6,8 +6,9 @@ module.exports.createPurchasedCourse = Joi.object({
   course: Joi.string().custom(customCallback).required().label("Course ID"),
   courseName: Joi.string().trim().required().label("Course Name"),
   courseMrp: Joi.number().required().label("Course MRP"),
+  thumbnail: Joi.string().required().label("Thumbnail"),
   courseSellingPrice: Joi.number().required().label("Course Selling Price"),
-  couponName: Joi.string().trim().label("Coupon Name").allow(""),
+  couponCode: Joi.string().trim().label("Coupon Name").allow(""),
   discountWithCouponAmount: Joi.number().label("Discount With Coupon Amount"),
   cGstAmount: Joi.number().label("CGST Amount"),
   sGstAmount: Joi.number().label("SGST Amount"),
@@ -15,19 +16,11 @@ module.exports.createPurchasedCourse = Joi.object({
   subTotalAmount: Joi.number().required().label("Sub Total Amount"),
   isPaid: Joi.boolean().label("Is Paid"),
   courseValidity: Joi.string().required().label("Course Validity"),
-  courseCompletionStatus: Joi.number()
-    .label("Course Completion Status")
-    .required(),
-  returnDays: Joi.string().required().label("Return Days"),
   isReturnable: Joi.boolean().required().label("Is Returnable"),
   returnBy: Joi.string().valid("user", "admin").label("Return By"),
   returnMessage: Joi.string().label("Return Message"),
   paymentId: Joi.string().label("Payment ID"),
   paymentRequestId: Joi.string().label("Payment Request ID"),
-  courseStatus: Joi.string()
-    .valid("purchased", "returned")
-    .required()
-    .label("Course Status"),
 });
 
 // Get Purchased Course By ID Validation Schema
@@ -62,6 +55,3 @@ module.exports.updatePurchasedCourse = Joi.object({
   status: Joi.boolean().label("Status").required(),
 });
 
-module.exports.getMySingleCourse = Joi.object({
-  course: Joi.string().custom(customCallback).label("Course"),
-});

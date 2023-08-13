@@ -152,6 +152,10 @@ const courseSchema = mongoose.Schema(
       trim: true,
       enum: ["purchased", "returned"],
     },
+    isPaid: {
+      type: Boolean,
+      default: true,
+    },
     status: {
       type: Boolean,
       required: true,

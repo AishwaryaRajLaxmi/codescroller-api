@@ -25,9 +25,13 @@ const purchasedCourseSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
-    couponName: {
+    couponCode: {
       type: String,
       trim: true,
+    },
+    thumbnail: {
+      type: String,
+      required: true,
     },
     discountWithCouponAmount: {
       type: Number,

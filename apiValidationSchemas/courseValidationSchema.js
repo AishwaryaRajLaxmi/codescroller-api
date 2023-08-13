@@ -40,6 +40,7 @@ module.exports.createCourse = Joi.object({
   defaultVideo: Joi.string().allow("").label("Default Video"),
   isReturnable: Joi.boolean().required().label("Is Returnable"),
   returnDays: Joi.number().required().label("Return Days"),
+  isPaid:Joi.boolean().label("Is Paid")
 });
 
 // getAllCourses
@@ -53,6 +54,7 @@ module.exports.getAllCourses = Joi.object({
   subCategory: Joi.string().custom(customCallback).label("Sub Category"),
   topic: Joi.string().custom(customCallback).label("Topic"),
   level: Joi.string().custom(customCallback).label("Level"),
+  isPaid:Joi.boolean().label("Is Paid")
 });
 
 //getCourseById
@@ -102,4 +104,5 @@ module.exports.updateCourse = Joi.object({
   returnDays: Joi.number().required().label("Return Days"),
   status: Joi.boolean().label("Status"),
   isDeleted: Joi.boolean().label("Is Deleted"),
+  isPaid: Joi.boolean().label("Is Paid"),
 });

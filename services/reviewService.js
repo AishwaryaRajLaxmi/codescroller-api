@@ -124,7 +124,7 @@ module.exports.getAllReviews = async (serviceData) => {
     throw new Error(error);
   }
 };
-// getAllReviews
+// getMyReviews
 module.exports.getMyReview = async (user, serviceData) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
   try {
