@@ -16,7 +16,7 @@ const {
 // verifyForgotPasswordOtp
 userRouter.post(
   "/verifyForgotPasswordOtp",
-  validateBody(userValidationSchema.verifyAccount),
+  validateBody(userValidationSchema.verifyForgotPasswordOtp),
   userController.verifyForgotPasswordOtp
 );
 
