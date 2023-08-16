@@ -57,6 +57,57 @@ module.exports.verifyAccount = async (req, res) => {
   res.status(response.status).send(response);
 };
 
+// verifyForgotPasswordOtp
+module.exports.verifyForgotPasswordOtp = async (req, res) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
+  try {
+    const serviceResponse = await userService.verifyForgotPasswordOtp(req.body);
+
+    if (serviceResponse.status === 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
+      response.body = serviceResponse.body;
+      response.message = serviceResponse.message;
+      response.status = 200;
+    }
+  } catch (error) {
+    console.log(
+      `Something went wrong controller : userController :verifyForgotPasswordOtp \nError: ${error.message}`
+    );
+
+    response.message = error.message;
+    response.errors = error;
+  }
+  res.status(response.status).send(response);
+};
+
+
+// createNewPassword
+module.exports.createNewPassword = async (req, res) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
+  try {
+    const serviceResponse = await userService.createNewPassword(req.body,req.params);
+
+    if (serviceResponse.status === 400) {
+      response.errors = serviceResponse.errors;
+      response.message = serviceResponse.message;
+    } else {
+      response.body = serviceResponse.body;
+      response.message = serviceResponse.message;
+      response.status = 200;
+    }
+  } catch (error) {
+    console.log(
+      `Something went wrong controller : userController :createNewPassword \nError: ${error.message}`
+    );
+
+    response.message = error.message;
+    response.errors = error;
+  }
+  res.status(response.status).send(response);
+};
+
 // findAccountAndSendOTP
 module.exports.findAccountAndSendOTP = async (req, res) => {
   const response = _.cloneDeep(constants.defaultServerResponse);

@@ -34,6 +34,16 @@ module.exports.updateMyPassword = Joi.object({
     .messages({ "any.only": "{{#label}} does not match" }),
 });
 
+// createNewPassword
+module.exports.createNewPassword = Joi.object({
+  password: Joi.string().min(5).trim().required().label("New Password"),
+  cPassword: Joi.any()
+    .equal(Joi.ref("password"))
+    .required()
+    .label("Confirm Password")
+    .messages({ "any.only": "{{#label}} does not match" }),
+});
+
 // verifyAccount
 module.exports.verifyAccount = Joi.object({
   email: Joi.string().email().trim().required().label("Email"),

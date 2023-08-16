@@ -13,8 +13,14 @@ const {
   validateUserToken,
 } = require("../middlewares/jwtValidation");
 
-// getMyProfile for user
+// verifyForgotPasswordOtp
+userRouter.post(
+  "/verifyForgotPasswordOtp",
+  validateBody(userValidationSchema.verifyAccount),
+  userController.verifyForgotPasswordOtp
+);
 
+// getMyProfile for user
 userRouter.get(
   "/myProfile",
   jwtValidation.validateUserToken,
@@ -32,6 +38,13 @@ userRouter.post(
   "/verifyAccount",
   validateBody(userValidationSchema.verifyAccount),
   userController.verifyAccount
+);
+// createNewPassword
+userRouter.post(
+  "/createNewPassword",
+  validateBody(userValidationSchema.createNewPassword),
+  jwtValidation.validateUserToken,
+  userController.createNewPassword
 );
 
 // findAccountAndSendOTP
@@ -93,8 +106,6 @@ userRouter.put(
   userController.updateMyPassword
 );
 
-
-
 // This is for User
 // updateMyProfile
 userRouter.put(
@@ -105,8 +116,11 @@ userRouter.put(
 );
 
 // forget password
-userRouter.put("/forgetPassword",validateBody(userValidationSchema.forgetPassword),
-userController.forgetPassword)
+userRouter.post(
+  "/forgetPassword",
+  validateBody(userValidationSchema.forgetPassword),
+  userController.forgetPassword
+);
 
 // updateUser
 userRouter.put(

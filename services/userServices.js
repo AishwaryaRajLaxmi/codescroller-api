@@ -742,3 +742,82 @@ module.exports.forgetPassword = async (serviceData) => {
     throw new Error(error.message);
   }
 };
+
+// createNewPassword
+
+module.exports.verifyForgotPasswordOtp = async (serviceData) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
+  try {
+    console.log(serviceData);
+    // Check if Email already exists
+    const userResponse = await userModel.findOne({
+      email: serviceData.email,
+    });
+
+    if (!userResponse) {
+      response.errors = {
+        email: "User not found",
+      };
+      return response;
+    }
+
+    // Check if the OTP matches
+    if (userResponse.otp !== serviceData.otp) {
+      response.errors = {
+        otp: "OTP does not match",
+      };
+      return response;
+    }
+
+    const token = jwt.sign(
+      { id: userResponse._id },
+      process.env.JWT_USER_SECRET_KEY,
+      { expiresIn: "1h" }
+    );
+
+    response.status = 200;
+    response.message = "You have Verified Your Account";
+    response.body = { token };
+    return response;
+  } catch (error) {
+    console.log(
+      `Something went wrong in service: userService: verifyForgotPasswordOtp\nError: ${error.message}`
+    );
+    throw new Error(error.message);
+  }
+};
+
+// createNewPassword
+
+module.exports.createNewPassword = async (serviceData, userId) => {
+  const response = _.cloneDeep(constants.defaultServerResponse);
+  try {
+  
+    // Find the user by email (assuming serviceData contains the email)
+    const userResponse = await userModel.findOne({ _id: userId.userId });
+
+    if (!userResponse) {
+      response.errors = {
+        email: "User not found",
+      };
+      return response;
+    }
+
+    // Hash the new password
+    const hashPassword = await bcryptjs.hash(serviceData.password, 10); // 10 is the salt rounds
+
+    // Update the user's password in the database
+    userResponse.password = hashPassword;
+    await userResponse.save();
+
+    response.status = 200;
+    response.message = "You have Created Your Password Successfully";
+    response.body = userResponse;
+    return response;
+  } catch (error) {
+    console.log(
+      `Something went wrong in service: userService: createNewPassword\nError: ${error.message}`
+    );
+    throw new Error(error.message);
+  }
+};

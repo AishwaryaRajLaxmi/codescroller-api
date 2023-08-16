@@ -36,6 +36,7 @@ app.use(
   require("./routers/mainSliderRouter")
 );
 app.use("/api/v1/coupons", require("./routers/couponRouter"));
+app.use("/api/v1/coupons", require("./routers/couponRouter"));
 
 
 const port = process.env.PORT || 5300;
