@@ -234,6 +234,28 @@ module.exports = {
     MAIN_SLIDER_FOUND: "Main Slider Found",
     MAIN_SLIDER_ALREADY_EXISTS: "Main Slider Already Exists",
     MAIN_SLIDER_NOT_EXISTS: "Main Slider Not Exists",
-  }
+  },
+  databaseMessage: {
+    INVALID_OBJECTID: "Object ID is Invalid",
+  },
+  couponMessage: {
+    COUPON_CREATED: "Coupon Created Successfully!",
+    COUPON_NOT_CREATED: "Coupon not Created!",
+
+    COUPON_UPDATED: "Coupon Updated Successfully !",
+    COUPON_NOT_UPDATED: "Coupon not Updated!",
+
+    COUPON_DELETED: "Coupon Deleted Successfully!",
+    COUPON_NOT_DELETED: "Coupon not Deleted!",
+
+    COUPON_FETCHED: "Coupon Fetched Successfully!",
+    COUPON_NOT_FETCHED: "Coupon not Fetched!",
+
+    COUPON_NOT_FOUND: "Coupon not Found!",
+    COUPON_VERIFIED: "Coupon Applied!",
+
+    COUPON_ERROR: "Oops Error with Coupon !",
+    COUPON_EXISTS: "Oops Coupon Code is already exsts !",
+  },
   
 };

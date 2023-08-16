@@ -18,7 +18,8 @@ module.exports.createPurchasedCourse = async (...serviceData) => {
     // if already purchased,just return
     if (purchasedCourseResponse) {
       response.errors = {
-        course: constants.purchasedCourseMessage.PURCHASED_COURSE_ALREADY_EXISTS,
+        course:
+          constants.purchasedCourseMessage.PURCHASED_COURSE_ALREADY_EXISTS,
       };
       response.message =
         constants.purchasedCourseMessage.PURCHASED_COURSE_ALREADY_EXISTS;
@@ -77,17 +78,16 @@ module.exports.getPurchasedCourseByID = async (serviceData) => {
       return response;
     }
 
-
     // find lesson and add
     let lessonResponse = await lessonModel.findOne({
       course: dbResponse.course,
       isDeleted: false,
     });
-    
+
     if (lessonResponse) {
       dbResponse.lessons = lessonResponse._id; // Directly add lessonResponse to dbResponse
     }
-   
+
     response.body = formatMongoData(dbResponse);
     response.status = 200;
     return response;
@@ -104,18 +104,16 @@ module.exports.getPurchasedCourseByID = async (serviceData) => {
 module.exports.getMyPurchasedCourseById = async (serviceData) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
   try {
-    console.log(serviceData.userId)
-    
+    console.log(serviceData.id);
+
     let dbResponse = await purchasedCourseModel
       .findOne({
         _id: serviceData.id,
         isDeleted: false,
-        user:serviceData.userId,
+        user: serviceData.userId,
       })
       .populate({ path: "user", select: "name _id" })
       .populate({ path: "course", select: "name _id" });
-      
-
     if (!dbResponse) {
       response.errors = {
         error: constants.purchasedCourseMessage.PURCHASED_COURSE_NOT_FOUND,
@@ -125,16 +123,19 @@ module.exports.getMyPurchasedCourseById = async (serviceData) => {
       return response;
     }
 
-    // // find lesson and add
-    // let lessonResponse = await lessonModel.findOne({
-    //   course: dbResponse.course,
-    //   isDeleted: false,
-    // });
-    
-    // if (lessonResponse) {
-    //   dbResponse.lessons = lessonResponse._id; // Directly add lessonResponse to dbResponse
-    // }
-   
+    // find lesson and add
+    let lessonResponse = await lessonModel.find({
+      course: dbResponse.course.id,
+      isDeleted: false,
+    });
+
+    console.log(lessonResponse);
+
+    if (lessonResponse) {
+      dbResponse.lessons = lessonResponse;
+    }
+    console.log(lessonResponse);
+
     response.body = formatMongoData(dbResponse);
     response.status = 200;
     return response;
@@ -147,17 +148,14 @@ module.exports.getMyPurchasedCourseById = async (serviceData) => {
   }
 };
 
-
 // getMyPurchasedCourse
 module.exports.getMyPurchasedCourse = async (serviceData) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
- 
+
   try {
-  
     let dbResponse = await purchasedCourseModel
       .find({
         user: serviceData.userId,
-       
       })
       .populate({ path: "course", select: "name _id" })
       .populate({ path: "user", select: "name _id" });
@@ -230,7 +228,6 @@ module.exports.getAllPurchasedCourses = async (serviceData) => {
       conditions.couponName = couponName;
     }
 
-    
     const totalRecords = await purchasedCourseModel.countDocuments(conditions);
     const totalPages = Math.ceil(totalRecords / parseInt(limit));
 
@@ -240,7 +237,6 @@ module.exports.getAllPurchasedCourses = async (serviceData) => {
       .limit(parseInt(limit))
       .populate({ path: "user", select: "name _id" })
       .populate({ path: "course", select: "name _id" });
-
 
     if (!dbResponse) {
       response.errors = {

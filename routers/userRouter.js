@@ -106,7 +106,6 @@ userRouter.put(
 
 // forget password
 userRouter.put("/forgetPassword",validateBody(userValidationSchema.forgetPassword),
-jwtValidation.validateUserToken,
 userController.forgetPassword)
 
 // updateUser
