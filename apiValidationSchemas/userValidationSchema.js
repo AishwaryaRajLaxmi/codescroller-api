@@ -50,6 +50,9 @@ module.exports.verifyAccount = Joi.object({
   otp: Joi.string().min(4).max(4).label("OTP"),
 });
 
+// verifyAccount
+
+
 // forgetPassword
 module.exports.forgetPassword = Joi.object({
   email: Joi.string().email().trim().required().label("Email"),

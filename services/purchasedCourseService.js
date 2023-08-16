@@ -133,6 +133,7 @@ module.exports.getMyPurchasedCourseById = async (serviceData) => {
 
     if (lessonResponse) {
       dbResponse.lessons = lessonResponse;
+      await dbResponse.save();
     }
     console.log(lessonResponse);
 

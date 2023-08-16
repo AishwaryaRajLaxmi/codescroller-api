@@ -277,8 +277,6 @@ module.exports.findAccountAndSendOTP = async (serviceData) => {
       response.errors.email = "Sorry, your email is not registered";
     }
 
-    console.log(response);
-
     return response;
   } catch (error) {
     console.log(
@@ -747,41 +745,44 @@ module.exports.forgetPassword = async (serviceData) => {
 
 module.exports.verifyForgotPasswordOtp = async (serviceData) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
+
   try {
-    console.log(serviceData);
-    // Check if Email already exists
     const userResponse = await userModel.findOne({
       email: serviceData.email,
     });
 
-    if (!userResponse) {
-      response.errors = {
-        email: "User not found",
-      };
-      return response;
+    console.log(serviceData)
+    console.log(userResponse)
+
+    if (userResponse) {
+      if (userResponse.otp == serviceData.otp) {
+        const otpExpiry = new Date(userResponse.otpExpiredAt);
+        const currentDate = new Date();
+        const timeDistance = otpExpiry - currentDate;
+        if (timeDistance < 0) {
+          response.errors.otp = "Your otp has expired, please resend your otp";
+          response.message = "Your otp has expired, please resend your otp";
+          return response;
+        }
+        // generate token
+        const token = jwt.sign(
+          { id: userResponse._id },
+          process.env.JWT_USER_SECRET_KEY
+        );
+        response.body = { token };
+      } else {
+        response.errors.otp = "You entered an invalid OTP";
+        response.message = "You entered an invalid OTP";
+      }
+    } else {
+      response.errors.email = "Invalid email, Please try again";
+      response.message = "Invalid email, Please try again";
     }
 
-    // Check if the OTP matches
-    if (userResponse.otp !== serviceData.otp) {
-      response.errors = {
-        otp: "OTP does not match",
-      };
-      return response;
-    }
-
-    const token = jwt.sign(
-      { id: userResponse._id },
-      process.env.JWT_USER_SECRET_KEY,
-      { expiresIn: "1h" }
-    );
-
-    response.status = 200;
-    response.message = "You have Verified Your Account";
-    response.body = { token };
     return response;
   } catch (error) {
     console.log(
-      `Something went wrong in service: userService: verifyForgotPasswordOtp\nError: ${error.message}`
+      `Something went wrong in service: userService: erifyForgotPasswordOtp\nError: ${error.message}`
     );
     throw new Error(error.message);
   }
@@ -792,13 +793,12 @@ module.exports.verifyForgotPasswordOtp = async (serviceData) => {
 module.exports.createNewPassword = async (serviceData, userId) => {
   const response = _.cloneDeep(constants.defaultServerResponse);
   try {
-  
     // Find the user by email (assuming serviceData contains the email)
     const userResponse = await userModel.findOne({ _id: userId.userId });
 
     if (!userResponse) {
       response.errors = {
-        email: "User not found",
+        error: "User not found",
       };
       return response;
     }
